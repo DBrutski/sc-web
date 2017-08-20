@@ -8,7 +8,7 @@ var SCgEditMode = {
     /**
      * Check if specified mode is valid
      */
-    isValid: function (mode) {
+    isValid: function(mode) {
         return (mode >= this.SCgModeSelect) && (mode <= this.SCgModeContour);
     }
 };
@@ -47,13 +47,14 @@ var KeyCode = {
 var SCgTypeEdgeNow = sc_type_arc_pos_const_perm;
 var SCgTypeNodeNow = sc_type_node | sc_type_const;
 
-SCg.Scene = function (options) {
+SCg.Scene = function(options) {
 
     this.listener_array = [new SCgSelectListener(this),
         new SCgEdgeListener(this),
         new SCgBusListener(this),
         new SCgContourListener(this),
-        new SCgLinkListener(this)];
+        new SCgLinkListener(this)
+    ];
     this.listener = this.listener_array[0];
     this.commandManager = new SCgCommandManager();
     this.render = options.render;
@@ -84,10 +85,16 @@ SCg.Scene = function (options) {
     this.mouse_pos = new SCg.Vector3(0, 0, 0);
 
     // edge source and target
-    this.edge_data = {source: null, target: null};
+    this.edge_data = {
+        source: null,
+        target: null
+    };
 
     // bus source
-    this.bus_data = {source: null, end: null};
+    this.bus_data = {
+        source: null,
+        end: null
+    };
 
     // callback for selection changed
     this.event_selection_changed = null;
@@ -105,7 +112,7 @@ SCg.Scene.prototype = {
 
     constructor: SCg.Scene,
 
-    init: function () {
+    init: function() {
         this.layout_manager = new SCg.LayoutManager();
         this.layout_manager.init(this);
     },
@@ -114,12 +121,12 @@ SCg.Scene.prototype = {
      * Appends new sc.g-node to scene
      * @param {SCg.ModelNode} node Node to append
      */
-    appendNode: function (node) {
+    appendNode: function(node) {
         this.nodes.push(node);
         node.scene = this;
     },
 
-    appendLink: function (link) {
+    appendLink: function(link) {
         this.links.push(link);
         link.scene = this;
     },
@@ -128,7 +135,7 @@ SCg.Scene.prototype = {
      * Appends new sc.g-edge to scene
      * @param {SCg.ModelEdge} edge Edge to append
      */
-    appendEdge: function (edge) {
+    appendEdge: function(edge) {
         this.edges.push(edge);
         edge.scene = this;
     },
@@ -137,7 +144,7 @@ SCg.Scene.prototype = {
      * Append new sc.g-contour to scene
      * @param {SCg.ModelContour} contour Contour to append
      */
-    appendContour: function (contour) {
+    appendContour: function(contour) {
         this.contours.push(contour);
         contour.scene = this;
     },
@@ -146,12 +153,12 @@ SCg.Scene.prototype = {
      * Append new sc.g-contour to scene
      * @param {SCg.ModelBus} bus Bus to append
      */
-    appendBus: function (bus) {
+    appendBus: function(bus) {
         this.buses.push(bus);
         bus.scene = this;
     },
 
-    appendObject: function (obj) {
+    appendObject: function(obj) {
         if (obj instanceof SCg.ModelNode) {
             this.appendNode(obj);
         } else if (obj instanceof SCg.ModelLink) {
@@ -170,7 +177,7 @@ SCg.Scene.prototype = {
      * Remove object from scene.
      * @param {SCg.ModelObject} obj Object to remove
      */
-    removeObject: function (obj) {
+    removeObject: function(obj) {
         var self = this;
 
         function remove_from_list(obj, list) {
@@ -205,7 +212,7 @@ SCg.Scene.prototype = {
      * Delete objects from scene
      * @param {Array} objects Array of sc.g-objects to delete
      */
-    deleteObjects: function (objects) {
+    deleteObjects: function(objects) {
         var self = this;
 
         function collect_objects(container, root) {
@@ -244,37 +251,36 @@ SCg.Scene.prototype = {
     /**
      * Updates render
      */
-    updateRender: function () {
+    updateRender: function() {
         this.render.update();
     },
 
     /**
      * Updates render objects state
      */
-    updateObjectsVisual: function () {
+    updateObjectsVisual: function() {
         this.render.updateObjects();
     },
 
     // --------- layout --------
-    layout: function () {
+    layout: function() {
         this.layout_manager.doLayout();
         this.render.update();
     },
 
-    onLayoutTick: function () {
-    },
+    onLayoutTick: function() {},
 
     /**
      * Returns size of container, where graph drawing
      */
-    getContainerSize: function () {
+    getContainerSize: function() {
         return this.render.getContainerSize();
     },
 
     /**
      * Return array that contains sc-addrs of all objects in scene
      */
-    getScAddrs: function () {
+    getScAddrs: function() {
         var keys = new Array();
         for (key in this.objects) {
             keys.push(key);
@@ -287,7 +293,7 @@ SCg.Scene.prototype = {
      * @param {String} addr sc-addr of object to find
      * @return If object founded, then return it; otherwise return null
      */
-    getObjectByScAddr: function (addr) {
+    getObjectByScAddr: function(addr) {
         if (Object.prototype.hasOwnProperty.call(this.objects, addr))
             return this.objects[addr];
 
@@ -297,11 +303,11 @@ SCg.Scene.prototype = {
     /**
      * Selection all object
      */
-    selectAll: function () {
+    selectAll: function() {
         var self = this;
         var allObjects = [this.nodes, this.edges, this.buses, this.contours, this.links];
-        allObjects.forEach(function (setObjects) {
-            setObjects.forEach(function (obj) {
+        allObjects.forEach(function(setObjects) {
+            setObjects.forEach(function(obj) {
                 if (!obj.is_selected) {
                     self.selected_objects.push(obj);
                     obj._setSelected(true);
@@ -315,7 +321,7 @@ SCg.Scene.prototype = {
     /**
      * Append selection to object
      */
-    appendSelection: function (obj) {
+    appendSelection: function(obj) {
         if (obj.is_selected) {
             var idx = this.selected_objects.indexOf(obj);
             this.selected_objects.splice(idx, 1);
@@ -330,7 +336,7 @@ SCg.Scene.prototype = {
     /**
      * Remove selection from object
      */
-    removeSelection: function (obj) {
+    removeSelection: function(obj) {
 
         var idx = this.selected_objects.indexOf(obj);
 
@@ -348,7 +354,7 @@ SCg.Scene.prototype = {
     /**
      * Clear selection list
      */
-    clearSelection: function () {
+    clearSelection: function() {
 
         var need_event = this.selected_objects.length > 0;
 
@@ -361,7 +367,7 @@ SCg.Scene.prototype = {
         if (need_event) this.selectionChanged();
     },
 
-    selectionChanged: function () {
+    selectionChanged: function() {
         this._fireSelectionChanged();
 
         this.line_points.splice(0, this.line_points.length);
@@ -371,7 +377,10 @@ SCg.Scene.prototype = {
 
             if (obj instanceof SCg.ModelEdge || obj instanceof SCg.ModelBus || obj instanceof SCg.ModelContour) { /* @todo add contour and bus */
                 for (idx in obj.points) {
-                    this.line_points.push({pos: obj.points[idx], idx: idx});
+                    this.line_points.push({
+                        pos: obj.points[idx],
+                        idx: idx
+                    });
                 }
             }
         }
@@ -380,17 +389,17 @@ SCg.Scene.prototype = {
     },
 
     // -------- input processing -----------
-    onMouseMove: function (x, y) {
+    onMouseMove: function(x, y) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         else return this.listener.onMouseMove(x, y);
     },
 
-    onMouseDown: function (x, y) {
+    onMouseDown: function(x, y) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         else return this.listener.onMouseDown(x, y);
     },
 
-    onMouseUp: function (x, y) {
+    onMouseUp: function(x, y) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         if (!this.pointed_object) {
             this.clearSelection();
@@ -399,31 +408,31 @@ SCg.Scene.prototype = {
         return false;
     },
 
-    onMouseDoubleClick: function (x, y) {
+    onMouseDoubleClick: function(x, y) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         else this.listener.onMouseDoubleClick(x, y);
     },
 
-    onMouseOverObject: function (obj) {
+    onMouseOverObject: function(obj) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         this.pointed_object = obj;
     },
 
-    onMouseOutObject: function (obj) {
+    onMouseOutObject: function(obj) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         this.pointed_object = null;
     },
 
-    onMouseDownObject: function (obj) {
+    onMouseDownObject: function(obj) {
         if (this.modal != SCgModalMode.SCgModalNone) return false; // do nothing
         else this.listener.onMouseDownObject(obj);
     },
 
-    onMouseUpObject: function (obj) {
+    onMouseUpObject: function(obj) {
         return this.listener.onMouseUpObject(obj);
     },
 
-    onKeyDown: function (event) {
+    onKeyDown: function(event) {
         if (this.modal == SCgModalMode.SCgModalNone && !$("#search-input").is(":focus")) {
             if ((event.which == KeyCode.Z) && event.ctrlKey && event.shiftKey) {
                 this.commandManager.redo();
@@ -475,7 +484,7 @@ SCg.Scene.prototype = {
         return false;
     },
 
-    onKeyUp: function (event) {
+    onKeyUp: function(event) {
         if (this.modal == SCgModalMode.SCgModalNone && !$("#search-input").is(":focus")) {
             this.listener.onKeyUp(event);
         }
@@ -487,7 +496,7 @@ SCg.Scene.prototype = {
      * Setup new edit mode for scene. Calls from user interface
      * @param {SCgEditMode} mode New edit mode
      */
-    setEditMode: function (mode) {
+    setEditMode: function(mode) {
 
         if (this.edit_mode == mode) return; // do nothing
 
@@ -506,7 +515,7 @@ SCg.Scene.prototype = {
     /**
      * Changes modal state of scene. Just for internal usage
      */
-    setModal: function (value) {
+    setModal: function(value) {
         this.modal = value;
         this._fireModalChanged();
     },
@@ -514,7 +523,7 @@ SCg.Scene.prototype = {
     /**
      * Reset edge creation mode state
      */
-    resetEdgeMode: function () {
+    resetEdgeMode: function() {
         this.drag_line_points.splice(0, this.drag_line_points.length);
         this.render.updateDragLine();
 
@@ -525,7 +534,7 @@ SCg.Scene.prototype = {
      * Revert drag line to specified point. All drag point with index >= idx will be removed
      * @param {Integer} idx Index of drag point to revert.
      */
-    revertDragPoint: function (idx) {
+    revertDragPoint: function(idx) {
 
         if (this.edit_mode != SCgEditMode.SCgModeEdge && this.edit_mode != SCgEditMode.SCgModeBus && this.edit_mode != SCgEditMode.SCgModeContour) {
             SCgDebug.error('Work with drag point in incorrect edit mode');
@@ -549,7 +558,7 @@ SCg.Scene.prototype = {
     /**
      * Update selected line point position
      */
-    setLinePointPos: function (idx, pos) {
+    setLinePointPos: function(idx, pos) {
         if (this.selected_objects.length != 1) {
             SCgDebug.error('Invalid state. Trying to update line point position, when there are no selected objects');
             return;
@@ -576,28 +585,28 @@ SCg.Scene.prototype = {
     },
 
     // ------------- events -------------
-    _fireSelectionChanged: function () {
+    _fireSelectionChanged: function() {
         if (this.event_selection_changed)
             this.event_selection_changed();
     },
 
-    _fireModalChanged: function () {
+    _fireModalChanged: function() {
         if (this.event_modal_changed)
             this.event_modal_changed();
     },
 
-    isSelectedObjectAllArcsOrAllNodes: function () {
+    isSelectedObjectAllArcsOrAllNodes: function() {
         var objects = this.selected_objects;
         var typeMask = objects[0].sc_type & sc_type_arc_mask ? sc_type_arc_mask :
             objects[0].sc_type & sc_type_node ?
-                sc_type_node : 0;
-        return (objects.every(function (obj) {
+            sc_type_node : 0;
+        return (objects.every(function(obj) {
             return ((obj.sc_type & typeMask) && !(obj instanceof SCg.ModelContour) && !(obj instanceof SCg.ModelBus));
         }))
     },
 
-    isSelectedObjectAllHaveScAddr: function () {
-        return (this.selected_objects.some(function (obj) {
+    isSelectedObjectAllHaveScAddr: function() {
+        return (this.selected_objects.some(function(obj) {
             return obj.sc_addr;
         }))
     }
