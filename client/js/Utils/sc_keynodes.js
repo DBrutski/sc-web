@@ -1,78 +1,76 @@
-ScKeynodes = function(helper) {
-    this.helper = helper;
-    this.sctpClient = helper.sctpClient;
+/**
+ * Resolve sc-keynodes via sys-id and save it in this
+ * @param sctpClient - already initialized sctp client
+ * @param keynodesToResolve - array of sys-id.
+ * sys-id: string | [sys-id: string, property: string]
+ * property - key for saving in keynodes object
+ * @constructor
+ */
+ScKeynodes = function (sctpClient, keynodesToResolve) {
+    this.sctpClient = sctpClient;
+    this.keynodes = keynodesToResolve ||
+        [['ui_menu_root_for_eekb', 'menu_eekb'],
+            'ui_nrel_command_template',
+            'question',
+            'ui_menu_view_full_semantic_neighborhood_in_the_agreed_part_of_kb',
+            'ui_menu_view_full_semantic_neighborhood',
+            'nrel_system_identifier',
+            'nrel_main_idtf',
+            'nrel_idtf',
+            'nrel_answer',
+            'ui_user',
+            'ui_user_registered',
+            'ui_main_menu',
+            'ui_user_command_class_atom',
+            'ui_user_command_class_noatom',
+            'ui_external_languages',
+            'ui_rrel_command_arguments',
+            'ui_rrel_command',
+            'ui_nrel_command_result',
+            'ui_nrel_user_answer_formats',
+            'nrel_ui_commands_decomposition',
+            'ui_command_initiated',
+            'ui_command_finished',
+            'ui_nrel_user_used_language',
+            'ui_nrel_user_default_ext_language',
+            'languages',
+            'lang_ru',
+            'binary_types',
+            'binary_float',
+            'binary_int8',
+            'binary_int16',
+            'binary_int32',
+            'binary_int64',
+            'format_pdf',
+            'format_png',
+            'format_html',
+            'nrel_format',
+            'nrel_command_order',
+            'nrel_command_access',
+            'nrel_authorised_user',
+            'nrel_registered_user',
+            'nrel_administrator',
+            'nrel_manager',
+            'nrel_expert',
+            'ui_user_command_with_context']
 };
 
-ScKeynodes.prototype.init = function() {
+ScKeynodes.prototype.init = function () {
+    return this.resolveArrayOfKeynodes(this.keynodes);
+};
+
+/**
+ * Resolve sc-addr using sys-id and save it in object using property as a key
+ * (default: property = sys-id)
+ * @param sysIdtf - sys-id
+ * @param property - key for saving
+ * @returns {*}
+ */
+ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
     var dfd = new jQuery.Deferred();
     var self = this;
 
-    $.when(
-        this.resolveKeynode('ui_menu_root_for_eekb', 'menu_eekb'),
-        this.resolveKeynode('ui_nrel_command_template'),
-        this.resolveKeynode('question'),
-
-        this.resolveKeynode('ui_menu_view_full_semantic_neighborhood_in_the_agreed_part_of_kb'),
-        this.resolveKeynode('ui_menu_view_full_semantic_neighborhood'),
-
-        this.resolveKeynode('nrel_system_identifier'),
-        this.resolveKeynode('nrel_main_idtf'),
-        this.resolveKeynode('nrel_idtf'),
-        this.resolveKeynode('nrel_answer'),
-
-        this.resolveKeynode('ui_user'),
-        this.resolveKeynode('ui_user_registered'),
-        this.resolveKeynode('ui_main_menu'),
-        this.resolveKeynode('ui_user_command_class_atom'),
-        this.resolveKeynode('ui_user_command_class_noatom'),
-        this.resolveKeynode('ui_external_languages'),
-        this.resolveKeynode('ui_rrel_command_arguments'),
-        this.resolveKeynode('ui_rrel_command'),
-        this.resolveKeynode('ui_nrel_command_result'),
-        this.resolveKeynode('ui_nrel_user_answer_formats'),
-
-        this.resolveKeynode('nrel_ui_commands_decomposition'),
-
-        this.resolveKeynode('ui_command_initiated'),
-        this.resolveKeynode('ui_command_finished'),
-        this.resolveKeynode('ui_nrel_user_used_language'),
-        this.resolveKeynode('ui_nrel_user_default_ext_language'),
-
-        this.resolveKeynode('languages'),
-        this.resolveKeynode('lang_ru'),
-
-        this.resolveKeynode('binary_types'),
-        this.resolveKeynode('binary_float'),
-        this.resolveKeynode('binary_int8'),
-        this.resolveKeynode('binary_int16'),
-        this.resolveKeynode('binary_int32'),
-        this.resolveKeynode('binary_int64'),
-        this.resolveKeynode('format_pdf'),
-        this.resolveKeynode('format_png'),
-        this.resolveKeynode('format_html'),
-        this.resolveKeynode('nrel_format'),
-        this.resolveKeynode('nrel_command_order'),
-        this.resolveKeynode('nrel_command_access'),
-        this.resolveKeynode('nrel_authorised_user'),
-        this.resolveKeynode('nrel_registered_user'),
-        this.resolveKeynode('nrel_administrator'),
-        this.resolveKeynode('nrel_manager'),
-        this.resolveKeynode('nrel_expert'),
-        this.resolveKeynode('ui_user_command_with_context')
-    ).done(function() {
-        dfd.resolve();
-    }).fail(function() {
-        throw "Can't resolve keynode";
-    });
-
-    return dfd.promise();
-};
-
-ScKeynodes.prototype.resolveKeynode = function(sysIdtf, property) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
-
-    this.sctpClient.find_element_by_system_identifier(sysIdtf).done(function(res) {
+    this.sctpClient.find_element_by_system_identifier(sysIdtf).done(function (res) {
 
         console.log('Resolved keynode: ' + sysIdtf + ' = ' + res);
         if (property) {
@@ -82,15 +80,48 @@ ScKeynodes.prototype.resolveKeynode = function(sysIdtf, property) {
         }
 
         dfd.resolve(res);
-    }).fail(function() {
-        throw "Can't resolve keynode " + sysIdtf;
+    }).fail(function () {
         dfd.reject();
+        throw "Can't resolve keynode " + sysIdtf;
     });
 
     return dfd.promise();
 };
 
-ScKeynodes.prototype.getSysIdtfByAddress = function(scAddr) {
+/**
+ * Resolve array of sc-addr
+ * @param sysIdtfs - array of sys-id.
+ * sys-id: string | [sys-id: string, property: string]
+ * @returns {*}
+ */
+ScKeynodes.prototype.resolveArrayOfKeynodes = function (sysIdtfs) {
+    if (!sysIdtfs || !Array.isArray(sysIdtfs))
+        throw new Error(`incorect type of argumet. expected: array, actual ${sysIdtfs}`);
+    var dfd = new jQuery.Deferred();
+    var self = this;
+    let promises = sysIdtfs.map((val) => this._executeSysIdtf(val));
+    $.when.apply($, promises
+    ).done(function () {
+        dfd.resolve(self);
+    }).fail(function () {
+        throw "Can't resolve keynode";
+    });
+
+    return dfd.promise();
+};
+
+ScKeynodes.prototype._executeSysIdtf = function (val) {
+    if (Array.isArray(val)) {
+        if (val.length !== 2)
+            throw new Error("incorrect keynode");
+        return this.resolveKeynode(val[0], val[1])
+    } else if (typeof (val) === "string") {
+        return this.resolveKeynode(val);
+    } else
+        throw new Error(`illegal argument. expected array | string. actual ${val}`)
+};
+
+ScKeynodes.prototype.getSysIdtfByAddress = function (scAddr) {
     let sysIdtf = Object.keys(this).map((key) => [key, this[key]]).find((tuple) => tuple[1] === scAddr);
     if (sysIdtf) {
         return sysIdtf[0];
