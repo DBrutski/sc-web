@@ -25,7 +25,7 @@ SCWeb.core.Main = {
 
             window.sctpClient = client;
             window.scHelper = new ScHelper(window.sctpClient);
-            window.scKeynodes = new ScKeynodes(window.scHelper);
+            window.scKeynodes = new ScKeynodes(window.sctpClient);
 
             window.scKeynodes.init().done(function () {
                 window.scHelper.init().done(function () {

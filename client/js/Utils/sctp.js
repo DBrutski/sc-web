@@ -321,13 +321,30 @@ function SctpResultBuffer(v) {
     };
 }
 
-SctpClient = function () {
+/**
+ * Create sctp-clinient
+ * After construction should be invoke connect method
+ * @param options - {
+ *  eventFrequency: number - time beetwen events requests,
+ *  onError: function - error handler
+ *  onClose: function - invokes when socket closes
+ *}
+ * @constructor
+ */
+SctpClient = function (options) {
     this.socket = null;
     this.task_queue = [];
     this.task_timeout = 0;
     this.task_frequency = 10;
     this.events = {};
-}
+    this.eventFrequency = options.eventFrequency || 1000;
+    this.onError = options.onError;
+    this.onClose = options.onClose;
+};
+
+SctpClient.prototype.close = function () {
+   this.socket.close();
+};
 
 SctpClient.prototype.connect = function (url, success) {
     this.socket = new WebSocket('ws://' + window.location.host + '/sctp'/*, ['soap', 'xmpp']*/);
@@ -338,18 +355,7 @@ SctpClient.prototype.connect = function (url, success) {
         console.log('Connected to websocket');
         success();
 
-        var emit_events = function () {
-            if (self.event_timeout != 0) {
-                window.clearTimeout(self.event_timeout);
-                self.event_timeout = 0;
-            }
-
-            self.event_emit();
-
-            window.setTimeout(emit_events, 1000);
-        };
-
-        emit_events();
+        self._schedule_emit_event();
     };
     this.socket.onmessage = function (e) {
         console.log('message', e.data);
@@ -357,20 +363,38 @@ SctpClient.prototype.connect = function (url, success) {
     this.socket.onclose = function (e) {
         var CLOSE_NORMAL = 1000;
         var CLOSE_GOING_AWAY = 1001;
-        console.log('Closed websocket connection');
-        if (!(e.code == CLOSE_NORMAL || e.code == CLOSE_GOING_AWAY)) {
-            $('#sc-ui-locker').removeClass('shown');
-            alert("WebSocket closed");
+        try {
+            console.log('Closed websocket connection');
+            self.onClose && self.onClose(e);
+            self.task_queue.forEach((task) => task.dfd.reject(e))
+        } finally {
+            if (!(e.code == CLOSE_NORMAL || e.code == CLOSE_GOING_AWAY)) {
+                $('#sc-ui-locker').removeClass('shown');
+            }
         }
     };
     this.socket.onerror = function (e) {
-        console.log('WebSocket Error ' + e);
-        $('#sc-ui-locker').removeClass('shown');
-        alert('WebSocket error');
+        try {
+            console.log('WebSocket Error ' + e);
+            self.onError && self.onError(e);
+        } finally {
+            $('#sc-ui-locker').removeClass('shown');
+            alert('WebSocket error');
+        }
     };
 
 };
 
+SctpClient.prototype._schedule_emit_event = function () {
+    if (this.event_timeout != 0) {
+        window.clearTimeout(this.event_timeout);
+        this.event_timeout = 0;
+    }
+
+    this.event_emit();
+
+    window.setTimeout(this._schedule_emit_event.bind(this), self.eventFrequency);
+}
 
 SctpClient.prototype._push_task = function (task) {
     this.task_queue.push(task);
@@ -870,6 +894,7 @@ SctpClient.prototype.event_emit = function () {
     this.new_request(buffer.data)
         .done(function (data) {
             var n = data.getResUint32(0);
+            var events = [];
 
             for (var i = 0; i < n; ++i) {
                 evt_id = data.getResUint32(4 + i * 12);
@@ -877,10 +902,11 @@ SctpClient.prototype.event_emit = function () {
                 arg = data.getResUint32(12 + i * 12);
                 var func = self.events[evt_id];
 
+                events.push({evt_id: evt_id, addr: addr, arg: arg});
                 if (func)
                     func(addr, arg);
             }
-            dfd.resolve();
+            dfd.resolve(events);
         }).fail(function (data) {
         dfd.reject();
     });
@@ -896,7 +922,7 @@ SctpClient.prototype.get_statistics = function () {
 SctpClientCreate = function () {
     var dfd = jQuery.Deferred();
 
-    var sctp_client = new SctpClient();
+    var sctp_client = new SctpClient({onClose: alert.bind(undefined, "Websocket closed" )});
     sctp_client.connect('/sctp', function () {
         dfd.resolve(sctp_client);
     });
