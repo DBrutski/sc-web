@@ -386,14 +386,7 @@ SctpClient.prototype.connect = function (url, success) {
 };
 
 SctpClient.prototype._schedule_emit_event = function () {
-    if (this.event_timeout != 0) {
-        window.clearTimeout(this.event_timeout);
-        this.event_timeout = 0;
-    }
-
-    this.event_emit();
-
-    window.setTimeout(this._schedule_emit_event.bind(this), self.eventFrequency);
+    window.setInterval(this.event_emit.bind(this), this.eventFrequency);
 }
 
 SctpClient.prototype._push_task = function (task) {
