@@ -70,7 +70,7 @@ ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
     var dfd = new jQuery.Deferred();
     var self = this;
 
-    this.sctpClient.find_element_by_system_identifier(sysIdtf).done(function (res) {
+    this.sctpClient.find_element_by_system_identifier(sysIdtf).then(function (res) {
 
         console.log('Resolved keynode: ' + sysIdtf + ' = ' + res);
         if (property) {
@@ -80,7 +80,7 @@ ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
         }
 
         dfd.resolve(res);
-    }).fail(function () {
+    }, function () {
         dfd.reject();
         throw "Can't resolve keynode " + sysIdtf;
     });
@@ -101,9 +101,9 @@ ScKeynodes.prototype.resolveArrayOfKeynodes = function (sysIdtfs) {
     var self = this;
     let promises = sysIdtfs.map((val) => this._executeSysIdtf(val));
     $.when.apply($, promises
-    ).done(function () {
+    ).then(function () {
         dfd.resolve(self);
-    }).fail(function () {
+    }, function () {
         throw "Can't resolve keynode";
     });
 
