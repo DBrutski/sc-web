@@ -1,42 +1,42 @@
 // sc-element types
-var sc_type_node = 0x1
-var sc_type_link = 0x2
-var sc_type_edge_common = 0x4
-var sc_type_arc_common = 0x8
-var sc_type_arc_access = 0x10
+var sc_type_node = 0x1;
+var sc_type_link = 0x2;
+var sc_type_edge_common = 0x4;
+var sc_type_arc_common = 0x8;
+var sc_type_arc_access = 0x10;
 
 // sc-element constant
-var sc_type_const = 0x20
-var sc_type_var = 0x40
+var sc_type_const = 0x20;
+var sc_type_var = 0x40;
 
 // sc-element positivity
-var sc_type_arc_pos = 0x80
-var sc_type_arc_neg = 0x100
-var sc_type_arc_fuz = 0x200
+var sc_type_arc_pos = 0x80;
+var sc_type_arc_neg = 0x100;
+var sc_type_arc_fuz = 0x200;
 
 // sc-element premanently
-var sc_type_arc_temp = 0x400
-var sc_type_arc_perm = 0x800
+var sc_type_arc_temp = 0x400;
+var sc_type_arc_perm = 0x800;
 
 // struct node types
-var sc_type_node_tuple = (0x80)
-var sc_type_node_struct = (0x100)
-var sc_type_node_role = (0x200)
-var sc_type_node_norole = (0x400)
-var sc_type_node_class = (0x800)
-var sc_type_node_abstract = (0x1000)
-var sc_type_node_material = (0x2000)
+var sc_type_node_tuple = (0x80);
+var sc_type_node_struct = (0x100);
+var sc_type_node_role = (0x200);
+var sc_type_node_norole = (0x400);
+var sc_type_node_class = (0x800);
+var sc_type_node_abstract = (0x1000);
+var sc_type_node_material = (0x2000);
 
 
-var sc_type_arc_pos_const_perm = (sc_type_arc_access | sc_type_const | sc_type_arc_pos | sc_type_arc_perm)
+var sc_type_arc_pos_const_perm = (sc_type_arc_access | sc_type_const | sc_type_arc_pos | sc_type_arc_perm);
 
 // type mask
-var sc_type_element_mask = (sc_type_node | sc_type_link | sc_type_edge_common | sc_type_arc_common | sc_type_arc_access)
-var sc_type_constancy_mask = (sc_type_const | sc_type_var)
-var sc_type_positivity_mask = (sc_type_arc_pos | sc_type_arc_neg | sc_type_arc_fuz)
-var sc_type_permanency_mask = (sc_type_arc_perm | sc_type_arc_temp)
-var sc_type_node_struct_mask = (sc_type_node_tuple | sc_type_node_struct | sc_type_node_role | sc_type_node_norole | sc_type_node_class | sc_type_node_abstract | sc_type_node_material)
-var sc_type_arc_mask = (sc_type_arc_access | sc_type_arc_common | sc_type_edge_common)
+var sc_type_element_mask = (sc_type_node | sc_type_link | sc_type_edge_common | sc_type_arc_common | sc_type_arc_access);
+var sc_type_constancy_mask = (sc_type_const | sc_type_var);
+var sc_type_positivity_mask = (sc_type_arc_pos | sc_type_arc_neg | sc_type_arc_fuz);
+var sc_type_permanency_mask = (sc_type_arc_perm | sc_type_arc_temp);
+var sc_type_node_struct_mask = (sc_type_node_tuple | sc_type_node_struct | sc_type_node_role | sc_type_node_norole | sc_type_node_class | sc_type_node_abstract | sc_type_node_material);
+var sc_type_arc_mask = (sc_type_arc_access | sc_type_arc_common | sc_type_edge_common);
 
 var SctpCommandType = {
     SCTP_CMD_UNKNOWN: 0x00, // unkown command
@@ -69,7 +69,7 @@ var SctpResultCode = {
     SCTP_RESULT_OK: 0x00,
     SCTP_RESULT_FAIL: 0x01,
     SCTP_RESULT_ERROR_NO_ELEMENT: 0x02 // sc-element wasn't founded
-}
+};
 
 
 var SctpIteratorType = {
@@ -82,7 +82,7 @@ var SctpIteratorType = {
     SCTP_ITERATOR_5F_A_F_A_A: 6,
     SCTP_ITERATOR_5F_A_A_A_A: 7,
     SCTP_ITERATOR_5A_A_F_A_A: 8
-}
+};
 
 var SctpEventType = {
     SC_EVENT_UNKNOWN: -1,
@@ -91,7 +91,7 @@ var SctpEventType = {
     SC_EVENT_REMOVE_OUTPUT_ARC: 2,
     SC_EVENT_REMOVE_INPUT_ARC: 3,
     SC_EVENT_REMOVE_ELEMENT: 4
-}
+};
 
 
 function String2ArrayBuffer(string) {
@@ -119,11 +119,11 @@ sc_addr_from_id = function (sc_id) {
     var offset = parseInt(a[1]);
 
     return (offset << 16) | seg;
-}
+};
 
 sc_addr_to_id = function (addr) {
     return (addr & 0xFFFF).toString() + '_' + ((addr >> 16) & 0xFFFF).toString();
-}
+};
 
 sc_iterator_type_count = function (it) {
     if (it >= SctpIteratorType.SCTP_ITERATOR_3F_A_A && it <= SctpIteratorType.SCTP_ITERATOR_3F_A_F)
@@ -133,7 +133,7 @@ sc_iterator_type_count = function (it) {
         return 5;
 
     throw "Unknown iterator type";
-}
+};
 
 sc_iterator_params_size = function (it) {
     switch (it) {
@@ -158,7 +158,7 @@ sc_iterator_params_size = function (it) {
     ;
 
     throw "Unknown iterator type";
-}
+};
 
 sc_iteartor_fixed_count = function (it) {
     switch (it) {
@@ -179,11 +179,11 @@ sc_iteartor_fixed_count = function (it) {
     ;
 
     throw "Unknown iterator type";
-}
+};
 
 sc_iteartor_assign_count = function (it) {
     return sc_iterator_type_count(it) - sc_iteartor_fixed_count(it);
-}
+};
 
 sc_iterator_is_fixed_arg = function (it, pos) {
     if (pos >= sc_iterator_type_count(it))
@@ -217,7 +217,7 @@ sc_iterator_is_fixed_arg = function (it, pos) {
     ;
 
     return res;
-}
+};
 
 function SctpConstrIter(iterator_type, args, resMappings) {
     var i;
@@ -387,7 +387,7 @@ SctpClient.prototype.connect = function (url, success) {
 
 SctpClient.prototype._schedule_emit_event = function () {
     window.setInterval(this.event_emit.bind(this), this.eventFrequency);
-}
+};
 
 SctpClient.prototype._push_task = function (task) {
     this.task_queue.push(task);
@@ -400,7 +400,7 @@ SctpClient.prototype._push_task = function (task) {
 
             var result = new SctpResultBuffer(new DataView(e.data));
             if (result.getResultSize() != e.data.byteLength - result.getHeaderSize())
-                throw "Invalid data size " + l
+                throw "Invalid data size " + l;
 
             var r = result;
             var resCode = result.getResultCode();
@@ -417,12 +417,12 @@ SctpClient.prototype._push_task = function (task) {
                 t.dfd.reject();
 
             if (self.task_queue.length > 0)
-                self.task_timeout = window.setTimeout(process, this.task_frequency)
+                self.task_timeout = window.setTimeout(process, this.task_frequency);
             else {
                 window.clearTimeout(self.task_timeout);
                 self.task_timeout = 0;
             }
-        }
+        };
 
         self.socket.send(t.message);
     }

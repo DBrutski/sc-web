@@ -84,5 +84,5 @@ const KeyboardHandler = {
             callBack(d3_event);
         }
     }
-}
+};
 export default KeyboardHandler

@@ -12,7 +12,7 @@ export const CommandState = function (command_addr, command_args, format) {
     this.command_addr = command_addr;
     this.command_args = command_args || [];
     this.format = format;
-}
+};
 
 /**
  * Create new instance of component sandbox.
@@ -233,7 +233,7 @@ ComponentSandbox.prototype.updateAnswer = function () {
     }, this);
     return Main.getTranslatedAnswer(this.command_state)
         .then(performAnswer);
-}
+};
 
 
 /**

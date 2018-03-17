@@ -115,11 +115,11 @@ const Menu = {
                 var menu_item = {};
                 menu_item.action = function (e) {
                     Main.doCommand(item, args);
-                }
+                };
 
                 menu_item.text = item;
                 parentSubmenu.push(menu_item);
-            }
+            };
 
             var menu = [];
             for (i in data) {
@@ -135,7 +135,7 @@ const Menu = {
                         applyTranslation(item.subMenu[i], id, text);
                     }
                 }
-            }
+            };
 
             Server.resolveIdentifiers(data, function (namesMap) {
 

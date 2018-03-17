@@ -25,11 +25,11 @@ const SearchPanel = {
                             var list = data[key];
                             if (list) {
                                 for (idx in list) {
-                                    var value = list[idx]
+                                    var value = list[idx];
                                     keys.push({name: value[1], addr: value[0], group: key});
                                 }
                             }
-                        }
+                        };
 
                         addValues('sys');
                         addValues('main');

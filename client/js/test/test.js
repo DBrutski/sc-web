@@ -24,7 +24,7 @@ function _unit_test_sctp_common() {
 
 function _unit_test_sctp_links() {
     var link_tests = [56, -78, 34.565, -78.232, 'a', 'test', new String('test2')];
-    var link_types = ['int', 'int', 'float', 'float', 'string', 'string', 'string']
+    var link_types = ['int', 'int', 'float', 'float', 'string', 'string', 'string'];
     for (var i = 0; i < link_tests.length; ++i) {
         (function (v, t) {
             window.sctpClient.create_link().done(function (res) {
