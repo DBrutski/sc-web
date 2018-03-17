@@ -1,4 +1,12 @@
-SCWeb.ui.WindowManager = {
+import ArgumentsPanel from "./ArgumentsPanel";
+import CommandState from "../core/CommandState";
+import ComponentManager from "../core/ComponentManager";
+import EventManager from "../core/EventManager";
+import Main from "../core/Main";
+import OpenComponentHandler from "./OpenComponentHandler";
+import Server from "../core/Server";
+import Translation from "../core/Translation";
+const WindowManager = {
 
     // dictionary that contains information about windows corresponding to history items
     windows: [],
@@ -37,14 +45,14 @@ SCWeb.ui.WindowManager = {
         }
         $('#history-item-langs').html(ext_langs_items).find('[sc_addr]').click(function (event) {
 
-            if (SCWeb.ui.ArgumentsPanel.isArgumentAddState()) return;
+            if (ArgumentsPanel.isArgumentAddState()) return;
 
             var question_addr = self.active_history_addr;
             var lang_addr = $(this).attr('sc_addr');
 
-            var fmt_addr = SCWeb.core.ComponentManager.getPrimaryFormatForExtLang(lang_addr);
+            var fmt_addr = ComponentManager.getPrimaryFormatForExtLang(lang_addr);
             if (fmt_addr) {
-                var command_state = new SCWeb.core.CommandState(null, null, fmt_addr);
+                var command_state = new CommandState(null, null, fmt_addr);
                 var id = self.hash_addr(question_addr, command_state);
                 if (self.isWindowExist(id)) {
                     self.setWindowActive(id);
@@ -57,7 +65,7 @@ SCWeb.ui.WindowManager = {
         });
 
         $('#history-item-print').click(function () {
-            if (SCWeb.ui.ArgumentsPanel.isArgumentAddState()) return;
+            if (ArgumentsPanel.isArgumentAddState()) return;
 
             // get ctive window data
             var data = self.window_container.find("#" + self.active_window_id).html();
@@ -82,8 +90,8 @@ SCWeb.ui.WindowManager = {
         });
 
         // listen translation events
-        SCWeb.core.EventManager.subscribe("translation/update", this, this.updateTranslation);
-        SCWeb.core.EventManager.subscribe("translation/get", this, function (objects) {
+        EventManager.subscribe("translation/update", this, this.updateTranslation);
+        EventManager.subscribe("translation/get", this, function (objects) {
             $('#window-header-tools [sc_addr]').each(function (index, element) {
                 objects.push($(element).attr('sc_addr'));
             });
@@ -115,8 +123,8 @@ SCWeb.ui.WindowManager = {
         this.history_tabs.prepend(tab_html);
 
         // get translation and create window
-        var ext_lang_addr = SCWeb.core.Main.getDefaultExternalLang();
-        command_state.format = SCWeb.core.ComponentManager.getPrimaryFormatForExtLang(ext_lang_addr);
+        var ext_lang_addr = Main.getDefaultExternalLang();
+        command_state.format = ComponentManager.getPrimaryFormatForExtLang(ext_lang_addr);
         if (command_state.format) {
             var id = this.hash_addr(question_addr, command_state.format, command_state.command_args)
             if (this.isWindowExist(id)) {
@@ -138,7 +146,7 @@ SCWeb.ui.WindowManager = {
         });
 
         // translate added item
-        $.when(SCWeb.core.Translation.translate([question_addr])).done(function (namesMap) {
+        $.when(Translation.translate([question_addr])).done(function (namesMap) {
             value = namesMap[question_addr];
             if (value) {
                 $(self.history_tabs_id + " [sc_addr='" + question_addr + "']").text(value);
@@ -191,7 +199,7 @@ SCWeb.ui.WindowManager = {
             }
             sandbox = self.sandboxes[id];
             if (!sandbox) {
-                var sandbox = SCWeb.core.ComponentManager.createWindowSandboxByFormat({
+                var sandbox = ComponentManager.createWindowSandboxByFormat({
                     format_addr: command_state.format,
                     addr: addr,
                     is_struct: is_struct,
@@ -212,12 +220,12 @@ SCWeb.ui.WindowManager = {
         };
 
         var translated = function () {
-            SCWeb.core.Server.getAnswerTranslated(question_addr, command_state.format, function (d) {
+            Server.getAnswerTranslated(question_addr, command_state.format, function (d) {
                 f(d.link, false);
             });
         };
 
-        if (SCWeb.core.ComponentManager.isStructSupported(command_state.format)) {
+        if (ComponentManager.isStructSupported(command_state.format)) {
             // determine answer structure
             window.scHelper.getAnswer(question_addr).done(function (addr) {
                 f(addr, true);
@@ -254,7 +262,7 @@ SCWeb.ui.WindowManager = {
     showActiveWindow: function () {
         if (this.active_window_id)
             this.window_container.find("#" + this.active_window_id).removeClass('hidden');
-        SCWeb.ui.OpenComponentHandler.callOpenComponentCallback(this.active_window_id);
+        OpenComponentHandler.callOpenComponentCallback(this.active_window_id);
     },
 
     getActiveWindow: function (id) {
@@ -298,7 +306,7 @@ SCWeb.ui.WindowManager = {
         }
 
         (function (containers_map) {
-            SCWeb.core.Server.getLinksFormat(linkAddrs,
+            Server.getLinksFormat(linkAddrs,
                 function (formats) {
 
                     var result = {};
@@ -307,7 +315,7 @@ SCWeb.ui.WindowManager = {
                         var addr = containers_map[cntId];
                         var fmt = formats[addr];
                         if (fmt) {
-                            var sandbox = SCWeb.core.ComponentManager.createWindowSandboxByFormat({
+                            var sandbox = ComponentManager.createWindowSandboxByFormat({
                                 format_addr: fmt,
                                 addr: addr,
                                 is_struct: false,
@@ -341,7 +349,7 @@ SCWeb.ui.WindowManager = {
                 continue;
 
             var info = containers_map[cntId];
-            res[cntId] = SCWeb.core.ComponentManager.createWindowSandboxByExtLang({
+            res[cntId] = ComponentManager.createWindowSandboxByExtLang({
                 ext_lang_addr: info.ext_lang_addr,
                 addr: info.addr,
                 is_struct: true,
@@ -372,3 +380,4 @@ SCWeb.ui.WindowManager = {
 
     },
 };
+export default WindowManager

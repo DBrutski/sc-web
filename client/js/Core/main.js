@@ -1,8 +1,17 @@
+import Arguments from "./Arguments";
+import CommandState from "./CommandState";
+import ComponentManager from "./ComponentManager";
+import Core from "../ui/Core";
+import Locker from "../ui/Locker";
+import Server from "./Server";
+import TaskPanel from "../ui/TaskPanel";
+import Translation from "./Translation";
+import WindowManager from "../ui/WindowManager";
 var scHelper = null;
 var scKeynodes = null;
 
 
-SCWeb.core.Main = {
+const Main = {
 
     window_types: [],
     idtf_modes: [],
@@ -18,9 +27,9 @@ SCWeb.core.Main = {
         var dfd = new jQuery.Deferred();
 
         var self = this;
-        //SCWeb.ui.Locker.show();
+        //Locker.show();
 
-        SCWeb.core.Server._initialize();
+        Server._initialize();
         SctpClientCreate().done(function (client) {
 
             window.sctpClient = client;
@@ -33,19 +42,19 @@ SCWeb.core.Main = {
                     if (window._unit_tests)
                         window._unit_tests();
 
-                    $.when(SCWeb.ui.TaskPanel.init()).done(function () {
-                        SCWeb.core.Server.init(function (data) {
+                    $.when(TaskPanel.init()).done(function () {
+                        Server.init(function (data) {
                             self.menu_commands = data.menu_commands;
                             self.user = data.user;
 
                             data.menu_container_id = params.menu_container_id;
                             data.menu_container_eekb_id = params.menu_container_eekb_id;
 
-                            SCWeb.core.Translation.fireLanguageChanged(self.user.current_lang);
+                            Translation.fireLanguageChanged(self.user.current_lang);
 
-                            $.when(SCWeb.ui.Core.init(data),
-                                SCWeb.core.ComponentManager.init(),
-                                SCWeb.core.Translation.update()
+                            $.when(Core.init(data),
+                                ComponentManager.init(),
+                                Translation.update()
                             )
                                 .done(function () {
                                     dfd.resolve();
@@ -56,16 +65,16 @@ SCWeb.core.Main = {
                                         var question = url.searchObject['question'];
                                         if (question) {
                                             /// @todo Check question is realy a question
-                                            var commandState = new SCWeb.core.CommandState(question, null, null);
-                                            SCWeb.ui.WindowManager.appendHistoryItem(question, commandState);
+                                            var commandState = new CommandState(question, null, null);
+                                            WindowManager.appendHistoryItem(question, commandState);
                                             return;
                                         }
                                     }
 
-                                    SCWeb.core.Server.resolveScAddr(['ui_start_sc_element'], function (addrs) {
+                                    Server.resolveScAddr(['ui_start_sc_element'], function (addrs) {
 
                                         function start(a) {
-                                            SCWeb.core.Main.doDefaultCommand([a]);
+                                            Main.doDefaultCommand([a]);
                                             if (params.first_time)
                                                 $('#help-modal').modal({"keyboard": true});
                                         }
@@ -108,11 +117,11 @@ SCWeb.core.Main = {
      * @param {Array} cmd_args Array of sc-addrs with command arguments
      */
     doCommand: function (cmd_addr, cmd_args) {
-        SCWeb.core.Arguments.clear();
-        SCWeb.core.Server.doCommand(cmd_addr, cmd_args, function (result) {
+        Arguments.clear();
+        Server.doCommand(cmd_addr, cmd_args, function (result) {
             if (result.question != undefined) {
-                var commandState = new SCWeb.core.CommandState(cmd_addr, cmd_args);
-                SCWeb.ui.WindowManager.appendHistoryItem(result.question, commandState);
+                var commandState = new CommandState(cmd_addr, cmd_args);
+                WindowManager.appendHistoryItem(result.question, commandState);
             } else if (result.command != undefined) {
 
             } else {
@@ -123,7 +132,7 @@ SCWeb.core.Main = {
 
     doCommandWithPromise: function (command_state) {
         return new Promise(function (resolve, reject) {
-            SCWeb.core.Server.doCommand(command_state.command_addr, command_state.command_args, function (result) {
+            Server.doCommand(command_state.command_addr, command_state.command_args, function (result) {
                 if (result.question != undefined) {
                     resolve(result.question)
                 } else if (result.command != undefined) {
@@ -137,8 +146,8 @@ SCWeb.core.Main = {
 
     getTranslatedAnswer: function (command_state) {
         return new Promise(function (resolve, reject) {
-            SCWeb.core.Main.doCommandWithPromise(command_state).then(function (question_addr) {
-                SCWeb.core.Server.getAnswerTranslated(question_addr, command_state.format, function (answer) {
+            Main.doCommandWithPromise(command_state).then(function (question_addr) {
+                Server.getAnswerTranslated(question_addr, command_state.format, function (answer) {
                     resolve(answer.link);
                 })
             })
@@ -151,10 +160,10 @@ SCWeb.core.Main = {
      */
 
     doTextCommand: function (query) {
-        SCWeb.core.Server.textCommand(query, function (result) {
+        Server.textCommand(query, function (result) {
             if (result.question != undefined) {
-                var commandState = new SCWeb.core.CommandState(null, null, null);
-                SCWeb.ui.WindowManager.appendHistoryItem(result.question, commandState);
+                var commandState = new CommandState(null, null, null);
+                WindowManager.appendHistoryItem(result.question, commandState);
             } else if (result.command != undefined) {
 
             } else {
@@ -181,3 +190,4 @@ SCWeb.core.Main = {
 
 };
 
+export default Main

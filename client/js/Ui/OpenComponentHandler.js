@@ -1,4 +1,4 @@
-SCWeb.ui.OpenComponentHandler = {
+const OpenComponentHandler = {
 
     events: {},
 
@@ -16,3 +16,4 @@ SCWeb.ui.OpenComponentHandler = {
         }
     }
 };
+export default OpenComponentHandler

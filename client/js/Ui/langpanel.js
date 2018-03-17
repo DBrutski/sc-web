@@ -1,4 +1,8 @@
-SCWeb.ui.LanguagePanel = {
+import EventManager from "../core/EventManager";
+import Locker from "./Locker";
+import Server from "../core/Server";
+import Translation from "../core/Translation";
+const LanguagePanel = {
 
     /*!
      * Initialize settings panel.
@@ -21,18 +25,18 @@ SCWeb.ui.LanguagePanel = {
         $('#language-select').html(html)
             .val(params.user.current_lang)
             .change(function () {
-                SCWeb.ui.Locker.show();
+                Locker.show();
                 var addr = $('#language-select option:selected').attr("sc_addr");
                 $('#language-select').attr('disabled', true);
-                SCWeb.core.Translation.setLanguage(addr, function () {
+                Translation.setLanguage(addr, function () {
                     $('#language-select').removeAttr('disabled', true);
-                    SCWeb.ui.Locker.hide();
+                    Locker.hide();
                 });
             });
 
         // listen translation events
-        SCWeb.core.EventManager.subscribe("translation/update", this, this.updateTranslation);
-        SCWeb.core.EventManager.subscribe("translation/get", this, function (objects) {
+        EventManager.subscribe("translation/update", this, this.updateTranslation);
+        EventManager.subscribe("translation/get", this, function (objects) {
             $('#language-select [sc_addr]').each(function (index, element) {
                 objects.push($(element).attr('sc_addr'));
             });
@@ -58,11 +62,12 @@ SCWeb.ui.LanguagePanel = {
 
     updateSearchInput: function () {
         var keynodes = ['ui_control_search'];
-        SCWeb.core.Server.resolveScAddr(keynodes, function (keynodes) {
-            SCWeb.core.Server.resolveIdentifiers(keynodes, function (idf) {
+        Server.resolveScAddr(keynodes, function (keynodes) {
+            Server.resolveIdentifiers(keynodes, function (idf) {
                 $("#search-input").attr('placeholder', idf[keynodes['ui_control_search']]);
             });
         })
     }
 
 };
+export default LanguagePanel

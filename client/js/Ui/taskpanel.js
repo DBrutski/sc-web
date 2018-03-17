@@ -1,4 +1,6 @@
-SCWeb.ui.TaskPanel = {
+import Locker from "./Locker";
+import Server from "../core/Server";
+const TaskPanel = {
     _container: '#task_panel',
     _text_container: '#task_num',
     _task_num: 0,
@@ -6,7 +8,7 @@ SCWeb.ui.TaskPanel = {
     init: function (callback) {
         var dfd = new jQuery.Deferred();
 
-        SCWeb.core.Server.appendListener(this);
+        Server.appendListener(this);
         dfd.resolve();
 
         return dfd.promise();
@@ -31,12 +33,13 @@ SCWeb.ui.TaskPanel = {
     taskStarted: function () {
         this._task_num++;
         this.updatePanel();
-        //SCWeb.ui.Locker.show();
+        //Locker.show();
     },
 
     taskFinished: function () {
         this._task_num--;
         this.updatePanel();
-        //SCWeb.ui.Locker.hide();
+        //Locker.hide();
     }
 };
+export default TaskPanel

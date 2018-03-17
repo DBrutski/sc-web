@@ -1,4 +1,8 @@
-SCWeb.ui.Menu = {
+import Arguments from "../core/Arguments";
+import EventManager from "../core/EventManager";
+import Main from "../core/Main";
+import Server from "../core/Server";
+const Menu = {
     _items: null,
 
     /*!
@@ -15,13 +19,13 @@ SCWeb.ui.Menu = {
         this.menu_container_id = '#' + params.menu_container_id;
 
         // register for translation updates
-        SCWeb.core.EventManager.subscribe("translation/get", this, function (objects) {
+        EventManager.subscribe("translation/get", this, function (objects) {
             var items = self.getObjectsToTranslate();
             for (var i in items) {
                 objects.push(items[i]);
             }
         });
-        SCWeb.core.EventManager.subscribe("translation/update", this, function (names) {
+        EventManager.subscribe("translation/update", this, function (names) {
             self.updateTranslation(names);
         });
 
@@ -90,9 +94,9 @@ SCWeb.ui.Menu = {
         $('.menu-item').click(function () {
             var sc_addr = $(this).attr('sc_addr');
             if ($(this).hasClass('menu-cmd-atom')) {
-                SCWeb.core.Main.doCommand(sc_addr, SCWeb.core.Arguments._arguments);
+                SCWeb.core.Main.doCommand(sc_addr, Arguments._arguments);
             } else if ($(this).hasClass('menu-cmd-keynode')) {
-                SCWeb.core.Main.doDefaultCommand([sc_addr]);
+                Main.doDefaultCommand([sc_addr]);
             }
         });
     },
@@ -103,14 +107,14 @@ SCWeb.ui.Menu = {
 
     _contextMenu: function (target) {
         var dfd = new jQuery.Deferred();
-        var args = SCWeb.core.Arguments._arguments.slice();
+        var args = Arguments._arguments.slice();
         args.push(target.attr('sc_addr'));
-        SCWeb.core.Server.contextMenu(args, function (data) {
+        Server.contextMenu(args, function (data) {
 
             var parseMenuItem = function (item, parentSubmenu) {
                 var menu_item = {};
                 menu_item.action = function (e) {
-                    SCWeb.core.Main.doCommand(item, args);
+                    Main.doCommand(item, args);
                 }
 
                 menu_item.text = item;
@@ -133,7 +137,7 @@ SCWeb.ui.Menu = {
                 }
             }
 
-            SCWeb.core.Server.resolveIdentifiers(data, function (namesMap) {
+            Server.resolveIdentifiers(data, function (namesMap) {
 
                 for (var itemId in namesMap) {
                     if (namesMap.hasOwnProperty(itemId)) {
@@ -155,7 +159,7 @@ SCWeb.ui.Menu = {
                 menu.unshift({
                     text: '<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>',
                     action: function (e) {
-                        SCWeb.core.Arguments.appendArgument(target.attr('sc_addr'));
+                        Arguments.appendArgument(target.attr('sc_addr'));
                     }
                 });
 
@@ -185,3 +189,4 @@ SCWeb.ui.Menu = {
         return this._items;
     }
 };
+export default Menu

@@ -1,3 +1,4 @@
+import Server from "../core/Server";
 ScHelper = function (sctpClient) {
     this.sctpClient = sctpClient;
 };
@@ -82,7 +83,7 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
     function resolveSysIdtfs(scAddrs) {
         // there're no API message wich returns only sys-addr (resolveIdtf resolves sys-addr only if main is'not exists)
         return new Promise((resolve) => {
-            //  SCWeb.core.Server.resolveIdentifiers(scAddrs, resolve);
+            //  Server.resolveIdentifiers(scAddrs, resolve);
             resolve(scAddrs.map(window.scKeynodes.getSysIdtfByAddress.bind(window.scKeynodes)).filter(key =>
                 key));
         });

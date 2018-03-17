@@ -1,9 +1,13 @@
-SCWeb.core.ComponentType = {
+import ComponentSandbox from "./ComponentSandbox";
+import KeyboardHandler from "../ui/KeyboardHandler";
+import OpenComponentHandler from "../ui/OpenComponentHandler";
+import Server from "./Server";
+const ComponentType = {
     viewer: 0,
     editor: 1
 };
 
-SCWeb.core.ComponentManager = {
+const ComponentManager = {
 
     _listener: null,
     _initialize_queue: [],
@@ -32,7 +36,7 @@ SCWeb.core.ComponentManager = {
         }
 
         var self = this;
-        SCWeb.core.Server.resolveScAddr(keynodes, function (addrs) {
+        Server.resolveScAddr(keynodes, function (addrs) {
 
             self._keynodes = addrs;
             for (var i = 0; i < self._initialize_queue.length; i++) {
@@ -71,7 +75,7 @@ SCWeb.core.ComponentManager = {
      * Append new component initialize function
      * @param {Object} component_desc Object that define component. It contains such properties as:
      * - formats - Array of system identifiers of supported formats
-     * - factory - factory function (@see SCWeb.core.ComponentManager.registerFactory)
+     * - factory - factory function (@see ComponentManager.registerFactory)
      */
     appendComponentInitialize: function (component_def) {
         this._initialize_queue.push(component_def);
@@ -115,7 +119,7 @@ SCWeb.core.ComponentManager = {
         var comp_def = this._factories_fmt[options.format_addr];
 
         if (comp_def) {
-            var sandbox = new SCWeb.core.ComponentSandbox({
+            var sandbox = new ComponentSandbox({
                 container: options.container,
                 window_id: options.window_id,
                 addr: options.addr,
@@ -131,10 +135,10 @@ SCWeb.core.ComponentManager = {
             var component = comp_def.factory(sandbox);
             if (component.editor) {
                 if (component.editor.keyboardCallbacks) {
-                    SCWeb.ui.KeyboardHandler.subscribeWindow(options.window_id, component.editor.keyboardCallbacks);
+                    KeyboardHandler.subscribeWindow(options.window_id, component.editor.keyboardCallbacks);
                 }
                 if (component.editor.openComponentCallbacks) {
-                    SCWeb.ui.OpenComponentHandler.subscribeComponent(options.window_id, component.editor.openComponentCallbacks);
+                    OpenComponentHandler.subscribeComponent(options.window_id, component.editor.openComponentCallbacks);
                 }
             }
             if (component) {
@@ -166,7 +170,7 @@ SCWeb.core.ComponentManager = {
 
         if (comp_def) {
 
-            var sandbox = new SCWeb.core.ComponentSandbox({
+            var sandbox = new ComponentSandbox({
                 container: options.container,
                 addr: options.addr,
                 is_struct: options.is_struct,
@@ -243,3 +247,5 @@ SCWeb.core.ComponentManager = {
         }
     }
 };
+export default ComponentManager
+export default ComponentType

@@ -1,4 +1,4 @@
-SCWeb.core.EventManager = {
+const EventManager = {
 
     events: {},
 
@@ -59,3 +59,4 @@ SCWeb.core.EventManager = {
         }
     }
 };
+export default EventManager

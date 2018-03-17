@@ -1,4 +1,4 @@
-SCWeb.ui.Locker = {
+const Locker = {
     counter: 0,
 
     update: function () {
@@ -21,3 +21,4 @@ SCWeb.ui.Locker = {
         this.update();
     }
 };
+export default Locker

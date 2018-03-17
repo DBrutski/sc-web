@@ -1,7 +1,8 @@
+import WindowManager from "./WindowManager";
 /**
  * Created by rizhi-kote on 24.4.16.
  */
-SCWeb.ui.KeyboardHandler = {
+const KeyboardHandler = {
 
     events: {},
 
@@ -75,7 +76,7 @@ SCWeb.ui.KeyboardHandler = {
      * First param - is an event name. Other parameters will be passed into callback
      */
     emit: function (eventType, d3_event) {
-        var windowId = SCWeb.ui.WindowManager.getActiveWindowId();
+        var windowId = WindowManager.getActiveWindowId();
         if (!this.events[eventType] || !this.events[eventType][windowId])
             return;
         var callBack = this.events[eventType][windowId].func;
@@ -84,3 +85,4 @@ SCWeb.ui.KeyboardHandler = {
         }
     }
 }
+export default KeyboardHandler

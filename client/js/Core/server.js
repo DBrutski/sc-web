@@ -1,4 +1,5 @@
-SCWeb.core.Server = {
+import EventManager from "./EventManager";
+const Server = {
     _semanticNeighborhood: {
         commandId: 'ui_menu_view_full_semantic_neighborhood',
         commandAddr: null
@@ -27,8 +28,8 @@ SCWeb.core.Server = {
             max: 3000
         });
 
-        SCWeb.core.EventManager.subscribe("translation/changed_language", this, function(lang_addr) {
-            SCWeb.core.Server._current_language = parseInt(lang_addr);
+        EventManager.subscribe("translation/changed_language", this, function(lang_addr) {
+const Server._current_language = parseInt(lang_addr);
         });
     },
 
@@ -103,7 +104,7 @@ SCWeb.core.Server = {
                         success: task.success,
                         error: task.error,
                         complete: function() {
-                            SCWeb.core.Server._fireTaskFinished();
+                            Server._fireTaskFinished();
                             self._task_active_num--;
                         }
                     });
@@ -523,3 +524,4 @@ SCWeb.core.Server = {
         });
     }
 };
+export default Server

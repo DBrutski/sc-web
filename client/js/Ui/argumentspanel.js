@@ -1,4 +1,7 @@
-SCWeb.ui.ArgumentsPanel = {
+import Arguments from "../core/Arguments";
+import EventManager from "../core/EventManager";
+import Translation from "../core/Translation";
+const ArgumentsPanel = {
     _container: '#arguments_buttons',
 
     init: function() {
@@ -7,14 +10,14 @@ SCWeb.ui.ArgumentsPanel = {
 
         var self = this;
         // listen events from arguments
-        SCWeb.core.EventManager.subscribe("arguments/add", this, this.onArgumentAppended);
-        SCWeb.core.EventManager.subscribe("arguments/remove", this, this.onArgumentRemoved);
-        SCWeb.core.EventManager.subscribe("arguments/clear", this, this.onArgumentsCleared);
+        EventManager.subscribe("arguments/add", this, this.onArgumentAppended);
+        EventManager.subscribe("arguments/remove", this, this.onArgumentRemoved);
+        EventManager.subscribe("arguments/clear", this, this.onArgumentsCleared);
 
 
         // listen events from translation
-        SCWeb.core.EventManager.subscribe("translation/update", this, this.updateTranslation);
-        SCWeb.core.EventManager.subscribe("translation/get", this, function(objects) {
+        EventManager.subscribe("translation/update", this, this.updateTranslation);
+        EventManager.subscribe("translation/get", this, function(objects) {
             var items = self.getObjectsToTranslate();
             for (var i in items) {
                 objects.push(items[i]);
@@ -24,7 +27,7 @@ SCWeb.ui.ArgumentsPanel = {
         $('#arguments_clear_button').click(function() {
             if (self.isArgumentAddState())
                 return;
-            SCWeb.core.Arguments.clear();
+            Arguments.clear();
         });
         $('#arguments_add_button').click(function() {
             self.argument_add_state = !self.argument_add_state;
@@ -33,7 +36,7 @@ SCWeb.ui.ArgumentsPanel = {
 
         $(document).on("click", ".argument-item", function(event) {
             var idx = $(this).attr('arg_idx');
-            SCWeb.core.Arguments.removeArgumentByIndex(parseInt(idx));
+            Arguments.removeArgumentByIndex(parseInt(idx));
         });
 
         dfd.resolve();
@@ -78,7 +81,7 @@ SCWeb.ui.ArgumentsPanel = {
         $(this._container).append(new_button);
 
         // translate added argument
-        $.when(SCWeb.core.Translation.translate([argument])).done(function(namesMap) {
+        $.when(Translation.translate([argument])).done(function(namesMap) {
 
             var value = argument;
             if (namesMap[argument]) {
@@ -127,7 +130,8 @@ SCWeb.ui.ArgumentsPanel = {
 
     getObjectsToTranslate: function() {
 
-        return SCWeb.core.Arguments._arguments;
+        return Arguments._arguments;
     }
 
 };
+export default ArgumentsPanel

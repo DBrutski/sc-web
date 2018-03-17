@@ -1,3 +1,4 @@
+import EventManager from "./EventManager";
 /**
  * Object controls list of command parameters.
  * It can fires next events:
@@ -11,7 +12,7 @@
  *        - idx - is an index of the argument
  * - "arguments/clear" - this event emits on arguments clear (all arguments removed at once)
  */
-SCWeb.core.Arguments = {
+const Arguments = {
 
     _arguments: [],
 
@@ -85,7 +86,7 @@ SCWeb.core.Arguments = {
      */
     _fireArgumentAppended: function (argument, idx) {
 
-        SCWeb.core.EventManager.emit("arguments/add", argument, idx);
+        EventManager.emit("arguments/add", argument, idx);
     },
 
     /**
@@ -98,7 +99,7 @@ SCWeb.core.Arguments = {
      */
     _fireArgumentRemoved: function (argument, idx) {
 
-        SCWeb.core.EventManager.emit("arguments/remove", argument, idx);
+        EventManager.emit("arguments/remove", argument, idx);
     },
 
     /**
@@ -106,7 +107,7 @@ SCWeb.core.Arguments = {
      */
     _fireArgumentCleared: function () {
 
-        SCWeb.core.EventManager.emit("arguments/clear");
+        EventManager.emit("arguments/clear");
     },
 
     /**
@@ -120,3 +121,4 @@ SCWeb.core.Arguments = {
     }
 
 };
+export default Arguments

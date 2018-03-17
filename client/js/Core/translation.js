@@ -1,3 +1,5 @@
+import EventManager from "./EventManager";
+import Server from "./Server";
 /**
  * This object conrols available modes for natural languages (russina, english ant etc.)
  * It can fires next events:
@@ -7,7 +9,7 @@
  * - "translation/change_language_start" - this event emits on language change start. Parameter: empty
  * (this array couldn't be cleared, listener just append new elements).
  */
-SCWeb.core.Translation = {
+const Translation = {
 
     listeners: [],
     current_lang: null,
@@ -49,7 +51,7 @@ SCWeb.core.Translation = {
         var dfd = new jQuery.Deferred();
 
         var self = this;
-        SCWeb.core.Server.resolveIdentifiers(objects, function (namesMap) {
+        Server.resolveIdentifiers(objects, function (namesMap) {
             dfd.resolve(namesMap);
         });
 
@@ -62,7 +64,7 @@ SCWeb.core.Translation = {
      */
     setLanguage: function (lang_addr, callback) {
         var self = this;
-        SCWeb.core.Server.setLanguage(lang_addr, function () {
+        Server.setLanguage(lang_addr, function () {
             self.fireLanguageChanged(lang_addr);
             $.when(self.translate(self.collectObjects())).done(function (namesMap) {
                 self.fireUpdate(namesMap);
@@ -76,11 +78,11 @@ SCWeb.core.Translation = {
      */
     fireUpdate: function (namesMap) {
         // notify listeners for new translations
-        SCWeb.core.EventManager.emit("translation/update", namesMap);
+        EventManager.emit("translation/update", namesMap);
     },
 
     fireLanguageChanged: function (lang_addr) {
-        SCWeb.core.EventManager.emit("translation/changed_language", lang_addr);
+        EventManager.emit("translation/changed_language", lang_addr);
         this.current_lang = lang_addr;
     },
 
@@ -88,7 +90,7 @@ SCWeb.core.Translation = {
      */
     collectObjects: function () {
         var objects = [];
-        SCWeb.core.EventManager.emit("translation/get", objects);
+        EventManager.emit("translation/get", objects);
         return objects;
     },
 
@@ -103,3 +105,4 @@ SCWeb.core.Translation = {
     }
 
 };
+export default Translation

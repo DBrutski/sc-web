@@ -1,4 +1,5 @@
-SCWeb.ui.UserPanel = {
+import EventManager from "../core/EventManager";
+const UserPanel = {
 
     /*!
      * Initialize user panel.
@@ -23,8 +24,8 @@ SCWeb.ui.UserPanel = {
         }
 
         // listen translation events
-        SCWeb.core.EventManager.subscribe("translation/update", this, this.updateTranslation);
-        SCWeb.core.EventManager.subscribe("translation/get", this, function (objects) {
+        EventManager.subscribe("translation/update", this, this.updateTranslation);
+        EventManager.subscribe("translation/get", this, function (objects) {
             $('#auth-user-panel [sc_addr]').each(function (index, element) {
                 objects.push($(element).attr('sc_addr'));
             });
@@ -48,3 +49,4 @@ SCWeb.ui.UserPanel = {
 
 
 };
+export default UserPanel

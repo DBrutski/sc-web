@@ -1,3 +1,7 @@
+import Arguments from "../core/Arguments";
+import EventManager from "../core/EventManager";
+import Main from "../core/Main";
+import Server from "../core/Server";
 function restoreScListOrder(scList) {
     if (!Array.isArray(scList)) throw Error('not array');
     let childToPrevious = {};
@@ -65,10 +69,10 @@ function restoreCommandsOrder(commands, namesMap) {
 let panel;
 
 function EekbPanel() {
-    let EventManager = SCWeb.core.EventManager;
-    let Main = SCWeb.core.Main;
-    let Arguments = SCWeb.core.Arguments;
-    let Server = SCWeb.core.Server;
+    let EventManager = EventManager;
+    let Main = Main;
+    let Arguments = Arguments;
+    let Server = Server;
     let state = {};
     let _items = [];
     let menu_container_eekb_id;

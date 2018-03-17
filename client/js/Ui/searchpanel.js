@@ -1,4 +1,6 @@
-SCWeb.ui.SearchPanel = {
+import Main from "../core/Main";
+import Server from "../core/Server";
+const SearchPanel = {
 
     init: function () {
         var dfd = new jQuery.Deferred();
@@ -16,7 +18,7 @@ SCWeb.ui.SearchPanel = {
                 name: 'idtf',
                 source: function (query, cb) {
                     $('#search-input').addClass('search-processing');
-                    SCWeb.core.Server.findIdentifiersSubStr(query, function (data) {
+                    Server.findIdentifiersSubStr(query, function (data) {
                         keys = [];
 
                         var addValues = function (key) {
@@ -58,18 +60,18 @@ SCWeb.ui.SearchPanel = {
             }
         ).bind('typeahead:selected', function (evt, item, dataset) {
             if (item && item.addr) {
-                SCWeb.core.Main.doDefaultCommand([item.addr]);
+                Main.doDefaultCommand([item.addr]);
             }
             evt.stopPropagation();
             $('.typeahead').val('');
         }).keypress(function (event) {
             if (event.which == 13) {
-                SCWeb.core.Main.doTextCommand($(this).val());
+                Main.doTextCommand($(this).val());
                 $('#search-input').val('');
             }
         });
 
-        SCWeb.core.Server.resolveScAddr(['nrel_main_idtf', 'nrel_idtf', 'nrel_system_identifier'], function (addrs) {
+        Server.resolveScAddr(['nrel_main_idtf', 'nrel_idtf', 'nrel_system_identifier'], function (addrs) {
             keynode_nrel_main_idtf = addrs['nrel_main_idtf'];
             keynode_nrel_idtf = addrs['nrel_idtf'];
             keynode_nrel_system_idtf = addrs['nrel_system_identifier'];
@@ -81,3 +83,4 @@ SCWeb.ui.SearchPanel = {
     },
 
 };
+export default SearchPanel

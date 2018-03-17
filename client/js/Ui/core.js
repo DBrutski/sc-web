@@ -1,4 +1,13 @@
-SCWeb.ui.Core = {
+import Arguments from "../core/Arguments";
+import ArgumentsPanel from "./ArgumentsPanel";
+import LanguagePanel from "./LanguagePanel";
+import Main from "../core/Main";
+import Menu from "./Menu";
+import SearchPanel from "./SearchPanel";
+import Server from "../core/Server";
+import UserPanel from "./UserPanel";
+import WindowManager from "./WindowManager";
+const Core = {
 
     init: function(data, callback) {
         var self = this;
@@ -21,31 +30,31 @@ SCWeb.ui.Core = {
             }
         }
 
-        $.when(SCWeb.ui.Menu.init(data),
-            SCWeb.ui.ArgumentsPanel.init(),
-            SCWeb.ui.UserPanel.init(data),
-            SCWeb.ui.LanguagePanel.init(data),
-            SCWeb.ui.WindowManager.init(data),
-            SCWeb.ui.SearchPanel.init(),
+        $.when(Menu.init(data),
+            ArgumentsPanel.init(),
+            UserPanel.init(data),
+            LanguagePanel.init(data),
+            WindowManager.init(data),
+            SearchPanel.init(),
             new EekbPanel().init(data),
-            SCWeb.ui.KeyboardHandler.init(SCWeb.ui.WindowManager),
+            SCWeb.ui.KeyboardHandler.init(WindowManager),
             self.resolveElementsAddr('body')
         ).done(function() {
 
             // listen clicks on sc-elements
             var sc_elements_cmd_selector = '[sc_addr]:not(.sc-window, .sc-no-default-cmd)';
             $('#window-container,#help-modal').delegate(sc_elements_cmd_selector, 'click', function(e) {
-                if (!SCWeb.ui.ArgumentsPanel.isArgumentAddState()) {
-                    SCWeb.core.Main.doDefaultCommand([$(e.currentTarget).attr('sc_addr')]);
+                if (!ArgumentsPanel.isArgumentAddState()) {
+                    Main.doDefaultCommand([$(e.currentTarget).attr('sc_addr')]);
                     e.stopPropagation();
                 }
             });
 
             var sc_elements_arg_selector = '[sc_addr]:not(.sc-window)';
             $('body').delegate(sc_elements_arg_selector, 'click', function(e) {
-                if (SCWeb.ui.ArgumentsPanel.isArgumentAddState() && !$(e.currentTarget).hasClass(
+                if (ArgumentsPanel.isArgumentAddState() && !$(e.currentTarget).hasClass(
                         'not-argument')) {
-                    SCWeb.core.Arguments.appendArgument($(this).attr('sc_addr'));
+                    Arguments.appendArgument($(this).attr('sc_addr'));
                     e.stopPropagation();
                 }
             });
@@ -61,7 +70,7 @@ SCWeb.ui.Core = {
                         self.tooltip_interval = null;
                         var addr = self.tooltip_element.attr('sc_addr');
                         if (addr) {
-                            SCWeb.core.Server.resolveIdentifiers([addr], function(idf) {
+                            Server.resolveIdentifiers([addr], function(idf) {
                                 if (self.tooltip_element) { // check mouseout destroy
                                     self.tooltip_element.tooltip({
                                         placement: 'auto',
@@ -86,13 +95,13 @@ SCWeb.ui.Core = {
                 if (body.hasClass('modal-empty')) {
                     body.addClass('loading');
                     // try to find content
-                    SCWeb.core.Server.resolveScAddr(['ui_start_help'], function(addrs) {
+                    Server.resolveScAddr(['ui_start_help'], function(addrs) {
                         var a = addrs['ui_start_help'];
                         if (a) {
                             body.html(
                                 '<div id="help-modal-content" class="sc-window" sc_addr="' +
                                 a + '"> </div>');
-                            $.when(SCWeb.ui.WindowManager.createViewersForScLinks({
+                            $.when(WindowManager.createViewersForScLinks({
                                     'help-modal-content': a
                                 }))
                                 .done(function() {
@@ -130,7 +139,7 @@ SCWeb.ui.Core = {
             elements.push($(this));
         });
 
-        SCWeb.core.Server.resolveScAddr(identifiers, function(addrs) {
+        Server.resolveScAddr(identifiers, function(addrs) {
             for (e in elements) {
                 var el = elements[e];
                 var addr = addrs[el.attr(attr_name)];
@@ -146,3 +155,4 @@ SCWeb.ui.Core = {
         return dfd.promise();
     }
 };
+export default Core
