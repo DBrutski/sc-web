@@ -1,9 +1,9 @@
 import * as jQuery from "jquery";
 import "./ScTypes";
 
-import {SctpConstrIter, SctpIteratorType} from "./sctp";
+import {SctpConstrIter, SctpEventType, SctpIteratorType} from "./sctp";
 
-export default function ScHelper (sctpClient) {
+export default function ScHelper(sctpClient) {
     this.sctpClient = sctpClient;
 };
 
@@ -187,7 +187,7 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
 
     let start = performance.now();
     parseCommand(menuAddr).then((result) => dfd.resolve(result))
-        .then(()=>console.log("Load menu in: ", performance.now() - start, "ms"));
+        .then(() => console.log("Load menu in: ", performance.now() - start, "ms"));
     return dfd.promise();
 }
 ;
@@ -215,50 +215,33 @@ ScHelper.prototype.getOutputLanguages = function () {
  */
 ScHelper.prototype.getAnswer = function (question_addr) {
     const dfd = new jQuery.Deferred();
+    const self = this;
 
-    (function (_question_addr, _self, _dfd) {
-        const fn = this;
-
-        this.timer = window.setTimeout(function () {
-            _dfd.reject();
-
-            window.clearTimeout(fn.timer);
-            delete fn.timer;
-
-            if (fn.event_id) {
-                _self.sctpClient.event_destroy(fn.event_id);
-                delete fn.event_id;
-            }
-        }, 10000);
-
-        _self.sctpClient.event_create(SctpEventType.SC_EVENT_ADD_OUTPUT_ARC, _question_addr, function (addr, arg) {
-            _self.checkEdge(window.scKeynodes['nrel_answer'], sc_type_arc_pos_const_perm, arg).done(
-                function () {
-                    _self.sctpClient.get_arc(arg).done(function (res) {
-                        _dfd.resolve(res[1]);
-                    }).fail(function () {
-                        _dfd.reject();
-                    });
+    self.sctpClient.event_create(SctpEventType.SC_EVENT_ADD_OUTPUT_ARC, question_addr, function (addr, arg) {
+        self.checkEdge(window.scKeynodes['nrel_answer'], sc_type_arc_pos_const_perm, arg).done(
+            function () {
+                self.sctpClient.get_arc(arg).done(function (res) {
+                    dfd.resolve(res[1]);
+                }).fail(function () {
+                    dfd.reject();
                 });
-        }).done(function (res) {
-            fn.event_id = res;
-            _self.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F, [
-                _question_addr,
-                sc_type_arc_common | sc_type_const,
-                sc_type_node, /// @todo possible need node struct
-                sc_type_arc_pos_const_perm,
-                window.scKeynodes['nrel_answer']
-            ])
-                .done(function (it) {
-                    _self.sctpClient.event_destroy(fn.event_id).fail(function () {
-                        /// @todo process fail
-                    });
-                    _dfd.resolve(it[0][2]);
-
-                    window.clearTimeout(fn.timer);
+            });
+    }).done(function (res) {
+        self.event_id = res;
+        self.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F, [
+            question_addr,
+            sc_type_arc_common | sc_type_const,
+            sc_type_node, /// @todo possible need node struct
+            sc_type_arc_pos_const_perm,
+            window.scKeynodes['nrel_answer']
+        ])
+            .done(function (it) {
+                self.sctpClient.event_destroy(self.event_id).fail(function () {
+                    /// @todo process fail
                 });
-        });
-    })(question_addr, this, dfd);
+                dfd.resolve(it[0][2]);
+            });
+    });
 
 
     return dfd.promise();

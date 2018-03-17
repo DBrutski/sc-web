@@ -1,6 +1,6 @@
 import EventManager from "../Core/EventManager";
 import * as jQuery from "jquery";
-const UserPanel = {
+export const UserPanel = {
 
     /*!
      * Initialize user panel.

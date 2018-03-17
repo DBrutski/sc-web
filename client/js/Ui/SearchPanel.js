@@ -1,7 +1,7 @@
 import Main from "../Core/Main";
 import Server from "../Core/Server";
 import * as jQuery from "jquery";
-const SearchPanel = {
+export const SearchPanel = {
 
     init: function () {
         const dfd = new jQuery.Deferred();

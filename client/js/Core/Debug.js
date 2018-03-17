@@ -1,10 +1,10 @@
-const ErrorCode = {
+export const ErrorCode = {
     Unknown: 0,
     ItemNotFound: 1,
     ItemAlreadyExists: 2
 };
 
-const Debug = {
+export const Debug = {
 
     code_map: {
         0: "Unknown",
@@ -26,5 +26,4 @@ const Debug = {
         console.log("Error: " + this.codeToText(code) + ". " + message);
     }
 };
-export default Debug
-export default ErrorCode
+export default Debug;

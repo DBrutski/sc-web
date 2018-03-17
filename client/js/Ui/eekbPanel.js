@@ -6,7 +6,7 @@ import ContextSwitcher from "./ContextSwitcher";
 import "bootstrap-treeview/dist/bootstrap-treeview.min";
 import "bootstrap-treeview/dist/bootstrap-treeview.min.css";
 
-function restoreScListOrder(scList) {
+export function restoreScListOrder(scList) {
     if (!Array.isArray(scList)) throw Error('not array');
     let childToPrevious = {};
     let lastChild;

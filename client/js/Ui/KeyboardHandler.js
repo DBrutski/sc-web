@@ -1,6 +1,6 @@
 import WindowManager from "./WindowManager";
 
-const KeyboardHandler = {
+export const KeyboardHandler = {
 
     events: {},
 

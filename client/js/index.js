@@ -1,20 +1,13 @@
-import $ from "jquery";
-import Locker from "./Ui/Locker";
-import Main from "./Core/Main";
-import "../css/core.css";
+import "./startup";
 
-$(document).ready(function() {
+import * as Core from "./Core/index";
+import * as Ui from "./Utils/index";
+import * as Utils from  "./Utils/index";
+export const core = Core;
+export const ui = Ui;
+export const utils = Utils;
 
-    $('#windows-list').click(function () {
-        $('#static-window-container').toggle();
-    });
+import * as sctp from "./Utils/sctp"
 
-    Locker.show();
-    const params = {
-        menu_container_id: 'menu_container',
-        menu_container_eekb_id: 'menu_container_eekb'
-    };
-    $.when(Main.init(params)).done(function() {
-        Locker.hide();
-    });
-});
+Object.assign(window, sctp);
+

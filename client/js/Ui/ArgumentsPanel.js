@@ -2,7 +2,7 @@ import Arguments from "../Core/Arguments";
 import EventManager from "../Core/EventManager";
 import Translation from "../Core/Translation";
 import * as jQuery from "jquery";
-const ArgumentsPanel = {
+export const ArgumentsPanel = {
     _container: '#arguments_buttons',
 
     init: function() {

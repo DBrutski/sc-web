@@ -11,7 +11,7 @@ import EekbPanel from "./eekbPanel"
 import KeyboardHandler from "./KeyboardHandler";
 import * as jQuery from "jquery";
 
-const Core = {
+export const Core = {
 
     init: function(data, callback) {
         const self = this;

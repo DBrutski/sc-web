@@ -9,7 +9,7 @@ export const ComponentType = {
     editor: 1
 };
 
-const ComponentManager = {
+export const ComponentManager = {
 
     /**
      * {Object} listener Listener object. It must to has functions:

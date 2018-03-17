@@ -14,7 +14,7 @@ import {SctpClientCreate, SctpIteratorType} from "../Utils/sctp";
 import "../Utils/ScTypes"
 import parseURL from "../Utils/parseURL";
 
-const Main = {
+export const Main = {
 
     window_types: [],
     idtf_modes: [],

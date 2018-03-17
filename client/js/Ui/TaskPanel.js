@@ -1,6 +1,6 @@
 import Server from "../Core/Server";
 import * as jQuery from "jquery";
-const TaskPanel = {
+export const TaskPanel = {
     _container: '#task_panel',
     _text_container: '#task_num',
     _task_num: 0,

@@ -1,4 +1,4 @@
-const Locker = {
+export const Locker = {
     counter: 0,
 
     update: function () {

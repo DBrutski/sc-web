@@ -12,7 +12,7 @@ import EventManager from "./EventManager";
  *        - idx - is an index of the argument
  * - "arguments/clear" - this event emits on arguments clear (all arguments removed at once)
  */
-const Arguments = {
+export const Arguments = {
 
     _arguments: [],
 

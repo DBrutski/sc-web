@@ -3,7 +3,7 @@ import EventManager from "../Core/EventManager";
 import Main from "../Core/Main";
 import Server from "../Core/Server";
 import * as jQuery from "jquery";
-const Menu = {
+export const Menu = {
     _items: null,
 
     /*!

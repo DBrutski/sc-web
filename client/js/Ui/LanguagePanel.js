@@ -3,7 +3,7 @@ import Locker from "./Locker";
 import Server from "../Core/Server";
 import Translation from "../Core/Translation";
 import * as jQuery from "jquery";
-const LanguagePanel = {
+export const LanguagePanel = {
 
     /*!
      * Initialize settings panel.

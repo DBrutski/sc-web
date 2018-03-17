@@ -1,4 +1,4 @@
-const OpenComponentHandler = {
+export const OpenComponentHandler = {
 
     events: {},
 

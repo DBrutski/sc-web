@@ -56,7 +56,7 @@ export const SctpEventType = {
 };
 
 
-function String2ArrayBuffer(string) {
+export function String2ArrayBuffer(string) {
     const unescapedString = unescape(encodeURIComponent(string)),
         charList = unescapedString.split(''),
         uintArray = [];
@@ -66,7 +66,7 @@ function String2ArrayBuffer(string) {
     return new Uint8Array(uintArray);
 }
 
-function ArrayBuffer2String(arrayBuffer) {
+export function ArrayBuffer2String(arrayBuffer) {
     return new StringView(new Uint8Array(arrayBuffer)).toString();
 }
 

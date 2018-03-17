@@ -5,7 +5,7 @@ import * as R from "ramda";
 
 
 
-const Server = {
+export const Server = {
     _semanticNeighborhood: {
         commandId: 'ui_menu_view_full_semantic_neighborhood',
         commandAddr: null

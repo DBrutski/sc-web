@@ -26,7 +26,7 @@ export const CommandState = function (command_addr, command_args, format) {
     this.format = format;
 };
 
-const ComponentSandbox = function (options) {
+export const ComponentSandbox = function (options) {
 
     this.command_state = options.command_state;
     this.container = options.container;

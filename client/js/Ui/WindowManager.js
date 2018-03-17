@@ -7,7 +7,7 @@ import OpenComponentHandler from "./OpenComponentHandler";
 import Server from "../Core/Server";
 import Translation from "../Core/Translation";
 import * as jQuery from "jquery";
-const WindowManager = {
+export const WindowManager = {
 
     // dictionary that contains information about windows corresponding to history items
     windows: [],
@@ -188,8 +188,9 @@ const WindowManager = {
 
         const f = function (addr, is_struct) {
             const id = self.hash_addr(question_addr, command_state.format);
+            let window_id;
             if (!self.isWindowExist(id)) {
-                let window_id = 'window_' + question_addr;
+                window_id = 'window_' + question_addr;
                 const window_html = '<div class="panel panel-default sc-window" id="' + id + '" sc_addr="' + question_addr + '" sc-addr-fmt="' + command_state.format + '">' +
                     '<div class="panel-body" id="' + window_id + '"></div>';
                 self.window_container.prepend(window_html);
@@ -199,7 +200,7 @@ const WindowManager = {
             }
             let sandbox = self.sandboxes[id];
             if (!sandbox) {
-                let sandbox = ComponentManager.createWindowSandboxByFormat({
+                sandbox = ComponentManager.createWindowSandboxByFormat({
                     format_addr: command_state.format,
                     addr: addr,
                     is_struct: is_struct,

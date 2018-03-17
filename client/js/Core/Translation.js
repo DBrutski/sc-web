@@ -10,7 +10,7 @@
 import EventManager from "./EventManager";
 import Server from "./Server";
 import * as jQuery from "jquery";
-const Translation = {
+export const Translation = {
 
     listeners: [],
     current_lang: null,
