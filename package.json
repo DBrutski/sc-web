@@ -9,6 +9,8 @@
     "grunt": "^1.0.1",
     "jquery": "^3.3.1",
     "karma-sourcemap-loader": "^0.3.7",
+    "rambda": "^1.0.13",
+    "ramda": "^0.25.0",
     "webpack": "^3.1.0"
   },
   "devDependencies": {

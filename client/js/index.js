@@ -1,6 +1,7 @@
 import $ from "jquery";
 import Locker from "./Ui/Locker";
 import Main from "./Core/Main";
+import "../css/core.css";
 
 $(document).ready(function() {
 

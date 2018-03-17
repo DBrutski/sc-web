@@ -78,6 +78,8 @@ const Main = {
 
                                         function start(a) {
                                             Main.doDefaultCommand([a]);
+                                            if (params.first_time)
+                                                $('#help-modal').modal({"keyboard": true});
                                         }
 
                                         const argumentAddr = addrs['ui_start_sc_element'];

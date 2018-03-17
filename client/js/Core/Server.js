@@ -1,6 +1,9 @@
 import EventManager from "./EventManager";
-import AppCache from "../Utils/AppCache"
+import AppCache from "../Utils/AppCache";
 import {SctpConstrIter, SctpIteratorType} from "../Utils/sctp";
+import * as R from "ramda";
+
+
 
 const Server = {
     _semanticNeighborhood: {
@@ -241,8 +244,13 @@ const Server = {
         }
     },
 
-    _makeArgumentsList: function (arguments_list) {
-        return arguments_list.map(arg => arg + "_");
+    _makeArgumentsList: function(arguments_list) {
+        let urlEncodedArguments = {};
+        for (let i = 0; i < arguments_list.length; i++) {
+            const arg = arguments_list[i];
+            urlEncodedArguments[i.toString() + '_'] = arg;
+        }
+        return urlEncodedArguments;
     },
 
     contextMenu: function (arguments_list, callback) {
