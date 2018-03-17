@@ -1,5 +1,5 @@
-import Main from "../core/Main";
-import Server from "../core/Server";
+import Main from "../Core/Main";
+import Server from "../Core/Server";
 const SearchPanel = {
 
     init: function () {

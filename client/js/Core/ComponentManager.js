@@ -1,8 +1,9 @@
 import ComponentSandbox from "./ComponentSandbox";
-import KeyboardHandler from "../ui/KeyboardHandler";
-import OpenComponentHandler from "../ui/OpenComponentHandler";
+import KeyboardHandler from "../Ui/KeyboardHandler";
+import OpenComponentHandler from "../Ui/OpenComponentHandler";
 import Server from "./Server";
-const ComponentType = {
+
+export const ComponentType = {
     viewer: 0,
     editor: 1
 };
@@ -247,5 +248,5 @@ const ComponentManager = {
         }
     }
 };
-export default ComponentManager
-export default ComponentType
+
+export default ComponentManager;

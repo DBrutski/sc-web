@@ -1,6 +1,6 @@
-import Arguments from "../core/Arguments";
-import EventManager from "../core/EventManager";
-import Translation from "../core/Translation";
+import Arguments from "../Core/Arguments";
+import EventManager from "../Core/EventManager";
+import Translation from "../Core/Translation";
 const ArgumentsPanel = {
     _container: '#arguments_buttons',
 

@@ -21,4 +21,6 @@ const Locker = {
         this.update();
     }
 };
+
 export default Locker
+

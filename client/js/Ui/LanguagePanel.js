@@ -1,7 +1,7 @@
-import EventManager from "../core/EventManager";
+import EventManager from "../Core/EventManager";
 import Locker from "./Locker";
-import Server from "../core/Server";
-import Translation from "../core/Translation";
+import Server from "../Core/Server";
+import Translation from "../Core/Translation";
 const LanguagePanel = {
 
     /*!

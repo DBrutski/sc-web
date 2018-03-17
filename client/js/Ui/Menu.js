@@ -1,7 +1,7 @@
-import Arguments from "../core/Arguments";
-import EventManager from "../core/EventManager";
-import Main from "../core/Main";
-import Server from "../core/Server";
+import Arguments from "../Core/Arguments";
+import EventManager from "../Core/EventManager";
+import Main from "../Core/Main";
+import Server from "../Core/Server";
 const Menu = {
     _items: null,
 

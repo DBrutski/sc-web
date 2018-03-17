@@ -1,4 +1,4 @@
-import Server from "../core/Server";
+import Server from "../Core/Server";
 ScHelper = function (sctpClient) {
     this.sctpClient = sctpClient;
 };

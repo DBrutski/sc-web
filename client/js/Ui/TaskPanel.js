@@ -1,5 +1,5 @@
 import Locker from "./Locker";
-import Server from "../core/Server";
+import Server from "../Core/Server";
 const TaskPanel = {
     _container: '#task_panel',
     _text_container: '#task_num',

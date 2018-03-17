@@ -1,11 +1,11 @@
 import ArgumentsPanel from "./ArgumentsPanel";
-import CommandState from "../core/CommandState";
-import ComponentManager from "../core/ComponentManager";
-import EventManager from "../core/EventManager";
-import Main from "../core/Main";
+import {CommandState} from "../Core/ComponentSandbox";
+import ComponentManager from "../Core/ComponentManager";
+import EventManager from "../Core/EventManager";
+import Main from "../Core/Main";
 import OpenComponentHandler from "./OpenComponentHandler";
-import Server from "../core/Server";
-import Translation from "../core/Translation";
+import Server from "../Core/Server";
+import Translation from "../Core/Translation";
 const WindowManager = {
 
     // dictionary that contains information about windows corresponding to history items

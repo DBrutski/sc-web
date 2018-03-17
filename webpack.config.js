@@ -1,15 +1,36 @@
+var path = require("path");
 module.exports = {
-    entry: ["./client/js/Ui/eekbPanel.js"],
+    entry: {
+        app: ["./client/js/index.js"],
+    },
     output: {
-        // Make sure to use [name] or [id] in output.filename
-        //  when using multiple entry points
-        filename: "./build/eekbPanel.bundle.js",
-        library: "EekbPanel"
+        library: "SCWeb",
+        path: path.resolve(__dirname, "client/dist"),
+        publicPath: "/assets/",
+        filename: "[name].bundle.js",
+        sourceMapFilename: "[name].bundle.map.js"
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js']
+    },
+    devServer: {
+        proxy: [
+            {
+                context: ["/sctp", "/api", "/client", "/static"],
+                target: "http://localhost:8000",
+                secure: false,
+                ws: true
+            }
+        ],
+        contentBase: "./dist",
+        inline: true,
+        hot: true
     },
     module: {
-      loaders: [{
-          test: /.js$/,
-          loader : 'babel-loader'
-      }]
-    }
+        rules: [
+            {test: /\.css$/, use: 'css-loader'},
+            {test: /\.js$/, use: 'babel-loader', exclude: /node_modules/}
+        ]
+    },
+    devtool: "eval"
 };

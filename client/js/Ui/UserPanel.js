@@ -1,4 +1,4 @@
-import EventManager from "../core/EventManager";
+import EventManager from "../Core/EventManager";
 const UserPanel = {
 
     /*!

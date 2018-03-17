@@ -1,12 +1,13 @@
 import Arguments from "./Arguments";
-import CommandState from "./CommandState";
+import {CommandState} from "./ComponentSandbox";
 import ComponentManager from "./ComponentManager";
-import Core from "../ui/Core";
-import Locker from "../ui/Locker";
+import Core from "../Ui/Core";
+import Locker from "../Ui/Locker";
 import Server from "./Server";
-import TaskPanel from "../ui/TaskPanel";
+import TaskPanel from "../Ui/TaskPanel";
 import Translation from "./Translation";
-import WindowManager from "../ui/WindowManager";
+import WindowManager from "../Ui/WindowManager";
+
 var scHelper = null;
 var scKeynodes = null;
 

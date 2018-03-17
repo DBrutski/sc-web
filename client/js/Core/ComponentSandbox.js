@@ -1,13 +1,14 @@
 import Arguments from "./Arguments";
-import Core from "../ui/Core";
+import Core from "../Ui/Core";
 import EventManager from "./EventManager";
 import Main from "./Main";
 import Server from "./Server";
 import Translation from "./Translation";
-import WindowManager from "../ui/WindowManager";
-const scAddrsDict = {};
+import WindowManager from "../Ui/WindowManager";
 
-const CommandState = function (command_addr, command_args, format) {
+export const scAddrsDict = {};
+
+export const CommandState = function (command_addr, command_args, format) {
     this.command_addr = command_addr;
     this.command_args = command_args || [];
     this.format = format;
@@ -190,7 +191,7 @@ ComponentSandbox.prototype.getLinkContent = function (addr, callback_success, ca
 
 ComponentSandbox.prototype.resolveAddrs = function (idtf_list, callback) {
 
-    var arguments = [];
+    var addrsToResolve = [];
     var result = {};
     for (idx in idtf_list) {
         var idtf = idtf_list[idx];
@@ -198,10 +199,10 @@ ComponentSandbox.prototype.resolveAddrs = function (idtf_list, callback) {
         if (addr)
             result[idtf] = addr;
         else
-            arguments.push(idtf);
+            addrsToResolve.push(idtf);
     }
 
-    Server.resolveScAddr(arguments, function (data) {
+    Server.resolveScAddr(addrsToResolve, function (data) {
 
         for (var key in data) {
             if (data.hasOwnProperty(key))
@@ -386,6 +387,4 @@ ComponentSandbox.prototype.onDataAppend = function (data) {
 
     return dfd.promise();
 };
-export default CommandState
 export default ComponentSandbox
-export default scAddrsDict
