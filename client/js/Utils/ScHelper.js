@@ -1,6 +1,9 @@
 import * as jQuery from "jquery";
+import "./ScTypes";
 
-export default ScHelper = function (sctpClient) {
+import {SctpConstrIter, SctpIteratorType} from "./sctp";
+
+export default function ScHelper (sctpClient) {
     this.sctpClient = sctpClient;
 };
 

@@ -2,6 +2,10 @@ import Arguments from "../Core/Arguments";
 import EventManager from "../Core/EventManager";
 import Main from "../Core/Main";
 import Server from "../Core/Server";
+import ContextSwitcher from "./ContextSwitcher";
+import "bootstrap-treeview/dist/bootstrap-treeview.min";
+import "bootstrap-treeview/dist/bootstrap-treeview.min.css";
+
 function restoreScListOrder(scList) {
     if (!Array.isArray(scList)) throw Error('not array');
     let childToPrevious = {};
@@ -69,10 +73,6 @@ function restoreCommandsOrder(commands, namesMap) {
 let panel;
 
 export default function EekbPanel() {
-    let EventManager = EventManager;
-    let Main = Main;
-    let Arguments = Arguments;
-    let Server = Server;
     let state = {};
     let _items = [];
     let menu_container_eekb_id;
@@ -155,7 +155,7 @@ export default function EekbPanel() {
     }
 
     function updateTranslation(namesMap) {
-        logConstants.UPDATE_EEKB_ENTRY_STATE('update translation');
+        // logConstants.UPDATE_EEKB_ENTRY_STATE('update translation');
         setState({
             menuData: state.menuData,
             namesMap: namesMap,
@@ -270,7 +270,7 @@ export default function EekbPanel() {
             container: '#main-container'
         });
 
-        logConstants.UPDATE_EEKB_ENTRY_STATE('init');
+        // logConstants.UPDATE_EEKB_ENTRY_STATE('init');
         setState({
             menuData: params.menu_eekb,
             namesMap: {},

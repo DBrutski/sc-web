@@ -18,6 +18,7 @@ const fQueue = (function () {
             } else
                 dfd.resolve();
         }
+
         worker();
         return dfd.promise();
     };
@@ -32,8 +33,8 @@ const fQueue = (function () {
 (function dfdQueue() {
 
     let q;
-    const tasks = [],
-        remain = 0;
+    const tasks = [];
+    let remain = 0;
     let await = null;   // callback
 
     const pushImpl = function (dfd) {

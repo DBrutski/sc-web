@@ -1,3 +1,5 @@
+import * as jQuery from "jquery";
+
 /**
  * Resolve sc-keynodes via sys-id and save it in this
  * @param sctpClient - already initialized sctp client
@@ -6,8 +8,7 @@
  * property - key for saving in keynodes object
  * @constructor
  */
-import * as jQuery from "jquery";
-ScKeynodes = function (sctpClient, keynodesToResolve) {
+export default function ScKeynodes(sctpClient, keynodesToResolve) {
     this.sctpClient = sctpClient;
     this.keynodes = keynodesToResolve ||
         [['ui_menu_root_for_eekb', 'menu_eekb'],

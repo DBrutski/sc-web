@@ -1,3 +1,4 @@
+import {SctpConstrIter, SctpIteratorType} from "../Utils/sctp";
 function _unit_test_sctp_common() {
     window.sctpClient.create_node(sc_type_node_abstract).done(function (res) {
         console.log('node: ' + res);

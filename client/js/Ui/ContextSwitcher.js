@@ -1,4 +1,4 @@
-function ContextSwitcher(selector) {
+export default function ContextSwitcher(selector) {
     let $container = $(selector);
 
     this.render = (state) =>

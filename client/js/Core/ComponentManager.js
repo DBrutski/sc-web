@@ -216,7 +216,7 @@ const ComponentManager = {
     getScStructSupportExtLangs: function () {
         const res = [];
 
-        for (ext_lang in this._factories_ext_lang) {
+        for (let ext_lang in this._factories_ext_lang) {
             if (this._factories_ext_lang.hasOwnProperty(ext_lang)) {
                 if (this._factories_ext_lang[ext_lang].struct_support)
                     res.push(ext_lang);

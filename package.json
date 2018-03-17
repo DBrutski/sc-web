@@ -1,31 +1,23 @@
 {
-  "scripts": {
-    "start": "./node_modules/grunt/bin/grunt",
-    "test": "./node_modules/karma/bin/karma start"
-  },
+  "scripts": {},
   "name": "sc-web",
   "version": "1.0.0",
   "dependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
+    "bootstrap-treeview": "^1.2.0",
     "grunt": "^1.0.1",
     "jquery": "^3.3.1",
     "karma-sourcemap-loader": "^0.3.7",
     "webpack": "^3.1.0"
   },
   "devDependencies": {
+    "bower": "^1.8.2",
+    "css-loader": "^0.28.11",
     "fs": "0.0.1-security",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-exec": "^2.0.0",
-    "jasmine": "^2.6.0",
-    "jasmine-core": "^2.6.4",
-    "jasmine-diff": "^0.1.2",
-    "karma": "^1.7.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "karma-webpack": "^2.0.4"
+    "grunt-exec": "^2.0.0"
   }
 }

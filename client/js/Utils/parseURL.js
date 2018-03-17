@@ -1,4 +1,4 @@
-function parseURL(url) {
+export default function parseURL(url) {
     const parser = document.createElement('a'),
         searchObject = {};
     let queries, split, i;

@@ -1,3 +1,5 @@
+import "../Utils/sctp";
+import ScKeynodes from "../Utils/ScKeynodes";
 import Arguments from "./Arguments";
 import {CommandState} from "./ComponentSandbox";
 import ComponentManager from "./ComponentManager";
@@ -6,8 +8,11 @@ import Server from "./Server";
 import TaskPanel from "../Ui/TaskPanel";
 import Translation from "./Translation";
 import WindowManager from "../Ui/WindowManager";
-import ScHelper from "../Utils/sc_helper";
+import ScHelper from "../Utils/ScHelper";
 import * as jQuery from "jquery";
+import {SctpClientCreate, SctpIteratorType} from "../Utils/sctp";
+import "../Utils/ScTypes"
+import parseURL from "../Utils/parseURL";
 
 const Main = {
 
@@ -115,7 +120,7 @@ const Main = {
     doCommand: function (cmd_addr, cmd_args) {
         Arguments.clear();
         Server.doCommand(cmd_addr, cmd_args, function (result) {
-            if (result.question !== undefined) {
+            if (result.question) {
                 const commandState = new CommandState(cmd_addr, cmd_args);
                 WindowManager.appendHistoryItem(result.question, commandState);
             } else if (result.command !== undefined) {
@@ -129,7 +134,7 @@ const Main = {
     doCommandWithPromise: function (command_state) {
         return new Promise(function (resolve, reject) {
             Server.doCommand(command_state.command_addr, command_state.command_args, function (result) {
-                if (result.question !== undefined) {
+                if (result.question) {
                     resolve(result.question)
                 } else if (result.command !== undefined) {
 

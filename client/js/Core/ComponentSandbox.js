@@ -15,6 +15,8 @@ import Server from "./Server";
 import Translation from "./Translation";
 import WindowManager from "../Ui/WindowManager";
 import * as jQuery from "jquery";
+import "../Utils/ScTypes"
+import {SctpIteratorType} from "../Utils/sctp";
 
 export const scAddrsDict = {};
 
