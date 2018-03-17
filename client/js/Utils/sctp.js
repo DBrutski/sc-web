@@ -1,44 +1,44 @@
 // sc-element types
-var sc_type_node = 0x1;
-var sc_type_link = 0x2;
-var sc_type_edge_common = 0x4;
-var sc_type_arc_common = 0x8;
-var sc_type_arc_access = 0x10;
+const sc_type_node = 0x1;
+const sc_type_link = 0x2;
+const sc_type_edge_common = 0x4;
+const sc_type_arc_common = 0x8;
+const sc_type_arc_access = 0x10;
 
 // sc-element constant
-var sc_type_const = 0x20;
-var sc_type_var = 0x40;
+const sc_type_const = 0x20;
+const sc_type_var = 0x40;
 
 // sc-element positivity
-var sc_type_arc_pos = 0x80;
-var sc_type_arc_neg = 0x100;
-var sc_type_arc_fuz = 0x200;
+const sc_type_arc_pos = 0x80;
+const sc_type_arc_neg = 0x100;
+const sc_type_arc_fuz = 0x200;
 
 // sc-element premanently
-var sc_type_arc_temp = 0x400;
-var sc_type_arc_perm = 0x800;
+const sc_type_arc_temp = 0x400;
+const sc_type_arc_perm = 0x800;
 
 // struct node types
-var sc_type_node_tuple = (0x80);
-var sc_type_node_struct = (0x100);
-var sc_type_node_role = (0x200);
-var sc_type_node_norole = (0x400);
-var sc_type_node_class = (0x800);
-var sc_type_node_abstract = (0x1000);
-var sc_type_node_material = (0x2000);
+const sc_type_node_tuple = (0x80);
+const sc_type_node_struct = (0x100);
+const sc_type_node_role = (0x200);
+const sc_type_node_norole = (0x400);
+const sc_type_node_class = (0x800);
+const sc_type_node_abstract = (0x1000);
+const sc_type_node_material = (0x2000);
 
 
-var sc_type_arc_pos_const_perm = (sc_type_arc_access | sc_type_const | sc_type_arc_pos | sc_type_arc_perm);
+const sc_type_arc_pos_const_perm = (sc_type_arc_access | sc_type_const | sc_type_arc_pos | sc_type_arc_perm);
 
 // type mask
-var sc_type_element_mask = (sc_type_node | sc_type_link | sc_type_edge_common | sc_type_arc_common | sc_type_arc_access);
-var sc_type_constancy_mask = (sc_type_const | sc_type_var);
-var sc_type_positivity_mask = (sc_type_arc_pos | sc_type_arc_neg | sc_type_arc_fuz);
-var sc_type_permanency_mask = (sc_type_arc_perm | sc_type_arc_temp);
-var sc_type_node_struct_mask = (sc_type_node_tuple | sc_type_node_struct | sc_type_node_role | sc_type_node_norole | sc_type_node_class | sc_type_node_abstract | sc_type_node_material);
-var sc_type_arc_mask = (sc_type_arc_access | sc_type_arc_common | sc_type_edge_common);
+const sc_type_element_mask = (sc_type_node | sc_type_link | sc_type_edge_common | sc_type_arc_common | sc_type_arc_access);
+const sc_type_constancy_mask = (sc_type_const | sc_type_var);
+const sc_type_positivity_mask = (sc_type_arc_pos | sc_type_arc_neg | sc_type_arc_fuz);
+const sc_type_permanency_mask = (sc_type_arc_perm | sc_type_arc_temp);
+const sc_type_node_struct_mask = (sc_type_node_tuple | sc_type_node_struct | sc_type_node_role | sc_type_node_norole | sc_type_node_class | sc_type_node_abstract | sc_type_node_material);
+const sc_type_arc_mask = (sc_type_arc_access | sc_type_arc_common | sc_type_edge_common);
 
-var SctpCommandType = {
+const SctpCommandType = {
     SCTP_CMD_UNKNOWN: 0x00, // unkown command
     SCTP_CMD_CHECK_ELEMENT: 0x01, // check if specified sc-element exist
     SCTP_CMD_GET_ELEMENT_TYPE: 0x02, // return sc-element type
@@ -65,14 +65,14 @@ var SctpCommandType = {
 };
 
 
-var SctpResultCode = {
+const SctpResultCode = {
     SCTP_RESULT_OK: 0x00,
     SCTP_RESULT_FAIL: 0x01,
     SCTP_RESULT_ERROR_NO_ELEMENT: 0x02 // sc-element wasn't founded
 };
 
 
-var SctpIteratorType = {
+const SctpIteratorType = {
     SCTP_ITERATOR_3F_A_A: 0,
     SCTP_ITERATOR_3A_A_F: 1,
     SCTP_ITERATOR_3F_A_F: 2,
@@ -84,7 +84,7 @@ var SctpIteratorType = {
     SCTP_ITERATOR_5A_A_F_A_A: 8
 };
 
-var SctpEventType = {
+const SctpEventType = {
     SC_EVENT_UNKNOWN: -1,
     SC_EVENT_ADD_OUTPUT_ARC: 0,
     SC_EVENT_ADD_INPUT_ARC: 1,
@@ -95,10 +95,10 @@ var SctpEventType = {
 
 
 function String2ArrayBuffer(string) {
-    var string = unescape(encodeURIComponent(string)),
-        charList = string.split(''),
+    const unescapedString = unescape(encodeURIComponent(string)),
+        charList = unescapedString.split(''),
         uintArray = [];
-    for (var i = 0; i < charList.length; i++) {
+    for (let i = 0; i < charList.length; i++) {
         uintArray.push(charList[i].charCodeAt(0));
     }
     return new Uint8Array(uintArray);
@@ -109,14 +109,14 @@ function ArrayBuffer2String(arrayBuffer) {
 }
 
 
-var sc_addr_size = 4,
+const sc_addr_size = 4,
     sc_type_size = 2,
     sctp_header_size = 10;
 
 sc_addr_from_id = function (sc_id) {
-    var a = sc_id.split("_");
-    var seg = parseInt(a[0]);
-    var offset = parseInt(a[1]);
+    const a = sc_id.split("_");
+    const seg = parseInt(a[0]);
+    const offset = parseInt(a[1]);
 
     return (offset << 16) | seg;
 };
@@ -188,30 +188,30 @@ sc_iteartor_assign_count = function (it) {
 sc_iterator_is_fixed_arg = function (it, pos) {
     if (pos >= sc_iterator_type_count(it))
         throw "Inalid position for iterator";
-    var res = false;
+    let res = false;
     switch (it) {
         case SctpIteratorType.SCTP_ITERATOR_3A_A_F:
         case SctpIteratorType.SCTP_ITERATOR_5A_A_F_A_A:
-            res = (pos == 2);
+            res = (pos === 2);
             break;
         case SctpIteratorType.SCTP_ITERATOR_3F_A_A:
         case SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_A:
-            res = (pos == 0);
+            res = (pos === 0);
             break;
         case SctpIteratorType.SCTP_ITERATOR_3F_A_F:
         case SctpIteratorType.SCTP_ITERATOR_5F_A_F_A_A:
-            res = (pos == 0 || pos == 2);
+            res = (pos === 0 || pos === 2);
             break;
 
         case SctpIteratorType.SCTP_ITERATOR_5A_A_F_A_F:
-            res = (pos == 2 || pos == 4);
+            res = (pos === 2 || pos === 4);
             break;
         case SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F:
-            res = (pos == 0 || pos == 4);
+            res = (pos === 0 || pos === 4);
             break;
 
         case SctpIteratorType.SCTP_ITERATOR_5F_A_F_A_F:
-            res = (pos == 0 || pos == 2 || pos == 4);
+            res = (pos === 0 || pos === 2 || pos === 4);
             break;
     }
     ;
@@ -220,7 +220,7 @@ sc_iterator_is_fixed_arg = function (it, pos) {
 };
 
 function SctpConstrIter(iterator_type, args, resMappings) {
-    var i;
+    let i;
     return i = {
         iterator_type: iterator_type,
         args: args,
@@ -229,7 +229,8 @@ function SctpConstrIter(iterator_type, args, resMappings) {
 }
 
 function SctpCommandBuffer(size) {
-    var b, pos = 0, s = size,
+    let b, pos = 0;
+    const s = size,
         view = new DataView(new ArrayBuffer(size + sctp_header_size));
 
     return b = {
@@ -252,8 +253,8 @@ function SctpCommandBuffer(size) {
         },
 
         writeBuffer: function (buff) {
-            var dstU8 = new Uint8Array(view.buffer, pos);
-            var srcU8 = new Uint8Array(buff);
+            const dstU8 = new Uint8Array(view.buffer, pos);
+            const srcU8 = new Uint8Array(buff);
             dstU8.set(srcU8);
             pos += buff.byteLength;
         },
@@ -268,7 +269,7 @@ function SctpCommandBuffer(size) {
 };
 
 function SctpResultBuffer(v) {
-    var view = v;
+    const view = v;
 
     return {
 
@@ -313,7 +314,7 @@ function SctpResultBuffer(v) {
             return view.getFloat64(sctp_header_size + offset, true);
         },
         getResBuffer: function (offset, len) {
-            var o = sctp_header_size + offset;
+            const o = sctp_header_size + offset;
             //var l = view.buffer.byteLength - o;
             return view.buffer.slice(o); //new Uint8Array(view.buffer, o, l);
         },
@@ -350,7 +351,7 @@ SctpClient.prototype.connect = function (url, success) {
     this.socket = new WebSocket('ws://' + window.location.host + '/sctp'/*, ['soap', 'xmpp']*/);
     this.socket.binaryType = 'arraybuffer';
 
-    var self = this;
+    const self = this;
     this.socket.onopen = function () {
         console.log('Connected to websocket');
         success();
@@ -361,14 +362,14 @@ SctpClient.prototype.connect = function (url, success) {
         console.log('message', e.data);
     };
     this.socket.onclose = function (e) {
-        var CLOSE_NORMAL = 1000;
-        var CLOSE_GOING_AWAY = 1001;
+        const CLOSE_NORMAL = 1000;
+        const CLOSE_GOING_AWAY = 1001;
         try {
             console.log('Closed websocket connection');
             self.onClose && self.onClose(e);
             self.task_queue.forEach((task) => task.dfd.reject(e))
         } finally {
-            if (!(e.code == CLOSE_NORMAL || e.code == CLOSE_GOING_AWAY)) {
+            if (!(e.code === CLOSE_NORMAL || e.code === CLOSE_GOING_AWAY)) {
                 $('#sc-ui-locker').removeClass('shown');
             }
         }
@@ -391,27 +392,27 @@ SctpClient.prototype._schedule_emit_event = function () {
 
 SctpClient.prototype._push_task = function (task) {
     this.task_queue.push(task);
-    var self = this;
+    const self = this;
 
     function process() {
-        var t = self.task_queue.shift();
+        const t = self.task_queue.shift();
 
         self.socket.onmessage = function (e) {
 
-            var result = new SctpResultBuffer(new DataView(e.data));
-            if (result.getResultSize() != e.data.byteLength - result.getHeaderSize())
+            const result = new SctpResultBuffer(new DataView(e.data));
+            if (result.getResultSize() !== e.data.byteLength - result.getHeaderSize())
                 throw "Invalid data size " + l;
 
-            var r = result;
-            var resCode = result.getResultCode();
-            if (e && e.data && resCode == SctpResultCode.SCTP_RESULT_OK) {
+            let r = result;
+            let resCode = result.getResultCode();
+            if (e && e.data && resCode === SctpResultCode.SCTP_RESULT_OK) {
                 if (t.parse)
                     r = t.parse(result);
                 if (t.resCode)
                     resCode = t.resCode(result);
             }
 
-            if (resCode == SctpResultCode.SCTP_RESULT_OK) {
+            if (resCode === SctpResultCode.SCTP_RESULT_OK) {
                 t.dfd.resolve(r);
             } else
                 t.dfd.reject();
@@ -433,7 +434,7 @@ SctpClient.prototype._push_task = function (task) {
 };
 
 SctpClient.prototype.new_request = function (message, parseFn, resCodeFn) {
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
     this._push_task({
         message: message,
         parse: parseFn,
@@ -444,7 +445,7 @@ SctpClient.prototype.new_request = function (message, parseFn, resCodeFn) {
 };
 
 SctpClient.prototype.erase_element = function (addr) {
-    var buffer = new SctpCommandBuffer(sc_addr_size);
+    const buffer = new SctpCommandBuffer(sc_addr_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_ERASE_ELEMENT, 0, 0);
     buffer.writeUint32(addr);
 
@@ -455,7 +456,7 @@ SctpClient.prototype.erase_element = function (addr) {
 
 
 SctpClient.prototype.check_element = function (addr) {
-    var buffer = new SctpCommandBuffer(sc_addr_size);
+    const buffer = new SctpCommandBuffer(sc_addr_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_CHECK_ELEMENT, 0, 0);
     buffer.writeUint32(addr);
 
@@ -465,7 +466,7 @@ SctpClient.prototype.check_element = function (addr) {
 };
 
 SctpClient.prototype.get_element_type = function (addr) {
-    var buffer = new SctpCommandBuffer(sc_addr_size);
+    const buffer = new SctpCommandBuffer(sc_addr_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_GET_ELEMENT_TYPE, 0, 0);
     buffer.writeUint32(addr);
 
@@ -475,7 +476,7 @@ SctpClient.prototype.get_element_type = function (addr) {
 };
 
 SctpClient.prototype.get_arc = function (addr) {
-    var buffer = new SctpCommandBuffer(sc_addr_size);
+    const buffer = new SctpCommandBuffer(sc_addr_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_GET_ARC, 0, 0);
     buffer.writeUint32(addr);
 
@@ -485,7 +486,7 @@ SctpClient.prototype.get_arc = function (addr) {
 };
 
 SctpClient.prototype.create_node = function (type) {
-    var buffer = new SctpCommandBuffer(sc_type_size);
+    const buffer = new SctpCommandBuffer(sc_type_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_CREATE_NODE, 0, 0);
     buffer.writeUint16(type);
 
@@ -496,7 +497,7 @@ SctpClient.prototype.create_node = function (type) {
 
 
 SctpClient.prototype.create_arc = function (type, src, trg) {
-    var buffer = new SctpCommandBuffer(sc_type_size + 2 * sc_addr_size);
+    const buffer = new SctpCommandBuffer(sc_type_size + 2 * sc_addr_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_CREATE_ARC, 0, 0);
     buffer.writeUint16(type);
     buffer.writeUint32(src);
@@ -509,7 +510,7 @@ SctpClient.prototype.create_arc = function (type, src, trg) {
 
 
 SctpClient.prototype.create_link = function () {
-    var buffer = new SctpCommandBuffer(0);
+    const buffer = new SctpCommandBuffer(0);
     buffer.setHeader(SctpCommandType.SCTP_CMD_CREATE_LINK, 0, 0);
 
     return this.new_request(buffer.data, function (data) {
@@ -521,18 +522,18 @@ SctpClient.prototype.create_link = function () {
 SctpClient.prototype.set_link_content = function (addr, data) {
 
     // determine type of content and it's size
-    var dataBuff = null;
+    let dataBuff = null;
     if (typeof data === 'number') {
         size = 8;
         if (data % 1 === 0) {
             //! @todo: support of unsigned
             dataBuff = new ArrayBuffer(Int32Array.BYTES_PER_ELEMENT);
-            var view = new DataView(dataBuff);
+            let view = new DataView(dataBuff);
             view.setInt32(0, data, true);
         } else {
             //! @todo: support unsigned
             dataBuff = new ArrayBuffer(Float64Array.BYTES_PER_ELEMENT);
-            var view = new DataView(dataBuff);
+            let view = new DataView(dataBuff);
             view.setFloat64(0, data, true);
         }
     } else if (typeof data === 'string' || data instanceof String) {
@@ -542,7 +543,7 @@ SctpClient.prototype.set_link_content = function (addr, data) {
     } else
         throw "Unknown object type";
 
-    var buffer = new SctpCommandBuffer(dataBuff.byteLength + sc_addr_size + Uint32Array.BYTES_PER_ELEMENT);
+    const buffer = new SctpCommandBuffer(dataBuff.byteLength + sc_addr_size + Uint32Array.BYTES_PER_ELEMENT);
     buffer.setHeader(SctpCommandType.SCTP_CMD_SET_LINK_CONTENT, 0, 0);
     buffer.writeUint32(addr);
     buffer.writeUint32(dataBuff.byteLength);
@@ -555,14 +556,14 @@ SctpClient.prototype.set_link_content = function (addr, data) {
 
 
 SctpClient.prototype.get_link_content = function (addr, type) {
-    var buffer = new SctpCommandBuffer(sc_addr_size);
+    const buffer = new SctpCommandBuffer(sc_addr_size);
     buffer.setHeader(SctpCommandType.SCTP_CMD_GET_LINK_CONTENT, 0, 0);
     buffer.writeUint32(addr);
 
     return this.new_request(buffer.data, function (data) {
-        var n = data.getResultSize();
+        const n = data.getResultSize();
 
-        var r = null;
+        let r = null;
         if (!type || type === 'string') {
             r = ArrayBuffer2String(data.getResBuffer(0));
         } else if (type === 'binary') {
@@ -588,13 +589,13 @@ SctpClient.prototype.find_links_with_content = function (data) {
 };
 
 SctpClient.prototype.iterate_elements = function (iterator_type, args) {
-    var itCount = sc_iterator_type_count(iterator_type);
+    const itCount = sc_iterator_type_count(iterator_type);
 
-    if (args.length != itCount)
+    if (args.length !== itCount)
         throw "Invalid number of arguments";
 
-    var paramsSize = sc_iterator_params_size(iterator_type);
-    var buffer = new SctpCommandBuffer(1 + paramsSize);
+    const paramsSize = sc_iterator_params_size(iterator_type);
+    const buffer = new SctpCommandBuffer(1 + paramsSize);
     buffer.setHeader(SctpCommandType.SCTP_CMD_ITERATE_ELEMENTS, 0, 0);
     buffer.writeUint8(iterator_type);
 
@@ -660,12 +661,12 @@ SctpClient.prototype.iterate_elements = function (iterator_type, args) {
     ;
 
     return this.new_request(buffer.data, function (data) {
-        var res = [];
-        var n = data.getResUint32(0);
-        for (var i = 0; i < n; ++i) {
-            var idx = 4 + i * itCount * sc_addr_size;
-            var r = [];
-            for (var j = 0; j < itCount; ++j)
+        const res = [];
+        const n = data.getResUint32(0);
+        for (let i = 0; i < n; ++i) {
+            const idx = 4 + i * itCount * sc_addr_size;
+            const r = [];
+            for (let j = 0; j < itCount; ++j)
                 r.push(data.getResUint32(idx + j * sc_addr_size));
             res.push(r);
         }
@@ -701,30 +702,30 @@ SctpClient.prototype.iterate_elements = function (iterator_type, args) {
  */
 SctpClient.prototype.iterate_constr = function () {
 
-    var iterators = Array.prototype.slice.call(arguments, 0);
-    var count = iterators.length;
+    const iterators = Array.prototype.slice.call(arguments, 0);
+    const count = iterators.length;
 
     // calculate parameters size
-    var paramsSize = 0;
-    var oneResultSize = 0;
-    var resMapping = {};
-    for (var i = 0; i < count; ++i) {
-        var it = iterators[i];
-        var c = sc_iterator_type_count(it.iterator_type);
+    let paramsSize = 0;
+    let oneResultSize = 0;
+    const resMapping = {};
+    for (let i = 0; i < count; ++i) {
+        const it = iterators[i];
+        const c = sc_iterator_type_count(it.iterator_type);
 
-        if (c != it.args.length)
+        if (c !== it.args.length)
             throw "Invalid number of arguments";
 
         // prepare mappings
         if (it.mappings) {
-            for (var k in it.mappings) {
+            for (let k in it.mappings) {
                 if (!it.mappings.hasOwnProperty(k))
                     continue;
 
                 if (resMapping[k])
                     throw "Duplicate name in iterator results mapping";
 
-                var m = it.mappings[k];
+                const m = it.mappings[k];
                 if (m < 0 || m >= c)
                     throw "Invalid mapping index " + m;
 
@@ -733,16 +734,16 @@ SctpClient.prototype.iterate_constr = function () {
         }
 
         it.repl = [];
-        for (var j = 0; j < it.args.length; ++j) {
-            var a = it.args[j];
-            var isFixed = sc_iterator_is_fixed_arg(it.iterator_type, j);
+        for (const j = 0; j < it.args.length; ++j) {
+            let a = it.args[j];
+            let isFixed = sc_iterator_is_fixed_arg(it.iterator_type, j);
 
-            if ((a instanceof String) || (typeof a == "string")) {
+            if ((a instanceof String) || (typeof a === "string")) {
 
                 if (!isFixed)
                     throw "Invalid argument type, it must be an type";
-                var idx = resMapping[a];
-                if (idx == undefined || idx == null)
+                const idx = resMapping[a];
+                if (idx === undefined || idx === null)
                     throw "Mapping name " + a + " doesn't exists";
 
                 it.repl.push(idx);
@@ -750,7 +751,7 @@ SctpClient.prototype.iterate_constr = function () {
                 it.repl.push(null);
         }
 
-        if (sc_iteartor_fixed_count(it.iterator_type) != it.repl.length)
+        if (sc_iteartor_fixed_count(it.iterator_type) !== it.repl.length)
             throw "Invalid number of replaces";
 
         oneResultSize += c;
@@ -759,25 +760,25 @@ SctpClient.prototype.iterate_constr = function () {
         paramsSize += sc_iterator_params_size(it.iterator_type);
     }
 
-    var buffer = new SctpCommandBuffer(count + 1 + paramsSize);
+    const buffer = new SctpCommandBuffer(count + 1 + paramsSize);
     buffer.setHeader(SctpCommandType.SCTP_CMD_ITERATE_CONSTRUCTION, 0, 0);
     buffer.writeUint8(count);
-    for (var i = 0; i < count; ++i) {
-        var it = iterators[i];
+    for (let i = 0; i < count; ++i) {
+        const it = iterators[i];
 
         buffer.writeUint8(it.iterator_type);
         if (i > 0) {
-            for (var j = 0; j < it.repl.length; ++j) {
-                var v = it.repl[j];
-                buffer.writeUint8(v == null ? 255 : v);
+            for (let j = 0; j < it.repl.length; ++j) {
+                const v = it.repl[j];
+                buffer.writeUint8(v === null ? 255 : v);
             }
         }
 
         // wrtie params
-        var rCount = 0;
-        for (var j = 0; j < it.args.length; ++j) {
+        let rCount = 0;
+        for (let j = 0; j < it.args.length; ++j) {
             if (sc_iterator_is_fixed_arg(it.iterator_type, j)) {
-                if (it.repl[rCount] == null)
+                if (it.repl[rCount] === null)
                     buffer.writeUint32(it.args[j]);
                 rCount++;
             } else
@@ -787,15 +788,16 @@ SctpClient.prototype.iterate_constr = function () {
 
     return this.new_request(buffer.data, function (data) {
 
-        var count = data.getResUint32(0);
-        var res = [], r;
+        const count = data.getResUint32(0);
+        const res = [];
+        let r;
 
-        if (data.getResultSize() != ((1 + oneResultSize * count) * Uint32Array.BYTES_PER_ELEMENT))
+        if (data.getResultSize() !== ((1 + oneResultSize * count) * Uint32Array.BYTES_PER_ELEMENT))
             throw "Invalid result size";
 
-        for (var i = 0; i < count; ++i) {
-            var item = [];
-            for (var j = 0; j < oneResultSize; ++j) {
+        for (let i = 0; i < count; ++i) {
+            const item = [];
+            for (let j = 0; j < oneResultSize; ++j) {
                 item.push(data.getResUint32(Uint32Array.BYTES_PER_ELEMENT * (1 + i * oneResultSize + j)));
             }
             res.push(item);
@@ -820,8 +822,8 @@ SctpClient.prototype.iterate_constr = function () {
 
 
 SctpClient.prototype.find_element_by_system_identifier = function (data) {
-    var buffData = String2ArrayBuffer(data);
-    var buffer = new SctpCommandBuffer(buffData.byteLength + 4);
+    const buffData = String2ArrayBuffer(data);
+    const buffer = new SctpCommandBuffer(buffData.byteLength + 4);
     buffer.setHeader(SctpCommandType.SCTP_CMD_FIND_ELEMENT_BY_SYSITDF, 0, 0);
     buffer.writeUint32(buffData.byteLength);
     buffer.writeBuffer(buffData);
@@ -837,10 +839,10 @@ SctpClient.prototype.set_system_identifier = function (addr, idtf) {
 };
 
 SctpClient.prototype.event_create = function (evt_type, addr, callback) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
 
-    var buffer = new SctpCommandBuffer(sc_addr_size + 1);
+    const buffer = new SctpCommandBuffer(sc_addr_size + 1);
     buffer.setHeader(SctpCommandType.SCTP_CMD_EVENT_CREATE, 0, 0);
     buffer.writeUint8(evt_type);
     buffer.writeUint32(addr);
@@ -858,10 +860,10 @@ SctpClient.prototype.event_create = function (evt_type, addr, callback) {
 };
 
 SctpClient.prototype.event_destroy = function (evt_id) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
 
-    var buffer = new SctpCommandBuffer(4);
+    const buffer = new SctpCommandBuffer(4);
     buffer.setHeader(SctpCommandType.SCTP_CMD_EVENT_DESTROY, 0, 0);
     buffer.writeUint32(evt_id);
 
@@ -878,22 +880,22 @@ SctpClient.prototype.event_destroy = function (evt_id) {
 };
 
 SctpClient.prototype.event_emit = function () {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
 
-    var buffer = new SctpCommandBuffer(0);
+    const buffer = new SctpCommandBuffer(0);
     buffer.setHeader(SctpCommandType.SCTP_CMD_EVENT_EMIT, 0, 0);
 
     this.new_request(buffer.data)
         .done(function (data) {
-            var n = data.getResUint32(0);
-            var events = [];
+            const n = data.getResUint32(0);
+            const events = [];
 
-            for (var i = 0; i < n; ++i) {
+            for (let i = 0; i < n; ++i) {
                 evt_id = data.getResUint32(4 + i * 12);
                 addr = data.getResUint32(8 + i * 12);
                 arg = data.getResUint32(12 + i * 12);
-                var func = self.events[evt_id];
+                const func = self.events[evt_id];
 
                 events.push({evt_id: evt_id, addr: addr, arg: arg});
                 if (func)
@@ -913,9 +915,9 @@ SctpClient.prototype.get_statistics = function () {
 };
 
 SctpClientCreate = function () {
-    var dfd = jQuery.Deferred();
+    const dfd = jQuery.Deferred();
 
-    var sctp_client = new SctpClient({onClose: alert.bind(undefined, "Websocket closed" )});
+    const sctp_client = new SctpClient({onClose: alert.bind(undefined, "Websocket closed")});
     sctp_client.connect('/sctp', function () {
         dfd.resolve(sctp_client);
     });

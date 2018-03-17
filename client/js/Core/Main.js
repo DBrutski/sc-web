@@ -8,8 +8,8 @@ import TaskPanel from "../Ui/TaskPanel";
 import Translation from "./Translation";
 import WindowManager from "../Ui/WindowManager";
 
-var scHelper = null;
-var scKeynodes = null;
+const scHelper = null;
+const scKeynodes = null;
 
 
 const Main = {
@@ -25,9 +25,9 @@ const Main = {
      * - menu_container_id - id of dom element, that will contains menu items
      */
     init: function (params) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
-        var self = this;
+        const self = this;
         //Locker.show();
 
         Server._initialize();
@@ -60,13 +60,13 @@ const Main = {
                                 .done(function () {
                                     dfd.resolve();
 
-                                    var url = parseURL(window.location.href);
+                                    const url = parseURL(window.location.href);
 
                                     if (url.searchObject) {
-                                        var question = url.searchObject['question'];
+                                        const question = url.searchObject['question'];
                                         if (question) {
                                             /// @todo Check question is realy a question
-                                            var commandState = new CommandState(question, null, null);
+                                            const commandState = new CommandState(question, null, null);
                                             WindowManager.appendHistoryItem(question, commandState);
                                             return;
                                         }
@@ -80,7 +80,7 @@ const Main = {
                                                 $('#help-modal').modal({"keyboard": true});
                                         }
 
-                                        var argumentAddr = addrs['ui_start_sc_element'];
+                                        const argumentAddr = addrs['ui_start_sc_element'];
                                         window.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_3F_A_A, [argumentAddr, sc_type_arc_pos_const_perm, 0])
                                             .done(function (res) {
                                                 start(res[0][2]);
@@ -120,10 +120,10 @@ const Main = {
     doCommand: function (cmd_addr, cmd_args) {
         Arguments.clear();
         Server.doCommand(cmd_addr, cmd_args, function (result) {
-            if (result.question != undefined) {
-                var commandState = new CommandState(cmd_addr, cmd_args);
+            if (result.question !== undefined) {
+                const commandState = new CommandState(cmd_addr, cmd_args);
                 WindowManager.appendHistoryItem(result.question, commandState);
-            } else if (result.command != undefined) {
+            } else if (result.command !== undefined) {
 
             } else {
                 alert("There are no any answer. Try another request");
@@ -134,9 +134,9 @@ const Main = {
     doCommandWithPromise: function (command_state) {
         return new Promise(function (resolve, reject) {
             Server.doCommand(command_state.command_addr, command_state.command_args, function (result) {
-                if (result.question != undefined) {
+                if (result.question !== undefined) {
                     resolve(result.question)
-                } else if (result.command != undefined) {
+                } else if (result.command !== undefined) {
 
                 } else {
                     reject("There are no any answer. Try another request");
@@ -162,10 +162,10 @@ const Main = {
 
     doTextCommand: function (query) {
         Server.textCommand(query, function (result) {
-            if (result.question != undefined) {
-                var commandState = new CommandState(null, null, null);
+            if (result.question !== undefined) {
+                const commandState = new CommandState(null, null, null);
                 WindowManager.appendHistoryItem(result.question, commandState);
-            } else if (result.command != undefined) {
+            } else if (result.command !== undefined) {
 
             } else {
                 alert("There are no any answer. Try another request");

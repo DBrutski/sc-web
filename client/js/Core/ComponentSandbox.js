@@ -53,7 +53,7 @@ const ComponentSandbox = function (options) {
     this.listeners = [];
     this.keynodes = options.keynodes;
 
-    var self = this;
+    const self = this;
     this.listeners = [];
     this.childs = {};
 
@@ -67,8 +67,8 @@ const ComponentSandbox = function (options) {
     // listen translation
     this.listeners.push(EventManager.subscribe("translation/update", this, this.updateTranslation));
     this.listeners.push(EventManager.subscribe("translation/get", this, function (objects) {
-        var items = self.getObjectsToTranslate();
-        for (var i in items) {
+        const items = self.getObjectsToTranslate();
+        for (let i in items) {
             objects.push(items[i]);
         }
     }));
@@ -102,7 +102,7 @@ ComponentSandbox.prototype = {
  * Destroys component sandbox
  */
 ComponentSandbox.prototype.destroy = function () {
-    for (var l in this.listeners) {
+    for (let l in this.listeners) {
         EventManager.unsubscribe(this.listeners[l]);
     }
 
@@ -168,7 +168,7 @@ ComponentSandbox.prototype.generateWindowContainer = function (containerId, cont
  * @returns If keynodes exist, then returns it sc-addr; otherwise returns null
  */
 ComponentSandbox.prototype.getKeynode = function (sys_idtf) {
-    var res = this.keynodes[sys_idtf];
+    const res = this.keynodes[sys_idtf];
     if (res) {
         return res;
     }
@@ -191,11 +191,11 @@ ComponentSandbox.prototype.getLinkContent = function (addr, callback_success, ca
 
 ComponentSandbox.prototype.resolveAddrs = function (idtf_list, callback) {
 
-    var addrsToResolve = [];
-    var result = {};
+    const addrsToResolve = [];
+    const result = {};
     for (idx in idtf_list) {
-        var idtf = idtf_list[idx];
-        var addr = scAddrsDict[idtf];
+        const idtf = idtf_list[idx];
+        const addr = scAddrsDict[idtf];
         if (addr)
             result[idtf] = addr;
         else
@@ -204,7 +204,7 @@ ComponentSandbox.prototype.resolveAddrs = function (idtf_list, callback) {
 
     Server.resolveScAddr(addrsToResolve, function (data) {
 
-        for (var key in data) {
+        for (let key in data) {
             if (data.hasOwnProperty(key))
                 scAddrsDict[key] = data[key];
         }
@@ -227,7 +227,7 @@ ComponentSandbox.prototype.removeChild = function removeChild() {
 };
 
 ComponentSandbox.prototype.updateAnswer = function () {
-    var performAnswer = jQuery.proxy(function (answer_addr) {
+    const performAnswer = jQuery.proxy(function (answer_addr) {
         this.addr = answer_addr;
         this.removeChild();
     }, this);
@@ -241,8 +241,8 @@ ComponentSandbox.prototype.updateAnswer = function () {
  * @param {Object} containers_map Map of viewer containers (key: sc-link addr, value: id of container)
  */
 ComponentSandbox.prototype.createViewersForScLinks = function (containers_map) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
     WindowManager.createViewersForScLinks(containers_map).done(function (windows) {
         self._appendChilds(windows);
         dfd.resolve(windows);
@@ -256,7 +256,7 @@ ComponentSandbox.prototype.createViewersForScLinks = function (containers_map) {
  * @param {Object} containers_map Map of viewer containers (id: id of container, value: {key: sc-struct addr, ext_lang_addr: sc-addr of external language}})
  */
 ComponentSandbox.prototype.createViewersForScStructs = function (containers_map) {
-    var windows = WindowManager.createViewersForScStructs(containers_map);
+    const windows = WindowManager.createViewersForScStructs(containers_map);
     this._appendChilds(windows);
     return windows;
 };
@@ -266,8 +266,8 @@ ComponentSandbox.prototype.createViewersForScStructs = function (containers_map)
  * data will be returned as string
  */
 ComponentSandbox.prototype.updateContent = function (contentType) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
 
     if (this.is_struct && this.eventStructUpdate) {
         window.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_3F_A_A,
@@ -364,10 +364,10 @@ ComponentSandbox.prototype.onWindowActiveChanged = function (is_active) {
 
 // --------- Data -------------
 ComponentSandbox.prototype.onDataAppend = function (data) {
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
 
     if (this.eventDataAppend) {
-        var self = this;
+        const self = this;
         $.when(this.eventDataAppend(data)).then(
             function () {
                 $.when(Translation.translate(self.getObjectsToTranslate())).done(

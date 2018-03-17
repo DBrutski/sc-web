@@ -10,8 +10,8 @@ import WindowManager from "./WindowManager";
 const Core = {
 
     init: function(data, callback) {
-        var self = this;
-        var dfd = new jQuery.Deferred();
+        const self = this;
+        const dfd = new jQuery.Deferred();
 
         this.tooltip_interval = null;
         this.tooltip_element = null;
@@ -42,7 +42,7 @@ const Core = {
         ).done(function() {
 
             // listen clicks on sc-elements
-            var sc_elements_cmd_selector = '[sc_addr]:not(.sc-window, .sc-no-default-cmd)';
+            const sc_elements_cmd_selector = '[sc_addr]:not(.sc-window, .sc-no-default-cmd)';
             $('#window-container,#help-modal').delegate(sc_elements_cmd_selector, 'click', function(e) {
                 if (!ArgumentsPanel.isArgumentAddState()) {
                     Main.doDefaultCommand([$(e.currentTarget).attr('sc_addr')]);
@@ -50,7 +50,7 @@ const Core = {
                 }
             });
 
-            var sc_elements_arg_selector = '[sc_addr]:not(.sc-window)';
+            const sc_elements_arg_selector = '[sc_addr]:not(.sc-window)';
             $('body').delegate(sc_elements_arg_selector, 'click', function(e) {
                 if (ArgumentsPanel.isArgumentAddState() && !$(e.currentTarget).hasClass(
                         'not-argument')) {
@@ -59,7 +59,7 @@ const Core = {
                 }
             });
 
-            var sc_elements_tooltip_selector = '[sc_addr]:not(.sc-window, .ui-no-tooltip)';
+            const sc_elements_tooltip_selector = '[sc_addr]:not(.sc-window, .ui-no-tooltip)';
             $('body')
                 .delegate(sc_elements_tooltip_selector, 'mouseover', function(e) {
 
@@ -68,7 +68,7 @@ const Core = {
                     self.tooltip_interval = setInterval(function() {
                         clearInterval(self.tooltip_interval);
                         self.tooltip_interval = null;
-                        var addr = self.tooltip_element.attr('sc_addr');
+                        const addr = self.tooltip_element.attr('sc_addr');
                         if (addr) {
                             Server.resolveIdentifiers([addr], function(idf) {
                                 if (self.tooltip_element) { // check mouseout destroy
@@ -91,12 +91,12 @@ const Core = {
                 });
 
             $('#help-modal').on('shown.bs.modal', function() {
-                var body = $('#help-modal-body');
+                const body = $('#help-modal-body');
                 if (body.hasClass('modal-empty')) {
                     body.addClass('loading');
                     // try to find content
                     Server.resolveScAddr(['ui_start_help'], function(addrs) {
-                        var a = addrs['ui_start_help'];
+                        const a = addrs['ui_start_help'];
                         if (a) {
                             body.html(
                                 '<div id="help-modal-content" class="sc-window" sc_addr="' +
@@ -129,11 +129,11 @@ const Core = {
      * @param {String} parentSelector String that contains selector for parent element
      */
     resolveElementsAddr: function(parentSelector) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
-        var attr_name = 'sc_control_sys_idtf';
-        var identifiers = [];
-        var elements = [];
+        const attr_name = 'sc_control_sys_idtf';
+        const identifiers = [];
+        const elements = [];
         $(parentSelector + ' [' + attr_name + ']').each(function() {
             identifiers.push($(this).attr(attr_name));
             elements.push($(this));
@@ -141,8 +141,8 @@ const Core = {
 
         Server.resolveScAddr(identifiers, function(addrs) {
             for (e in elements) {
-                var el = elements[e];
-                var addr = addrs[el.attr(attr_name)];
+                const el = elements[e];
+                const addr = addrs[el.attr(attr_name)];
                 if (addr) {
                     el.attr('sc_addr', addr);
                 } else {

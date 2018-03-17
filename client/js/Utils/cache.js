@@ -8,11 +8,11 @@ function AppCache(opt) {
  * return true if one or more keys have been removed
  */
 AppCache.prototype._delExpire = function (key) {
-    var rm = false,
-        cache = this.cache,
-        l = cache.length,
-        now = Date.now(),
-        obj;
+    let rm = false;
+    const cache = this.cache;
+    let l = cache.length;
+    const now = Date.now();
+    let obj;
 
     while (l--) {
         obj = cache[l];
@@ -27,10 +27,10 @@ AppCache.prototype._delExpire = function (key) {
 };
 
 AppCache.prototype.get = function (key) {
-    var data,
-        now = Date.now(),
-        cache = this.cache,
-        l = cache.length,
+    let data;
+    const now = Date.now(),
+        cache = this.cache;
+    let l = cache.length,
         obj;
 
     while (l--) {
@@ -51,7 +51,7 @@ AppCache.prototype.get = function (key) {
 };
 
 AppCache.prototype.set = function (key, val) {
-    var cache = this.cache,
+    const cache = this.cache,
         max = this.opt.max,
         data = {
             key: key,

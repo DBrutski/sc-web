@@ -7,7 +7,7 @@ const KeyboardHandler = {
     events: {},
 
     init: function () {
-        var self = this;
+        const self = this;
 
         $(window)
             .on('keydown', function (d3_event) {
@@ -36,7 +36,7 @@ const KeyboardHandler = {
 
     subscribe: function (evt_name, window_id, callback) {
 
-        var event = {
+        const event = {
             event_name: evt_name,
             func: callback,
             window_id: window_id
@@ -52,8 +52,8 @@ const KeyboardHandler = {
 
     subscribeWindow: function (window_id, callbackArray) {
 
-        for (var eventType in callbackArray) {
-            var func = callbackArray[eventType];
+        for (let eventType in callbackArray) {
+            let func = callbackArray[eventType];
             if (typeof func !== typeof function () {
                 }) {
                 continue;
@@ -76,10 +76,10 @@ const KeyboardHandler = {
      * First param - is an event name. Other parameters will be passed into callback
      */
     emit: function (eventType, d3_event) {
-        var windowId = WindowManager.getActiveWindowId();
+        const windowId = WindowManager.getActiveWindowId();
         if (!this.events[eventType] || !this.events[eventType][windowId])
             return;
-        var callBack = this.events[eventType][windowId].func;
+        const callBack = this.events[eventType][windowId].func;
         if (callBack) {
             callBack(d3_event);
         }

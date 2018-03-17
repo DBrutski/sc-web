@@ -19,15 +19,15 @@ const ComponentManager = {
     _keynodes: [],      // array of keynodes that requested by components
 
     init: function () {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
         // deffered will be resolved when all component will be registered
         this._componentCount = this._initialize_queue.length;
 
         // first of all we need to resolve sc-addrs of keynodes
-        var keynodes = [];
-        for (var i = 0; i < this._initialize_queue.length; i++) {
-            var c = this._initialize_queue[i];
+        let keynodes = [];
+        for (let i = 0; i < this._initialize_queue.length; i++) {
+            const c = this._initialize_queue[i];
             keynodes = keynodes.concat(c.formats);
             if (c.getRequestKeynodes) {
                 keynodes = keynodes.concat(c.getRequestKeynodes());
@@ -36,22 +36,22 @@ const ComponentManager = {
                 keynodes.push(c.ext_lang);
         }
 
-        var self = this;
+        const self = this;
         Server.resolveScAddr(keynodes, function (addrs) {
 
             self._keynodes = addrs;
-            for (var i = 0; i < self._initialize_queue.length; i++) {
-                var comp_def = self._initialize_queue[i];
+            for (let i = 0; i < self._initialize_queue.length; i++) {
+                const comp_def = self._initialize_queue[i];
 
-                var lang_addr = addrs[comp_def.ext_lang];
-                var formats = null;
+                const lang_addr = addrs[comp_def.ext_lang];
+                let formats = null;
                 if (lang_addr) {
                     formats = [];
                     self._factories_ext_lang[lang_addr] = comp_def;
                 }
 
-                for (var j = 0; j < comp_def.formats.length; j++) {
-                    var fmt = addrs[comp_def.formats[j]];
+                for (let j = 0; j < comp_def.formats.length; j++) {
+                    const fmt = addrs[comp_def.formats[j]];
 
                     if (fmt) {
                         self.registerFactory(fmt, comp_def);
@@ -95,7 +95,7 @@ const ComponentManager = {
     /** Check if compoenent for specified format supports structures
      */
     isStructSupported: function (format_addr) {
-        var comp_def = this._factories_fmt[format_addr];
+        let comp_def = this._factories_fmt[format_addr];
         if (!comp_def)
             throw "There are no component that supports format: " + format_addr;
 
@@ -116,11 +116,11 @@ const ComponentManager = {
      * If window doesn't created, then returns null
      */
     createWindowSandboxByFormat: function (options, callback) {
-        var dfd = new jQuery.Deferred();
-        var comp_def = this._factories_fmt[options.format_addr];
+        const dfd = new jQuery.Deferred();
+        const comp_def = this._factories_fmt[options.format_addr];
 
         if (comp_def) {
-            var sandbox = new ComponentSandbox({
+            const sandbox = new ComponentSandbox({
                 container: options.container,
                 window_id: options.window_id,
                 addr: options.addr,
@@ -133,7 +133,7 @@ const ComponentManager = {
             if (!comp_def.struct_support && options.is_struct)
                 throw "Component doesn't support structures: " + comp_def;
 
-            var component = comp_def.factory(sandbox);
+            const component = comp_def.factory(sandbox);
             if (component.editor) {
                 if (component.editor.keyboardCallbacks) {
                     KeyboardHandler.subscribeWindow(options.window_id, component.editor.keyboardCallbacks);
@@ -167,11 +167,11 @@ const ComponentManager = {
      * If window doesn't created, then returns null
      */
     createWindowSandboxByExtLang: function (options, callback) {
-        var comp_def = this._factories_ext_lang[options.ext_lang_addr];
+        const comp_def = this._factories_ext_lang[options.ext_lang_addr];
 
         if (comp_def) {
 
-            var sandbox = new ComponentSandbox({
+            const sandbox = new ComponentSandbox({
                 container: options.container,
                 addr: options.addr,
                 is_struct: options.is_struct,
@@ -195,7 +195,7 @@ const ComponentManager = {
      * @param {String} ext_lang_addr sc-addr of external language
      */
     getPrimaryFormatForExtLang: function (ext_lang_addr) {
-        var fmts = this._ext_langs[ext_lang_addr];
+        const fmts = this._ext_langs[ext_lang_addr];
 
         if (fmts && fmts.length > 0) {
             return fmts[0];
@@ -206,7 +206,7 @@ const ComponentManager = {
 
     /* Returns list of external languages, that has components for sc-structure visualization */
     getScStructSupportExtLangs: function () {
-        var res = [];
+        const res = [];
 
         for (ext_lang in this._factories_ext_lang) {
             if (this._factories_ext_lang.hasOwnProperty(ext_lang)) {

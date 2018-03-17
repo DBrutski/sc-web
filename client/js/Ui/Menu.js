@@ -13,15 +13,15 @@ const Menu = {
      * - menu_commands - object, that represent menu command hierachy (in format returned from server)
      */
     init: function (params) {
-        var dfd = new jQuery.Deferred();
-        var self = this;
+        const dfd = new jQuery.Deferred();
+        const self = this;
 
         this.menu_container_id = '#' + params.menu_container_id;
 
         // register for translation updates
         EventManager.subscribe("translation/get", this, function (objects) {
-            var items = self.getObjectsToTranslate();
-            for (var i in items) {
+            const items = self.getObjectsToTranslate();
+            for (let i in items) {
                 objects.push(items[i]);
             }
         });
@@ -48,12 +48,12 @@ const Menu = {
 
         this._items = [];
 
-        var menuHtml = '<ul class="nav navbar-nav">';
+        let menuHtml = '<ul class="nav navbar-nav">';
 
         //TODO: change to children, remove intermediate 'childs'
         if (menuData.hasOwnProperty('childs')) {
             for (i in menuData.childs) {
-                var subMenu = menuData.childs[i];
+                const subMenu = menuData.childs[i];
                 menuHtml += this._parseMenuItem(subMenu);
             }
         }
@@ -69,10 +69,10 @@ const Menu = {
 
         this._items.push(item.id);
 
-        var itemHtml = '';
-        if (item.cmd_type == 'cmd_noatom') {
+        let itemHtml = '';
+        if (item.cmd_type === 'cmd_noatom') {
             itemHtml = '<li class="dropdown"><a sc_addr="' + item.id + '" id="' + item.id + '" class="menu-item menu-cmd-noatom dropdown-toggle" data-toggle="dropdown" href="#" ><span clas="text">' + item.id + '</span><b class="caret"></b></a>';
-        } else if (item.cmd_type == 'cmd_atom') {
+        } else if (item.cmd_type === 'cmd_atom') {
             itemHtml = '<li><a id="' + item.id + '"sc_addr="' + item.id + '" class="menu-item menu-cmd-atom" >' + item.id + '</a>';
         } else {
             itemHtml = '<li><a id="' + item.id + '"sc_addr="' + item.id + '" class="menu-item menu-cmd-keynode" >' + item.id + '</a>';
@@ -81,7 +81,7 @@ const Menu = {
         if (item.hasOwnProperty('childs')) {
             itemHtml += '<ul class="dropdown-menu">';
             for (i in item.childs) {
-                var subMenu = item.childs[i];
+                const subMenu = item.childs[i];
                 itemHtml += this._parseMenuItem(subMenu);
             }
             itemHtml += '</ul>';
@@ -92,7 +92,7 @@ const Menu = {
     _registerMenuHandler: function () {
 
         $('.menu-item').click(function () {
-            var sc_addr = $(this).attr('sc_addr');
+            const sc_addr = $(this).attr('sc_addr');
             if ($(this).hasClass('menu-cmd-atom')) {
                 SCWeb.core.Main.doCommand(sc_addr, Arguments._arguments);
             } else if ($(this).hasClass('menu-cmd-keynode')) {
@@ -106,13 +106,13 @@ const Menu = {
     },
 
     _contextMenu: function (target) {
-        var dfd = new jQuery.Deferred();
-        var args = Arguments._arguments.slice();
+        const dfd = new jQuery.Deferred();
+        const args = Arguments._arguments.slice();
         args.push(target.attr('sc_addr'));
         Server.contextMenu(args, function (data) {
 
-            var parseMenuItem = function (item, parentSubmenu) {
-                var menu_item = {};
+            const parseMenuItem = function (item, parentSubmenu) {
+                const menu_item = {};
                 menu_item.action = function (e) {
                     Main.doCommand(item, args);
                 };
@@ -121,13 +121,13 @@ const Menu = {
                 parentSubmenu.push(menu_item);
             };
 
-            var menu = [];
+            const menu = [];
             for (i in data) {
                 parseMenuItem(data[i], menu);
             }
 
-            var applyTranslation = function (item, id, text) {
-                if (item.text == id) {
+            const applyTranslation = function (item, id, text) {
+                if (item.text === id) {
                     item.text = text;
                 }
                 if (item.subMenu) {
@@ -139,7 +139,7 @@ const Menu = {
 
             Server.resolveIdentifiers(data, function (namesMap) {
 
-                for (var itemId in namesMap) {
+                for (let itemId in namesMap) {
                     if (namesMap.hasOwnProperty(itemId)) {
                         for (i in menu) {
                             applyTranslation(menu[i], itemId, namesMap[itemId]);
@@ -174,7 +174,7 @@ const Menu = {
     updateTranslation: function (namesMap) {
         // apply translation
         $(this.menu_container_id + ' [sc_addr]').each(function (index, element) {
-            var addr = $(element).attr('sc_addr');
+            const addr = $(element).attr('sc_addr');
             if (namesMap[addr]) {
                 $(element).text(namesMap[addr]);
             }

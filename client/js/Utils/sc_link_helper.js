@@ -1,8 +1,8 @@
 
-var ScFileLinkTypes = {
-    html : "html",
-    pdf : "pdf",
-    image : "image"
+const ScFileLinkTypes = {
+    html: "html",
+    pdf: "pdf",
+    image: "image"
 };
 
 class ScFileLinkHelper {
@@ -28,7 +28,7 @@ class ScFileLinkHelper {
     }
 
     getFileType() {
-        var type = this.file.type;
+        const type = this.file.type;
         if (type.indexOf(ScFileLinkTypes.image) > -1) {
             return ScFileLinkTypes.image;
         } else if (type.indexOf(ScFileLinkTypes.html) > -1) {

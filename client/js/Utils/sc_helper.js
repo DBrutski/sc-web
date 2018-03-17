@@ -4,7 +4,7 @@ ScHelper = function (sctpClient) {
 };
 
 ScHelper.prototype.init = function () {
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
 
     dfd.resolve();
 
@@ -32,7 +32,7 @@ ScHelper.prototype.checkEdge = function (addr1, type, addr2) {
  * failed, that promise object rejects
  */
 ScHelper.prototype.getSetElements = function (addr) {
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
 
     this.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_3F_A_A, [
         addr,
@@ -40,7 +40,7 @@ ScHelper.prototype.getSetElements = function (addr) {
         sc_type_node | sc_type_const
     ])
         .done(function (res) {
-            var langs = [];
+            const langs = [];
 
             for (r in res) {
                 langs.push(res[r][2]);
@@ -181,7 +181,7 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
     };
 
 
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
 
     let start = performance.now();
     parseCommand(menuAddr).then((result) => dfd.resolve(result))
@@ -212,10 +212,10 @@ ScHelper.prototype.getOutputLanguages = function () {
  * If function fails, then promise rejects
  */
 ScHelper.prototype.getAnswer = function (question_addr) {
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
 
     (function (_question_addr, _self, _dfd) {
-        var fn = this;
+        const fn = this;
 
         this.timer = window.setTimeout(function () {
             _dfd.reject();
@@ -268,9 +268,9 @@ ScHelper.prototype.getAnswer = function (question_addr) {
  * If there are no system identifier, then promise rejects
  */
 ScHelper.prototype.getSystemIdentifier = function (addr) {
-    var dfd = new jQuery.Deferred();
+    const dfd = new jQuery.Deferred();
 
-    var self = this;
+    const self = this;
     this.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F, [
         addr,
         sc_type_arc_common | sc_type_const,
@@ -295,7 +295,7 @@ ScHelper.prototype.getSystemIdentifier = function (addr) {
 };
 
 ScHelper.prototype.getSystemIdentifierPromise = function (addr) {
-    var self = this;
+    const self = this;
 
     return new Promise((resolve, reject) => {
         this.sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F, [
@@ -328,10 +328,10 @@ ScHelper.prototype.getSystemIdentifierPromise = function (addr) {
  * If there are no any identifier, then promise rejects
  */
 ScHelper.prototype.getIdentifier = function (addr, lang) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
 
-    var get_sys = function () {
+    const get_sys = function () {
         self.getSystemIdentifier(addr)
             .done(function (res) {
                 dfd.resolve(res);
@@ -355,7 +355,7 @@ ScHelper.prototype.getIdentifier = function (addr, lang) {
             "x"
         ])
     ).done(function (results) {
-        var link_addr = results.get(0, "x");
+        const link_addr = results.get(0, "x");
 
         self.sctpClient.get_link_content(link_addr)
             .done(function (res) {
@@ -372,7 +372,7 @@ ScHelper.prototype.getIdentifier = function (addr, lang) {
 };
 
 ScHelper.prototype.setLinkFormat = function (addr, format) {
-    var self = this;
+    const self = this;
     window.sctpClient.create_arc(sc_type_arc_common | sc_type_const, addr, format).done(function (arc_addr) {
         window.sctpClient.create_arc(sc_type_arc_pos_const_perm, window.scKeynodes.nrel_format, arc_addr).fail(function () {
             console.log("Fail in ScHelper.prototype.setLinkFormat create_arc(nrel_format, arc_addr)")

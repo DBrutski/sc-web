@@ -1,7 +1,7 @@
 function parseURL(url) {
-    var parser = document.createElement('a'),
-        searchObject = {},
-        queries, split, i;
+    const parser = document.createElement('a'),
+        searchObject = {};
+    let queries, split, i;
     // Let the browser do the work
     parser.href = url;
     // Convert query string to object

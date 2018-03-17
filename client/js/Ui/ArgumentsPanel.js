@@ -6,9 +6,9 @@ const ArgumentsPanel = {
 
     init: function() {
         this.argument_add_state = false;
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
-        var self = this;
+        const self = this;
         // listen events from arguments
         EventManager.subscribe("arguments/add", this, this.onArgumentAppended);
         EventManager.subscribe("arguments/remove", this, this.onArgumentRemoved);
@@ -18,8 +18,8 @@ const ArgumentsPanel = {
         // listen events from translation
         EventManager.subscribe("translation/update", this, this.updateTranslation);
         EventManager.subscribe("translation/get", this, function(objects) {
-            var items = self.getObjectsToTranslate();
-            for (var i in items) {
+            const items = self.getObjectsToTranslate();
+            for (let i in items) {
                 objects.push(items[i]);
             }
         });
@@ -35,7 +35,7 @@ const ArgumentsPanel = {
         });
 
         $(document).on("click", ".argument-item", function(event) {
-            var idx = $(this).attr('arg_idx');
+            const idx = $(this).attr('arg_idx');
             Arguments.removeArgumentByIndex(parseInt(idx));
         });
 
@@ -56,7 +56,7 @@ const ArgumentsPanel = {
     },
 
     updateArgumentAddState: function() {
-        var add_button = $("#arguments_add_button");
+        const add_button = $("#arguments_add_button");
         if (this.argument_add_state) {
             add_button.addClass('argument-wait');
         } else {
@@ -67,10 +67,10 @@ const ArgumentsPanel = {
     // ------- Arguments listener interface -----------
     onArgumentAppended: function(argument, idx) {
 
-        var idx_str = idx.toString();
-        var self = this;
+        const idx_str = idx.toString();
+        const self = this;
 
-        var new_button =
+        const new_button =
             '<button class="btn btn-primary argument-item argument-translate-state not-argument" sc_addr="' +
             argument +
             '" arg_idx="' +
@@ -83,7 +83,7 @@ const ArgumentsPanel = {
         // translate added argument
         $.when(Translation.translate([argument])).done(function(namesMap) {
 
-            var value = argument;
+            let value = argument;
             if (namesMap[argument]) {
                 value = namesMap[argument];
             }
@@ -100,7 +100,7 @@ const ArgumentsPanel = {
         // update indicies
         $(this._container + ' [arg_idx]').each(function(index, element) {
 
-            var v = parseInt($(this).attr('arg_idx'));
+            let v = parseInt($(this).attr('arg_idx'));
 
             if (v > idx) {
                 v = v - 1;
@@ -121,7 +121,7 @@ const ArgumentsPanel = {
         // apply translation
         $('#arguments_buttons [sc_addr]').each(function(index, element) {
 
-            var addr = $(element).attr('sc_addr');
+            const addr = $(element).attr('sc_addr');
             if (namesMap[addr]) {
                 $(element).text(namesMap[addr]);
             }

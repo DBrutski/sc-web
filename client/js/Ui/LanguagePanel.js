@@ -11,12 +11,12 @@ const LanguagePanel = {
      * - languages - list of available natural languages
      */
     init: function (params) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
         this.languages = params.languages;
 
-        var html = '';
-        for (i in this.languages) {
-            var addr = this.languages[i];
+        let html = '';
+        for (let i in this.languages) {
+            const addr = this.languages[i];
 
             html += '<option sc_addr="' + addr + '">' + addr + '</option>';
         }
@@ -26,7 +26,7 @@ const LanguagePanel = {
             .val(params.user.current_lang)
             .change(function () {
                 Locker.show();
-                var addr = $('#language-select option:selected').attr("sc_addr");
+                const addr = $('#language-select option:selected').attr("sc_addr");
                 $('#language-select').attr('disabled', true);
                 Translation.setLanguage(addr, function () {
                     $('#language-select').removeAttr('disabled', true);
@@ -52,7 +52,7 @@ const LanguagePanel = {
         // apply translation
         this.updateSearchInput();
         $('#language-select [sc_addr]').each(function (index, element) {
-            var addr = $(element).attr('sc_addr');
+            const addr = $(element).attr('sc_addr');
             if (namesMap[addr]) {
                 $(element).text(namesMap[addr].replace('user::', '').replace('session::', ''));
             }
@@ -61,7 +61,7 @@ const LanguagePanel = {
     },
 
     updateSearchInput: function () {
-        var keynodes = ['ui_control_search'];
+        const keynodes = ['ui_control_search'];
         Server.resolveScAddr(keynodes, function (keynodes) {
             Server.resolveIdentifiers(keynodes, function (idf) {
                 $("#search-input").attr('placeholder', idf[keynodes['ui_control_search']]);

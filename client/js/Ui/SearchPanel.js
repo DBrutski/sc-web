@@ -3,12 +3,12 @@ import Server from "../Core/Server";
 const SearchPanel = {
 
     init: function () {
-        var dfd = new jQuery.Deferred();
-        var self = this;
+        const dfd = new jQuery.Deferred();
+        const self = this;
 
-        var keynode_nrel_main_idtf = null;
-        var keynode_nrel_idtf = null;
-        var keynode_nrel_system_idtf = null;
+        let keynode_nrel_main_idtf = null;
+        let keynode_nrel_idtf = null;
+        let keynode_nrel_system_idtf = null;
 
         $('.typeahead').typeahead({
                 minLength: 3,
@@ -21,11 +21,11 @@ const SearchPanel = {
                     Server.findIdentifiersSubStr(query, function (data) {
                         keys = [];
 
-                        var addValues = function (key) {
-                            var list = data[key];
+                        const addValues = function (key) {
+                            const list = data[key];
                             if (list) {
                                 for (idx in list) {
-                                    var value = list[idx];
+                                    const value = list[idx];
                                     keys.push({name: value[1], addr: value[0], group: key});
                                 }
                             }
@@ -44,11 +44,11 @@ const SearchPanel = {
                     suggestion: function (item) {
 
                         //glyphicon glyphicon-globe
-                        var html = '';
+                        const html = '';
                         if (item.group === 'common') {
                             return '<p class="sc-content">' + item.name + '</p>';
                         } else {
-                            var cl = 'glyphicon glyphicon-user';
+                            let cl = 'glyphicon glyphicon-user';
                             if (item.group === 'sys') {
                                 cl = 'glyphicon glyphicon-globe';
                             }
@@ -65,7 +65,7 @@ const SearchPanel = {
             evt.stopPropagation();
             $('.typeahead').val('');
         }).keypress(function (event) {
-            if (event.which == 13) {
+            if (event.which === 13) {
                 Main.doTextCommand($(this).val());
                 $('#search-input').val('');
             }

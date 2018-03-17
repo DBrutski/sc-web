@@ -24,19 +24,19 @@ TripleUtils.prototype = {
      * @returns If something found, then returns list of results; otherwise returns null
      */
     find5_f_a_a_a_f: function (addr1, type2, type3, type4, addr5) {
-        var res = null;
+        let res = null;
         // iterate all output edges from addr1
-        var list = this.outputEdges[addr1];
+        let list = this.outputEdges[addr1];
         if (!list) return null;
         for (l in list) {
-            var edge = list[l];
+            const edge = list[l];
             if (this._compareType(type2, this._getType(edge.edge)) && this._compareType(type3, this._getType(edge.trg))) {
                 // second triple iteration
-                var list2 = this.inputEdges[edge.edge];
+                const list2 = this.inputEdges[edge.edge];
                 if (list2) {
                     for (l2 in list2) {
-                        var edge2 = list2[l2];
-                        if (this._compareType(type4, this._getType(edge2.edge)) && (edge2.src == addr5)) {
+                        const edge2 = list2[l2];
+                        if (this._compareType(type4, this._getType(edge2.edge)) && (edge2.src === addr5)) {
                             if (!res) res = [];
                             res.push([
                                 {addr: addr1, type: this._getType(addr1)},
@@ -54,18 +54,18 @@ TripleUtils.prototype = {
     },
 
     find5_f_a_f_a_f: function (addr1, type2, addr3, type4, addr5) {
-        var list = this.inputEdges[addr3];
+        let list = this.inputEdges[addr3];
         if (!list) return null;
 
-        var res = null;
+        let res = null;
         for (l in list) {
-            var edge = list[l];
+            const edge = list[l];
             if (this._compareType(type2, this._getType(edge.edge)) && (addr1 === edge.src)) {
-                var list2 = this.inputEdges[addr5];
+                let list2 = this.inputEdges[addr5];
                 if (!list2) continue;
 
                 for (l2 in list2) {
-                    var edge2 = list2[l2];
+                    const edge2 = list2[l2];
                     if (this._compareType(type4, this._getType(edge2.edge)) && (addr3 === edge.src)) {
                         if (!res) res = [];
                         res.push([
@@ -82,12 +82,12 @@ TripleUtils.prototype = {
     },
 
     find3_f_a_f: function (addr1, type2, addr3) {
-        var list = this.inputEdges[addr3];
+        let list = this.inputEdges[addr3];
         if (!list) return null;
 
-        var res = null;
+        let res = null;
         for (l in list) {
-            var edge = list[l];
+            const edge = list[l];
             if (this._compareType(type2, edge.edge) && (addr1 === edge.src)) {
                 if (!res) res = [];
                 res.push([
@@ -106,12 +106,12 @@ TripleUtils.prototype = {
      */
     find3_f_a_a: function (addr1, type2, type3) {
         // iterate elements
-        var list = this.outputEdges[addr1];
+        let list = this.outputEdges[addr1];
         if (!list) return null;
 
-        var res = null;
+        let res = null;
         for (l in list) {
-            var edge = list[l];
+            const edge = list[l];
             if (this._compareType(type2, this._getType(edge.edge)) && this._compareType(type3, this._getType(edge.trg))) {
                 if (!res) res = [];
                 res.push([
@@ -133,7 +133,7 @@ TripleUtils.prototype = {
     },
 
     checkAnyOutputEdgeType: function (srcAddr, edgeType) {
-        var list = this.outputEdges[srcAddr];
+        const list = this.outputEdges[srcAddr];
         if (list) {
             for (l in list) {
                 if (this._checkType(edgeType, this._getType(list[l].edge)))
@@ -144,7 +144,7 @@ TripleUtils.prototype = {
     },
 
     checkAnyInputEdgeType: function (trgAddr, edgeType) {
-        var list = this.inputEdges[trgAddr];
+        const list = this.inputEdges[trgAddr];
         if (list) {
             for (l in list) {
                 if (this._checkType(edgeType, this._getType(list[l].edge)))
@@ -156,7 +156,7 @@ TripleUtils.prototype = {
 
     // just for internal usage
     _compareType: function (it_type, el_type) {
-        return ((it_type & el_type) == it_type);
+        return ((it_type & el_type) === it_type);
     },
 
     _getType: function (addr) {
@@ -164,8 +164,8 @@ TripleUtils.prototype = {
     },
 
     _appendOutputEdge: function (srcAddr, edgeAddr, trgAddr) {
-        var list = this.outputEdges[srcAddr];
-        var edge = {src: srcAddr, edge: edgeAddr, trg: trgAddr};
+        let list = this.outputEdges[srcAddr];
+        const edge = {src: srcAddr, edge: edgeAddr, trg: trgAddr};
         if (!list) {
             this.outputEdges[srcAddr] = [edge];
         } else {
@@ -174,11 +174,11 @@ TripleUtils.prototype = {
     },
 
     _removeOutputEdge: function (srcAddr, edgeAddr) {
-        var list = this.outputEdges[srcAddr];
+        const list = this.outputEdges[srcAddr];
         if (list) {
             for (e in list) {
-                var edge = list[e];
-                if (edge.edge == edgeAddr) {
+                const edge = list[e];
+                if (edge.edge === edgeAddr) {
                     this.outputEdges.splice(e, 1);
                     return;
                 }
@@ -189,8 +189,8 @@ TripleUtils.prototype = {
     },
 
     _appendInputEdge: function (srcAddr, edgeAddr, trgAddr) {
-        var list = this.inputEdges[trgAddr];
-        var edge = {src: srcAddr, edge: edgeAddr, trg: trgAddr};
+        let list = this.inputEdges[trgAddr];
+        const edge = {src: srcAddr, edge: edgeAddr, trg: trgAddr};
         if (!list) {
             this.inputEdges[trgAddr] = [edge];
         } else {
@@ -199,11 +199,11 @@ TripleUtils.prototype = {
     },
 
     _removeInputEdge: function (trgAddr, edgeAddr) {
-        var list = this.inputEdges[trgAddr];
+        const list = this.inputEdges[trgAddr];
         if (list) {
             for (e in list) {
-                var edge = list[e];
-                if (edge.edge == edgeAddr) {
+                const edge = list[e];
+                if (edge.edge === edgeAddr) {
                     this.inputEdges.splice(e, 1);
                     return;
                 }

@@ -17,14 +17,14 @@ const Translation = {
     /** Updates all translations
      */
     update: function () {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
         // collect objects, that need to be translated
-        var objects = this.collectObjects();
+        const objects = this.collectObjects();
 
         // @todo need to remove duplicates from object list
         // translate
-        var self = this;
+        const self = this;
         $.when(this.translate(objects)).then(
             function (namesMap) {
                 self.fireUpdate(namesMap);
@@ -48,9 +48,9 @@ const Translation = {
      * If there are no key in returned object, then identifier wasn't found
      */
     translate: function (objects) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
-        var self = this;
+        const self = this;
         Server.resolveIdentifiers(objects, function (namesMap) {
             dfd.resolve(namesMap);
         });
@@ -63,7 +63,7 @@ const Translation = {
      * @param {Function} callback Callbcak function that will be called on language change finish
      */
     setLanguage: function (lang_addr, callback) {
-        var self = this;
+        const self = this;
         Server.setLanguage(lang_addr, function () {
             self.fireLanguageChanged(lang_addr);
             $.when(self.translate(self.collectObjects())).done(function (namesMap) {
@@ -89,7 +89,7 @@ const Translation = {
     /** Collect objects for translation
      */
     collectObjects: function () {
-        var objects = [];
+        const objects = [];
         EventManager.emit("translation/get", objects);
         return objects;
     },
@@ -98,7 +98,7 @@ const Translation = {
      * @param {Array} objects Array of objects to translate
      */
     requestTranslate: function (objects) {
-        var self = this;
+        const self = this;
         this.translate(objects, function (namesMap) {
             self.fireUpdate(namesMap);
         });

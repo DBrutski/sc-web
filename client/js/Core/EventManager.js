@@ -11,7 +11,7 @@ const EventManager = {
      */
     subscribe: function (evt_name, context, callback) {
 
-        var event = {
+        const event = {
             event_name: evt_name,
             func: callback,
             context: context
@@ -32,9 +32,9 @@ const EventManager = {
      */
     unsubscribe: function (event) {
 
-        for (var evt in this.events) {
-            var funcs = this.events[evt];
-            var idx = funcs.indexOf(event);
+        for (let evt in this.events) {
+            const funcs = this.events[evt];
+            const idx = funcs.indexOf(event);
             if (idx >= 0) {
                 funcs.splice(idx, 1);
             }
@@ -47,13 +47,13 @@ const EventManager = {
      */
     emit: function () {
 
-        var params = Array.prototype.slice.call(arguments);
-        var evt = params.splice(0, 1);
+        const params = Array.prototype.slice.call(arguments);
+        const evt = params.splice(0, 1);
 
-        var funcs = this.events[evt];
+        const funcs = this.events[evt];
         if (funcs) {
-            for (var f in funcs) {
-                var e_obj = funcs[f];
+            for (let f in funcs) {
+                const e_obj = funcs[f];
                 e_obj.func.apply(e_obj.context, params);
             }
         }

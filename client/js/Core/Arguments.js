@@ -27,7 +27,7 @@ const Arguments = {
 
         this._arguments.push(argument);
 
-        var idx = this._arguments.length - 1;
+        const idx = this._arguments.length - 1;
         this._fireArgumentAppended(argument, idx);
 
         return idx;
@@ -41,10 +41,10 @@ const Arguments = {
      */
     removeArgument: function (argument) {
 
-        var idx = this._arguments.indexOf(argument);
+        const idx = this._arguments.indexOf(argument);
 
         if (idx >= 0) {
-            var arg = this._arguments[idx];
+            const arg = this._arguments[idx];
             this._arguments.splice(idx, 1);
 
             this._fireArgumentAppended(arg, idx);
@@ -60,7 +60,7 @@ const Arguments = {
     removeArgumentByIndex: function (idx) {
 
         if (idx < this._arguments.length) {
-            var arg = this._arguments[idx];
+            const arg = this._arguments[idx];
             this._arguments.splice(idx, 1);
 
             this._fireArgumentRemoved(arg, idx);

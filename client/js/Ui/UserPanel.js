@@ -10,7 +10,7 @@ const UserPanel = {
      * - current_lang - sc-addr of used natural language
      */
     init: function (params) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
         this.is_authenticated = params.user.is_authenticated;
         this.user_sc_addr = params.user.sc_addr;
@@ -39,7 +39,7 @@ const UserPanel = {
     updateTranslation: function (namesMap) {
         // apply translation
         $('#auth-user-panel [sc_addr]').each(function (index, element) {
-            var addr = $(element).attr('sc_addr');
+            const addr = $(element).attr('sc_addr');
             if (namesMap[addr]) {
                 $(element).text(namesMap[addr].replace('user::', '').replace('session::', ''));
             }

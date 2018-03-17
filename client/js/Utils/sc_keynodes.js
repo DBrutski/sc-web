@@ -67,8 +67,8 @@ ScKeynodes.prototype.init = function () {
  * @returns {*}
  */
 ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
 
     this.sctpClient.find_element_by_system_identifier(sysIdtf).then(function (res) {
 
@@ -97,8 +97,8 @@ ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
 ScKeynodes.prototype.resolveArrayOfKeynodes = function (sysIdtfs) {
     if (!sysIdtfs || !Array.isArray(sysIdtfs))
         throw new Error(`incorect type of argumet. expected: array, actual ${sysIdtfs}`);
-    var dfd = new jQuery.Deferred();
-    var self = this;
+    const dfd = new jQuery.Deferred();
+    const self = this;
     let promises = sysIdtfs.map((val) => this._executeSysIdtf(val));
     $.when.apply($, promises
     ).then(function () {

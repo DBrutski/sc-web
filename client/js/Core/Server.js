@@ -17,7 +17,7 @@ const Server = {
     _sys_identifiers_cache: null,
 
     _initialize: function () {
-        var expire = 1000 * 60 * 5; // five minutes expire
+        const expire = 1000 * 60 * 5; // five minutes expire
         this._identifiers_cache = new AppCache({
             expire: expire,
             max: 3000
@@ -41,7 +41,7 @@ const Server = {
      * - taskFinished - function that calls on new task finished. No any arguments
      */
     appendListener: function (listener) {
-        if (this._listeners.indexOf(listener) == -1) {
+        if (this._listeners.indexOf(listener) === -1) {
             this._listeners.push(listener);
         }
     },
@@ -51,7 +51,7 @@ const Server = {
      * @param {Object} listener Listener object to remove
      */
     removeListener: function (listener) {
-        var idx = this._listeners.indexOf(listener);
+        const idx = this._listeners.indexOf(listener);
         if (idx >= 0) {
             this._listeners.splice(idx, 1);
         }
@@ -61,7 +61,7 @@ const Server = {
      * Notify all registere listeners task started
      */
     _fireTaskStarted: function () {
-        for (var i = 0; i < this._listeners.length; ++i) {
+        for (let i = 0; i < this._listeners.length; ++i) {
             $.proxy(this._listeners[i].taskStarted(), this._listeners[i]);
         }
     },
@@ -70,7 +70,7 @@ const Server = {
      * Notify all registered listeners on task finished
      */
     _fireTaskFinished: function () {
-        for (var i = 0; i < this._listeners.length; ++i) {
+        for (let i = 0; i < this._listeners.length; ++i) {
             $.proxy(this._listeners[i].taskFinished(), this._listeners[i]);
         }
     },
@@ -90,12 +90,12 @@ const Server = {
         this._task_queue.push(task);
 
         if (!this._task_timeout) {
-            var self = this;
+            const self = this;
             this._task_timeout = window.setInterval(function () {
-                var tasks = self._pop_tasks();
+                const tasks = self._pop_tasks();
 
                 for (idx in tasks) {
-                    var task = tasks[idx];
+                    const task = tasks[idx];
                     self._task_active_num++;
                     $.ajax({
                         url: task.url,
@@ -120,13 +120,13 @@ const Server = {
      * Number of returned tasks is min(_task_max_active_num - _task_active_num, _task_queue.length)
      */
     _pop_tasks: function () {
-        var task_num = this._task_max_active_num - this._task_active_num;
-        var res = [];
-        for (var i = 0; i < Math.min(task_num, this._task_queue.length); ++i) {
+        const task_num = this._task_max_active_num - this._task_active_num;
+        const res = [];
+        for (let i = 0; i < Math.min(task_num, this._task_queue.length); ++i) {
             res.push(this._task_queue.shift());
         }
 
-        if (this._task_queue.length == 0) {
+        if (this._task_queue.length === 0) {
             window.clearInterval(this._task_timeout);
             this._task_timeout = 0;
         }
@@ -149,7 +149,7 @@ const Server = {
             type: 'GET',
             success: function (user) {
                 window.scHelper.getMenuCommands(window.scKeynodes.ui_main_menu).done(function (menu_commands) {
-                    var data = {};
+                    const data = {};
                     data['menu_commands'] = menu_commands;
                     data['user'] = user;
 
@@ -179,28 +179,28 @@ const Server = {
      */
     resolveIdentifiers: function (objects, callback) {
 
-        if (objects.length == 0) {
+        if (objects.length === 0) {
             callback({});
             return; // do nothing
         }
 
-        var self = this;
+        const self = this;
 
         function getKey(addr) {
             return self._current_language + '/' + addr;
         }
 
-        var result = {},
+        const result = {},
             used = {};
-        var urlEncodedArguments = '';
-        var idx = 1;
+        let urlEncodedArguments = '';
+        let idx = 1;
         for (i in objects) {
-            var id = objects[i];
+            const id = objects[i];
 
             if (used[id]) continue; // skip objects, that was processed
             used[id] = true;
 
-            var cached = this._identifiers_cache.get(getKey(id));
+            const cached = this._identifiers_cache.get(getKey(id));
             if (cached) {
                 if (cached !== '.') {
                     result[id] = cached;
@@ -243,7 +243,7 @@ const Server = {
     },
 
     contextMenu: function (arguments_list, callback) {
-        var argumentsList = this._makeArgumentsList(arguments_list);
+        const argumentsList = this._makeArgumentsList(arguments_list);
 
         this._push_task({
             type: "GET",
@@ -287,9 +287,9 @@ const Server = {
                 });
                 Promise.all(argsPromise).then(values => {
                     let commandArguments = values.filter((element) => {
-                        return element.search(/^ui_arg_\d+$/i) == 0;
+                        return element.search(/^ui_arg_\d+$/i) === 0;
                     });
-                    if (commandArguments.length == arguments_length) {
+                    if (commandArguments.length === arguments_length) {
                         resolve();
                     } else {
                         reject("wrong commandArguments");
@@ -310,10 +310,10 @@ const Server = {
     doCommand: function (cmd_addr, arguments_list, callback) {
 
         let length = arguments_list.length;
-        var promise = this.checkCommandArgument(cmd_addr, length);
+        const promise = this.checkCommandArgument(cmd_addr, length);
         promise.then(
             (result) => {
-                var cmdArguments = this._makeArgumentsList(arguments_list);
+                const cmdArguments = this._makeArgumentsList(arguments_list);
                 cmdArguments['cmd'] = cmd_addr;
 
                 this._push_task({
@@ -333,7 +333,7 @@ const Server = {
      */
     textCommand: function (query, callback) {
 
-        var cmdArguments = {};
+        const cmdArguments = {};
         cmdArguments['query'] = query;
 
         this._push_task({
@@ -369,16 +369,16 @@ const Server = {
      * takes object that contains map of resolved sc-addrs as parameter
      */
     resolveScAddr: function (idtfList, callback) {
-        var self = this,
-            urlEncodedArguments = '',
-            need_resolve = [],
+        const self = this;
+        let urlEncodedArguments = '';
+        const need_resolve = [],
             result = {},
             used = {};
 
         for (i = 0; i < idtfList.length; i++) {
-            var arg = idtfList[i];
+            const arg = idtfList[i];
 
-            var cached = this._sys_identifiers_cache.get(arg);
+            const cached = this._sys_identifiers_cache.get(arg);
             if (cached) {
                 result[arg] = cached;
                 continue;
@@ -391,7 +391,7 @@ const Server = {
             need_resolve.push(arg);
         }
 
-        if (need_resolve.length == 0) {
+        if (need_resolve.length === 0) {
             callback(result);
         } else {
             (function (result, addresses, need_resolve, callback) {
@@ -401,8 +401,8 @@ const Server = {
                     data: addresses,
                     success: function (addrs) {
                         for (i in need_resolve) {
-                            var key = need_resolve[i];
-                            var addr = addrs[key];
+                            const key = need_resolve[i];
+                            const addr = addrs[key];
                             if (addr) {
                                 self._sys_identifiers_cache.set(key, addr);
                                 result[key] = addr;
@@ -423,9 +423,9 @@ const Server = {
      * @param {Function} error Callback function, that calls on error
      */
     getLinksFormat: function (links, success, error) {
-        var urlEncodedLinks = '';
+        let urlEncodedLinks = '';
         for (i = 0; i < links.length; i++) {
-            var arg = links[i];
+            const arg = links[i];
             urlEncodedLinks += i.toString() + '_=' + arg + '&';
         }
 
@@ -502,9 +502,9 @@ const Server = {
      * Request tooltip content for specified sc-elements
      */
     getTooltips: function (addrs, success, error) {
-        var urlEncodedTooltips = '';
+        let urlEncodedTooltips = '';
         for (i = 0; i < addrs.length; i++) {
-            var arg = addrs[i];
+            const arg = addrs[i];
             urlEncodedTooltips += i.toString() + '_=' + arg + '&';
         }
 

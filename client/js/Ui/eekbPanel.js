@@ -176,7 +176,7 @@ function EekbPanel() {
         if (expandedNodes.selector) expandedNodes = [];
         treeViewNode.treeview('remove');
         let clickOnNode = (event, data) => {
-            var sc_addr = data.sc_addr;
+            const sc_addr = data.sc_addr;
             if (sc_addr && data.cmd_type === 'cmd_atom') {
                 if (data.sc_addr) {
                     Main.doCommand(sc_addr, Arguments._arguments);
@@ -251,8 +251,8 @@ function EekbPanel() {
 
         // register for translation updates
         EventManager.subscribe("translation/get", this, function (objects) {
-            var items = getObjectsToTranslate();
-            for (var i in items) {
+            const items = getObjectsToTranslate();
+            for (let i in items) {
                 objects.push(items[i]);
             }
         });

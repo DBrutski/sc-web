@@ -1,12 +1,12 @@
-var fQueue = (function () {
+const fQueue = (function () {
 
-    var qnb = function () {
-        var dfd = new jQuery.Deferred();
-        var funcs = Array.prototype.slice.call(arguments, 0);
+    const qnb = function () {
+        const dfd = new jQuery.Deferred();
+        const funcs = Array.prototype.slice.call(arguments, 0);
 
         function worker() {
             if (funcs.length > 0) {
-                var f = funcs.shift();
+                const f = funcs.shift();
                 f.func.apply(f, f.args).done(function () {
                     if (f.done)
                         f.done.call(f.args);
@@ -30,12 +30,12 @@ var fQueue = (function () {
 
 (function dfdQueue() {
 
-    var q,
-        tasks = [],
-        remain = 0,
-        await = null;   // callback
+    let q;
+    const tasks = [],
+        remain = 0;
+    let await = null;   // callback
 
-    var pushImpl = function (dfd) {
+    const pushImpl = function (dfd) {
         remain++;
         dfd.done()
     };

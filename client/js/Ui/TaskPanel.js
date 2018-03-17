@@ -6,7 +6,7 @@ const TaskPanel = {
     _task_num: 0,
 
     init: function (callback) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
         Server.appendListener(this);
         dfd.resolve();

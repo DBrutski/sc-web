@@ -23,10 +23,10 @@ const WindowManager = {
     },
 
     isWindowExist: function (id) {
-        return this.windows.indexOf(id) != -1;
+        return this.windows.indexOf(id) !== -1;
     },
     init: function (params) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
         this.ext_langs = params.external_languages;
 
         this.history_tabs_id = '#history-items';
@@ -35,25 +35,25 @@ const WindowManager = {
         this.window_container_id = '#window-container';
         this.window_container = $(this.window_container_id);
 
-        var self = this;
+        const self = this;
 
         // external language
-        var ext_langs_items = '';
+        let ext_langs_items = '';
         for (idx in this.ext_langs) {
-            var addr = this.ext_langs[idx];
+            const addr = this.ext_langs[idx];
             ext_langs_items += '<li><a href="#" sc_addr="' + addr + '">' + addr + '</a></li>';
         }
         $('#history-item-langs').html(ext_langs_items).find('[sc_addr]').click(function (event) {
 
             if (ArgumentsPanel.isArgumentAddState()) return;
 
-            var question_addr = self.active_history_addr;
-            var lang_addr = $(this).attr('sc_addr');
+            const question_addr = self.active_history_addr;
+            const lang_addr = $(this).attr('sc_addr');
 
-            var fmt_addr = ComponentManager.getPrimaryFormatForExtLang(lang_addr);
+            const fmt_addr = ComponentManager.getPrimaryFormatForExtLang(lang_addr);
             if (fmt_addr) {
-                var command_state = new CommandState(null, null, fmt_addr);
-                var id = self.hash_addr(question_addr, command_state);
+                const command_state = new CommandState(null, null, fmt_addr);
+                const id = self.hash_addr(question_addr, command_state);
                 if (self.isWindowExist(id)) {
                     self.setWindowActive(id);
                 } else {
@@ -68,14 +68,14 @@ const WindowManager = {
             if (ArgumentsPanel.isArgumentAddState()) return;
 
             // get ctive window data
-            var data = self.window_container.find("#" + self.active_window_id).html();
+            const data = self.window_container.find("#" + self.active_window_id).html();
 
-            var html = '<html><head>' + $('head').html() + '</head></html><body>' + data + '</body>';
-            var styles = '';
+            const html = '<html><head>' + $('head').html() + '</head></html><body>' + data + '</body>';
+            const styles = '';
 
-            var DOCTYPE = "<!DOCTYPE html>"; // your doctype declaration
-            var printPreview = window.open('about:blank', 'print_preview');
-            var printDocument = printPreview.document;
+            const DOCTYPE = "<!DOCTYPE html>"; // your doctype declaration
+            const printPreview = window.open('about:blank', 'print_preview');
+            const printDocument = printPreview.document;
             printDocument.open();
             printDocument.write(DOCTYPE +
                 '<html>' +
@@ -116,17 +116,17 @@ const WindowManager = {
     appendHistoryItem: function (question_addr, command_state) {
 
         // @todo check if tab exist        
-        var tab_html = '<a class="list-group-item history-item ui-no-tooltip" sc_addr="' + question_addr + '">' +
+        const tab_html = '<a class="list-group-item history-item ui-no-tooltip" sc_addr="' + question_addr + '">' +
             '<p>' + question_addr + '</p>' +
             '</a>';
 
         this.history_tabs.prepend(tab_html);
 
         // get translation and create window
-        var ext_lang_addr = Main.getDefaultExternalLang();
+        const ext_lang_addr = Main.getDefaultExternalLang();
         command_state.format = ComponentManager.getPrimaryFormatForExtLang(ext_lang_addr);
         if (command_state.format) {
-            var id = this.hash_addr(question_addr, command_state.format, command_state.command_args);
+            const id = this.hash_addr(question_addr, command_state.format, command_state.command_args);
             if (this.isWindowExist(id)) {
                 this.setWindowActive(id);
             } else {
@@ -138,9 +138,9 @@ const WindowManager = {
         this.setHistoryItemActive(question_addr);
 
         // setup input handlers
-        var self = this;
+        const self = this;
         this.history_tabs.find("[sc_addr]").click(function (event) {
-            var question_addr = $(this).attr('sc_addr');
+            const question_addr = $(this).attr('sc_addr');
             self.setHistoryItemActive(question_addr);
             self.setWindowActive(self.hash_addr(question_addr, self.window_active_formats[question_addr]));
         });
@@ -183,13 +183,13 @@ const WindowManager = {
      * @param {String} fmt_addr sc-addr of window format
      */
     appendWindow: function (question_addr, command_state) {
-        var self = this;
+        const self = this;
 
-        var f = function (addr, is_struct) {
-            var id = self.hash_addr(question_addr, command_state.format);
+        const f = function (addr, is_struct) {
+            const id = self.hash_addr(question_addr, command_state.format);
             if (!self.isWindowExist(id)) {
-                var window_id = 'window_' + question_addr;
-                var window_html = '<div class="panel panel-default sc-window" id="' + id + '" sc_addr="' + question_addr + '" sc-addr-fmt="' + command_state.format + '">' +
+                let window_id = 'window_' + question_addr;
+                const window_html = '<div class="panel panel-default sc-window" id="' + id + '" sc_addr="' + question_addr + '" sc-addr-fmt="' + command_state.format + '">' +
                     '<div class="panel-body" id="' + window_id + '"></div>';
                 '</div>';
                 self.window_container.prepend(window_html);
@@ -199,7 +199,7 @@ const WindowManager = {
             }
             sandbox = self.sandboxes[id];
             if (!sandbox) {
-                var sandbox = ComponentManager.createWindowSandboxByFormat({
+                let sandbox = ComponentManager.createWindowSandboxByFormat({
                     format_addr: command_state.format,
                     addr: addr,
                     is_struct: is_struct,
@@ -219,7 +219,7 @@ const WindowManager = {
             ;
         };
 
-        var translated = function () {
+        const translated = function () {
             Server.getAnswerTranslated(question_addr, command_state.format, function (d) {
                 f(d.link, false);
             });
@@ -294,13 +294,13 @@ const WindowManager = {
      * @param {Object} containers_map Map of viewer containers (key: sc-link addr, value: id of container)
      */
     createViewersForScLinks: function (containers_map) {
-        var dfd = new jQuery.Deferred();
+        const dfd = new jQuery.Deferred();
 
-        var linkAddrs = [];
-        for (var cntId in containers_map)
+        const linkAddrs = [];
+        for (let cntId in containers_map)
             linkAddrs.push(containers_map[cntId]);
 
-        if (linkAddrs.length == 0) {
+        if (linkAddrs.length === 0) {
             dfd.resolve();
             return dfd.promise();
         }
@@ -309,13 +309,13 @@ const WindowManager = {
             Server.getLinksFormat(linkAddrs,
                 function (formats) {
 
-                    var result = {};
+                    const result = {};
 
-                    for (var cntId in containers_map) {
-                        var addr = containers_map[cntId];
-                        var fmt = formats[addr];
+                    for (let cntId in containers_map) {
+                        const addr = containers_map[cntId];
+                        const fmt = formats[addr];
                         if (fmt) {
-                            var sandbox = ComponentManager.createWindowSandboxByFormat({
+                            const sandbox = ComponentManager.createWindowSandboxByFormat({
                                 format_addr: fmt,
                                 addr: addr,
                                 is_struct: false,
@@ -343,12 +343,12 @@ const WindowManager = {
      * @param {Object} containers_map Map of viewer containers (id: id of container, value: {key: sc-struct addr, ext_lang_addr: sc-addr of external language}})
      */
     createViewersForScStructs: function (containers_map) {
-        var res = {};
-        for (var cntId in containers_map) {
+        const res = {};
+        for (let cntId in containers_map) {
             if (!containers_map.hasOwnProperty(cntId))
                 continue;
 
-            var info = containers_map[cntId];
+            const info = containers_map[cntId];
             res[cntId] = ComponentManager.createWindowSandboxByExtLang({
                 ext_lang_addr: info.ext_lang_addr,
                 addr: info.addr,
@@ -365,14 +365,14 @@ const WindowManager = {
     updateTranslation: function (namesMap) {
         // apply translation
         $('#window-header-tools [sc_addr]:not(.btn)').each(function (index, element) {
-            var addr = $(element).attr('sc_addr');
+            const addr = $(element).attr('sc_addr');
             if (namesMap[addr]) {
                 $(element).text(namesMap[addr]);
             }
         });
 
         $('#history-container [sc_addr]:not(.btn)').each(function (index, element) {
-            var addr = $(element).attr('sc_addr');
+            const addr = $(element).attr('sc_addr');
             if (namesMap[addr]) {
                 $(element).text(namesMap[addr]);
             }
