@@ -1,3 +1,4 @@
+import * as jQuery from "jquery";
 const fQueue = (function () {
 
     const qnb = function () {
@@ -16,7 +17,7 @@ const fQueue = (function () {
                 });
             } else
                 dfd.resolve();
-        };
+        }
         worker();
         return dfd.promise();
     };

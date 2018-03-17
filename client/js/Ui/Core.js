@@ -7,6 +7,10 @@ import SearchPanel from "./SearchPanel";
 import Server from "../Core/Server";
 import UserPanel from "./UserPanel";
 import WindowManager from "./WindowManager";
+import EekbPanel from "./eekbPanel"
+import KeyboardHandler from "./KeyboardHandler";
+import * as jQuery from "jquery";
+
 const Core = {
 
     init: function(data, callback) {
@@ -37,7 +41,7 @@ const Core = {
             WindowManager.init(data),
             SearchPanel.init(),
             new EekbPanel().init(data),
-            SCWeb.ui.KeyboardHandler.init(WindowManager),
+            KeyboardHandler.init(WindowManager),
             self.resolveElementsAddr('body')
         ).done(function() {
 
@@ -140,7 +144,7 @@ const Core = {
         });
 
         Server.resolveScAddr(identifiers, function(addrs) {
-            for (e in elements) {
+            for (let e in elements) {
                 const el = elements[e];
                 const addr = addrs[el.attr(attr_name)];
                 if (addr) {

@@ -30,7 +30,7 @@ if (!Number.isInteger) {
 
 function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /* optional */, nLength /* optional */) {
 
-    let fTAView, aWhole, aRaw, fPutOutptCode, fGetOutptChrSize, nInptLen, nStartIdx = isFinite(nOffset) ? nOffset : 0,
+    var fTAView, aWhole, aRaw, fPutOutptCode, fGetOutptChrSize, nInptLen, nStartIdx = isFinite(nOffset) ? nOffset : 0,
         nTranscrType = 15;
 
     if (sEncoding) {
@@ -123,7 +123,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
     if (nTranscrType < 8) {
 
-        let vSource, nOutptLen, nCharStart, nCharEnd, nEndIdx, fGetInptChrSize, fGetInptChrCode;
+        var vSource, nOutptLen, nCharStart, nCharEnd, nEndIdx, fGetInptChrSize, fGetInptChrCode;
 
         if (nTranscrType & 4) { /* input is string */
 
@@ -169,8 +169,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
                 /* both the source and the new StringView have a fixed-length encoding... */
 
                 aWhole = new fTAView(nOutptLen);
-                //noinspection StatementWithEmptyBodyJS
-                for (let nOutptIdx = 0; nOutptIdx < nOutptLen; aWhole[nOutptIdx] = vSource[nStartIdx + nOutptIdx++]);
+                for (var nOutptIdx = 0; nOutptIdx < nOutptLen; aWhole[nOutptIdx] = vSource[nStartIdx + nOutptIdx++]);
                 break conversionSwitch;
 
             case 1:
@@ -181,7 +180,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 nOutptLen = 0;
 
-                for (const nInptIdx = nStartIdx; nInptIdx < nEndIdx; nInptIdx++) {
+                for (var nInptIdx = nStartIdx; nInptIdx < nEndIdx; nInptIdx++) {
                     nOutptLen += fGetOutptChrSize(vSource[nInptIdx]);
                 }
 
@@ -189,7 +188,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 /* transcription of the source... */
 
-                for (let nInptIdx = nStartIdx, nOutptIdx = 0; nOutptIdx < nOutptLen; nInptIdx++) {
+                for (var nInptIdx = nStartIdx, nOutptIdx = 0; nOutptIdx < nOutptLen; nInptIdx++) {
                     nOutptIdx = fPutOutptCode(aWhole, vSource[nInptIdx], nOutptIdx);
                 }
 
@@ -203,7 +202,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 nStartIdx = 0;
 
-                let nChrCode;
+                var nChrCode;
 
                 for (nChrIdx = 0; nChrIdx < nCharStart; nChrIdx++) {
                     nChrCode = fGetInptChrCode(vSource, nStartIdx);
@@ -214,7 +213,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 /* transcription of the source... */
 
-                for (let nInptIdx = nStartIdx, nOutptIdx = 0; nOutptIdx < nOutptLen; nInptIdx += fGetInptChrSize(nChrCode), nOutptIdx++) {
+                for (var nInptIdx = nStartIdx, nOutptIdx = 0; nOutptIdx < nOutptLen; nInptIdx += fGetInptChrSize(nChrCode), nOutptIdx++) {
                     nChrCode = fGetInptChrCode(vSource, nInptIdx);
                     aWhole[nOutptIdx] = nChrCode;
                 }
@@ -229,9 +228,9 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 nOutptLen = 0;
 
-                let nChrCode;
+                var nChrCode;
 
-                for (let nChrIdx = 0, nInptIdx = 0; nChrIdx < nCharEnd; nInptIdx += fGetInptChrSize(nChrCode)) {
+                for (var nChrIdx = 0, nInptIdx = 0; nChrIdx < nCharEnd; nInptIdx += fGetInptChrSize(nChrCode)) {
                     nChrCode = fGetInptChrCode(vSource, nInptIdx);
                     if (nChrIdx === nCharStart) {
                         nStartIdx = nInptIdx;
@@ -245,7 +244,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 /* transcription... */
 
-                for (let nInptIdx = nStartIdx, nOutptIdx = 0; nOutptIdx < nOutptLen; nInptIdx += fGetInptChrSize(nChrCode)) {
+                for (var nInptIdx = nStartIdx, nOutptIdx = 0; nOutptIdx < nOutptLen; nInptIdx += fGetInptChrSize(nChrCode)) {
                     nChrCode = fGetInptChrCode(vSource, nInptIdx);
                     nOutptIdx = fPutOutptCode(aWhole, nChrCode, nOutptIdx);
                 }
@@ -260,7 +259,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 /* transcription... */
 
-                for (let nIdx = 0; nIdx < nOutptLen; nIdx++) {
+                for (var nIdx = 0; nIdx < nOutptLen; nIdx++) {
                     aWhole[nIdx] = vSource.charCodeAt(nIdx) & 0xff;
                 }
 
@@ -274,7 +273,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 nOutptLen = 0;
 
-                for (let nMapIdx = 0; nMapIdx < nInptLen; nMapIdx++) {
+                for (var nMapIdx = 0; nMapIdx < nInptLen; nMapIdx++) {
                     if (nMapIdx === nCharStart) {
                         nStartIdx = nOutptLen;
                     }
@@ -288,7 +287,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 /* transcription... */
 
-                for (let nOutptIdx = 0, nChrIdx = 0; nOutptIdx < nOutptLen; nChrIdx++) {
+                for (var nOutptIdx = 0, nChrIdx = 0; nOutptIdx < nOutptLen; nChrIdx++) {
                     nOutptIdx = fPutOutptCode(aWhole, vSource.charCodeAt(nChrIdx), nOutptIdx);
                 }
 
@@ -302,7 +301,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
                 /* transcription... */
 
-                for (let nIdx = 0; nIdx < nOutptLen; nIdx++) {
+                for (var nIdx = 0; nIdx < nOutptLen; nIdx++) {
                     aWhole[nIdx] = vSource.charCodeAt(nIdx);
                 }
 
@@ -331,7 +330,7 @@ function StringView(vInput, sEncoding /* optional (default: UTF-8) */, nOffset /
 
 StringView.loadUTF8CharCode = function (aChars, nIdx) {
 
-    const nLen = aChars.length, nPart = aChars[nIdx];
+    var nLen = aChars.length, nPart = aChars[nIdx];
 
     return nPart > 251 && nPart < 254 && nIdx + 5 < nLen ?
         /* (nPart - 252 << 30) may be not safe in ECMAScript! So...: */
@@ -351,7 +350,7 @@ StringView.loadUTF8CharCode = function (aChars, nIdx) {
 
 StringView.putUTF8CharCode = function (aTarget, nChar, nPutAt) {
 
-    let nIdx = nPutAt;
+    var nIdx = nPutAt;
 
     if (nChar < 0x80 /* 128 */) {
         /* one byte */
@@ -399,7 +398,7 @@ StringView.getUTF8CharLength = function (nChar) {
 StringView.loadUTF16CharCode = function (aChars, nIdx) {
 
     /* UTF-16 to DOMString decoding algorithm */
-    const nFrstChr = aChars[nIdx];
+    var nFrstChr = aChars[nIdx];
 
     return nFrstChr > 0xD7BF /* 55231 */ && nIdx + 1 < aChars.length ?
         (nFrstChr - 0xD800 /* 55296 */ << 10) + aChars[nIdx + 1] + 0x2400 /* 9216 */
@@ -409,7 +408,7 @@ StringView.loadUTF16CharCode = function (aChars, nIdx) {
 
 StringView.putUTF16CharCode = function (aTarget, nChar, nPutAt) {
 
-    let nIdx = nPutAt;
+    var nIdx = nPutAt;
 
     if (nChar < 0x10000 /* 65536 */) {
         /* one element */
@@ -468,12 +467,9 @@ StringView.uint6ToB64 = function (nUint6) {
 
 StringView.bytesToBase64 = function (aBytes) {
 
-    let sB64Enc = "";
+    var sB64Enc = "";
 
-    let nMod3;
-    const nLen = aBytes.length;
-    let nUint24 = 0, nIdx = 0;
-    for (; nIdx < nLen; nIdx++) {
+    for (var nMod3, nLen = aBytes.length, nUint24 = 0, nIdx = 0; nIdx < nLen; nIdx++) {
         nMod3 = nIdx % 3;
         if (nIdx > 0 && (nIdx * 4 / 3) % 76 === 0) {
             sB64Enc += "\r\n";
@@ -492,12 +488,12 @@ StringView.bytesToBase64 = function (aBytes) {
 
 StringView.base64ToBytes = function (sBase64, nBlockBytes) {
 
-    const sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""), nInLen = sB64Enc.length,
+    var
+        sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""), nInLen = sB64Enc.length,
         nOutLen = nBlockBytes ? Math.ceil((nInLen * 3 + 1 >>> 2) / nBlockBytes) * nBlockBytes : nInLen * 3 + 1 >>> 2,
         aBytes = new Uint8Array(nOutLen);
 
-    let nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0;
-    for (; nInIdx < nInLen; nInIdx++) {
+    for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
         nMod4 = nInIdx & 3;
         nUint24 |= StringView.b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
         if (nMod4 === 3 || nInLen - nInIdx === 1) {
@@ -527,12 +523,10 @@ StringView.prototype.encoding = "UTF-8";
 
 StringView.prototype.makeIndex = function (nChrLength, nStartFrom) {
 
-    const aTarget = this.rawData;
-    let nChrEnd;
-    const nRawLength = aTarget.length,
-        nStartIdx = nStartFrom || 0;
-    let nIdxEnd = nStartIdx;
-    const nStopAtChr = isNaN(nChrLength) ? Infinity : nChrLength;
+    var
+
+        aTarget = this.rawData, nChrEnd, nRawLength = aTarget.length,
+        nStartIdx = nStartFrom || 0, nIdxEnd = nStartIdx, nStopAtChr = isNaN(nChrLength) ? Infinity : nChrLength;
 
     if (nChrLength + 1 > aTarget.length) {
         throw new RangeError("StringView.prototype.makeIndex - The offset can\'t be major than the length of the array - 1.");
@@ -542,7 +536,7 @@ StringView.prototype.makeIndex = function (nChrLength, nStartFrom) {
 
         case "UTF-8":
 
-            let nPart;
+            var nPart;
 
             for (nChrEnd = 0; nIdxEnd < nRawLength && nChrEnd < nStopAtChr; nChrEnd++) {
                 nPart = aTarget[nIdxEnd];
@@ -598,10 +592,10 @@ StringView.prototype.toBase64 = function (bWholeBuffer) {
 
 StringView.prototype.subview = function (nCharOffset /* optional */, nCharLength /* optional */) {
 
-    let nChrLen, nCharStart, nStrLen;
-    const bVariableLen = this.encoding === "UTF-8" || this.encoding === "UTF-16";
-    let nStartOffset = nCharOffset, nStringLength;
-    const nRawLen = this.rawData.length;
+    var
+
+        nChrLen, nCharStart, nStrLen, bVariableLen = this.encoding === "UTF-8" || this.encoding === "UTF-16",
+        nStartOffset = nCharOffset, nStringLength, nRawLen = this.rawData.length;
 
     if (nRawLen === 0) {
         return new StringView(this.buffer, this.encoding);
@@ -635,12 +629,11 @@ StringView.prototype.subview = function (nCharOffset /* optional */, nCharLength
 
 StringView.prototype.forEachChar = function (fCallback, oThat, nChrOffset, nChrLen) {
 
-    const aSource = this.rawData;
-    let nRawEnd, nRawIdx;
+    var aSource = this.rawData, nRawEnd, nRawIdx;
 
     if (this.encoding === "UTF-8" || this.encoding === "UTF-16") {
 
-        let fGetInptChrSize, fGetInptChrCode;
+        var fGetInptChrSize, fGetInptChrCode;
 
         if (this.encoding === "UTF-8") {
             fGetInptChrSize = StringView.getUTF8CharLength;
@@ -653,8 +646,7 @@ StringView.prototype.forEachChar = function (fCallback, oThat, nChrOffset, nChrL
         nRawIdx = isFinite(nChrOffset) ? this.makeIndex(nChrOffset) : 0;
         nRawEnd = isFinite(nChrLen) ? this.makeIndex(nChrLen, nRawIdx) : aSource.length;
 
-        let nChrCode, nChrIdx = 0;
-        for (; nRawIdx < nRawEnd; nChrIdx++) {
+        for (var nChrCode, nChrIdx = 0; nRawIdx < nRawEnd; nChrIdx++) {
             nChrCode = fGetInptChrCode(aSource, nRawIdx);
             fCallback.call(oThat || null, nChrCode, nChrIdx, nRawIdx, aSource);
             nRawIdx += fGetInptChrSize(nChrCode);
@@ -680,7 +672,7 @@ StringView.prototype.valueOf = StringView.prototype.toString = function () {
         return String.fromCharCode.apply(null, this.rawData);
     }
 
-    let fGetCode, fGetIncr, sView = "";
+    var fGetCode, fGetIncr, sView = "";
 
     if (this.encoding === "UTF-8") {
         fGetIncr = StringView.getUTF8CharLength;
@@ -690,10 +682,7 @@ StringView.prototype.valueOf = StringView.prototype.toString = function () {
         fGetCode = StringView.loadUTF16CharCode;
     }
 
-    let nChr;
-    const nLen = this.rawData.length;
-    let nIdx = 0;
-    for (; nIdx < nLen; nIdx += fGetIncr(nChr)) {
+    for (var nChr, nLen = this.rawData.length, nIdx = 0; nIdx < nLen; nIdx += fGetIncr(nChr)) {
         nChr = fGetCode(this.rawData, nIdx);
         sView += String.fromCharCode(nChr);
     }

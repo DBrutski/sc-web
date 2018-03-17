@@ -42,15 +42,15 @@ function _unit_test_sctp_links() {
 function _unit_test_sctp_iter_constr() {
     window.sctpClient.iterate_constr(
         SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-            [window.scKeynodes.nrel_system_identifier,
+            [window.scKeynodes['nrel_system_identifier'],
                 sc_type_arc_common | sc_type_const,
                 sc_type_link,
                 sc_type_arc_pos_const_perm,
-                window.scKeynodes.nrel_main_idtf
+                window.scKeynodes['nrel_main_idtf']
             ],
             {"x": 2}),
         SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_F,
-            [window.scKeynodes.lang_ru,
+            [window.scKeynodes['lang_ru'],
                 sc_type_arc_pos_const_perm,
                 "x"
             ])

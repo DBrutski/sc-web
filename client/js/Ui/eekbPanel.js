@@ -68,7 +68,7 @@ function restoreCommandsOrder(commands, namesMap) {
 
 let panel;
 
-function EekbPanel() {
+export default function EekbPanel() {
     let EventManager = EventManager;
     let Main = Main;
     let Arguments = Arguments;
@@ -143,7 +143,7 @@ function EekbPanel() {
                 console.log(`Command ${item.sc_addr} not have cmd_type`);
                 return {};
             }
-        };
+        }
         namesMap = namesMap || {};
         _items = [];
         let a = _parseMenuItem(menuData);
@@ -286,7 +286,7 @@ function EekbPanel() {
         return jQuery.when();
     }.bind(this);
 
-    eekbMenuInstance = {
+    return {
         init: init,
 
         _render: _render,
@@ -310,5 +310,4 @@ function EekbPanel() {
          */
         getObjectsToTranslate: getObjectsToTranslate
     };
-    return eekbMenuInstance;
 }

@@ -1,19 +1,3 @@
-import Arguments from "./Arguments";
-import Core from "../Ui/Core";
-import EventManager from "./EventManager";
-import Main from "./Main";
-import Server from "./Server";
-import Translation from "./Translation";
-import WindowManager from "../Ui/WindowManager";
-
-export const scAddrsDict = {};
-
-export const CommandState = function (command_addr, command_args, format) {
-    this.command_addr = command_addr;
-    this.command_args = command_args || [];
-    this.format = format;
-};
-
 /**
  * Create new instance of component sandbox.
  * @param {String} container Id of dom object, that will contain component
@@ -23,6 +7,23 @@ export const CommandState = function (command_addr, command_args, format) {
  * @param {String} ext_lang_addr sc-addr of external language
  * @param {Object} keynodes Dictionary that contains keynode addr by system identifiers
  */
+import Arguments from "./Arguments";
+import Core from "../Ui/Core";
+import EventManager from "./EventManager";
+import Main from "./Main";
+import Server from "./Server";
+import Translation from "./Translation";
+import WindowManager from "../Ui/WindowManager";
+import * as jQuery from "jquery";
+
+export const scAddrsDict = {};
+
+export const CommandState = function (command_addr, command_args, format) {
+    this.command_addr = command_addr;
+    this.command_args = command_args || [];
+    this.format = format;
+};
+
 const ComponentSandbox = function (options) {
 
     this.command_state = options.command_state;
@@ -193,7 +194,7 @@ ComponentSandbox.prototype.resolveAddrs = function (idtf_list, callback) {
 
     const addrsToResolve = [];
     const result = {};
-    for (idx in idtf_list) {
+    for (let idx in idtf_list) {
         const idtf = idtf_list[idx];
         const addr = scAddrsDict[idtf];
         if (addr)
@@ -213,7 +214,7 @@ ComponentSandbox.prototype.resolveAddrs = function (idtf_list, callback) {
 };
 
 ComponentSandbox.prototype._appendChilds = function (windows) {
-    for (cntId in windows) {
+    for (let cntId in windows) {
         if (!windows.hasOwnProperty(cntId))
             continue;
         if (this.childs[cntId])
@@ -277,7 +278,7 @@ ComponentSandbox.prototype.updateContent = function (contentType) {
                 0
             ])
             .done(function (res) {
-                for (idx in res)
+                for (let idx in res)
                     self.eventStructUpdate(true, res[idx][0], res[idx][1]);
 
                 dfd.resolve();

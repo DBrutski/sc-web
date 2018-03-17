@@ -2,6 +2,7 @@ import ComponentSandbox from "./ComponentSandbox";
 import KeyboardHandler from "../Ui/KeyboardHandler";
 import OpenComponentHandler from "../Ui/OpenComponentHandler";
 import Server from "./Server";
+import * as jQuery from "jquery";
 
 export const ComponentType = {
     viewer: 0,
@@ -10,6 +11,13 @@ export const ComponentType = {
 
 const ComponentManager = {
 
+    /**
+     * {Object} listener Listener object. It must to has functions:
+     * - onComponentRegistered - function, that call when new component registered. It receive
+     * component description object as argument
+     * - onComponentUnregistered - function, that calls after one of the component was unregistered.
+     * It receive component description object as argument
+     */
     _listener: null,
     _initialize_queue: [],
     _componentCount: 0,
@@ -163,7 +171,7 @@ const ComponentManager = {
      *          {String} container      Id of dom object, that will contain window
      *          {Boolean} canEdit       If that value is true, then request editor creation; otherwise - viewer
      * @param {Function} callback Callback function that calls on creation finished
-     * @return Return component sandbox object for created window instance.
+     * @return Sandbox component sandbox object for created window instance.
      * If window doesn't created, then returns null
      */
     createWindowSandboxByExtLang: function (options, callback) {
@@ -180,7 +188,7 @@ const ComponentManager = {
                 canEdit: options.canEdit,
                 command_state: options.command_state
             });
-            if (!comp_def.struct_support && is_struct)
+            if (!comp_def.struct_support && options.is_struct)
                 throw "Component doesn't support structures: " + comp_def;
 
             if (comp_def.factory(sandbox))

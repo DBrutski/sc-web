@@ -7,7 +7,7 @@ const EventManager = {
      * @param {String} evt_name Event name
      * @param {Object} context Context to call callback function
      * @param {callback} callback Callback function
-     * @returns Returns event object
+     * @returns {event_name: String, func: callback, context: Object} event object
      */
     subscribe: function (evt_name, context, callback) {
 

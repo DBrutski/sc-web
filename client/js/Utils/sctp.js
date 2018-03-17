@@ -155,8 +155,6 @@ sc_iterator_params_size = function (it) {
         case SctpIteratorType.SCTP_ITERATOR_5F_A_F_A_F:
             return 16;
     }
-    ;
-
     throw "Unknown iterator type";
 };
 
@@ -176,8 +174,6 @@ sc_iteartor_fixed_count = function (it) {
         case SctpIteratorType.SCTP_ITERATOR_5F_A_F_A_F:
             return 3;
     }
-    ;
-
     throw "Unknown iterator type";
 };
 
@@ -214,14 +210,11 @@ sc_iterator_is_fixed_arg = function (it, pos) {
             res = (pos === 0 || pos === 2 || pos === 4);
             break;
     }
-    ;
-
     return res;
 };
 
 function SctpConstrIter(iterator_type, args, resMappings) {
-    let i;
-    return i = {
+    return {
         iterator_type: iterator_type,
         args: args,
         mappings: resMappings
@@ -266,8 +259,7 @@ function SctpCommandBuffer(size) {
             this.writeUint32(s);
         }
     };
-};
-
+}
 function SctpResultBuffer(v) {
     const view = v;
 
@@ -418,7 +410,7 @@ SctpClient.prototype._push_task = function (task) {
                 t.dfd.reject();
 
             if (self.task_queue.length > 0)
-                self.task_timeout = window.setTimeout(process, this.task_frequency);
+                self.task_timeout = window.setTimeout(process, self.task_frequency);
             else {
                 window.clearTimeout(self.task_timeout);
                 self.task_timeout = 0;
@@ -523,6 +515,7 @@ SctpClient.prototype.set_link_content = function (addr, data) {
 
     // determine type of content and it's size
     let dataBuff = null;
+    let size;
     if (typeof data === 'number') {
         size = 8;
         if (data % 1 === 0) {
@@ -658,8 +651,6 @@ SctpClient.prototype.iterate_elements = function (iterator_type, args) {
             buffer.writeUint32(args[4]);
             break;
     }
-    ;
-
     return this.new_request(buffer.data, function (data) {
         const res = [];
         const n = data.getResUint32(0);
@@ -734,7 +725,7 @@ SctpClient.prototype.iterate_constr = function () {
         }
 
         it.repl = [];
-        for (const j = 0; j < it.args.length; ++j) {
+        for (let j = 0; j < it.args.length; ++j) {
             let a = it.args[j];
             let isFixed = sc_iterator_is_fixed_arg(it.iterator_type, j);
 
@@ -892,9 +883,9 @@ SctpClient.prototype.event_emit = function () {
             const events = [];
 
             for (let i = 0; i < n; ++i) {
-                evt_id = data.getResUint32(4 + i * 12);
-                addr = data.getResUint32(8 + i * 12);
-                arg = data.getResUint32(12 + i * 12);
+                const evt_id = data.getResUint32(4 + i * 12);
+                const addr = data.getResUint32(8 + i * 12);
+                const arg = data.getResUint32(12 + i * 12);
                 const func = self.events[evt_id];
 
                 events.push({evt_id: evt_id, addr: addr, arg: arg});
@@ -905,8 +896,6 @@ SctpClient.prototype.event_emit = function () {
         }).fail(function (data) {
         dfd.reject();
     });
-    ;
-
     return dfd.promise();
 };
 

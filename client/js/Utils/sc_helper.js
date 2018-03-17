@@ -1,5 +1,6 @@
-import Server from "../Core/Server";
-ScHelper = function (sctpClient) {
+import * as jQuery from "jquery";
+
+export default ScHelper = function (sctpClient) {
     this.sctpClient = sctpClient;
 };
 
@@ -42,7 +43,7 @@ ScHelper.prototype.getSetElements = function (addr) {
         .done(function (res) {
             const langs = [];
 
-            for (r in res) {
+            for (let r in res) {
                 langs.push(res[r][2]);
             }
 
@@ -56,17 +57,17 @@ ScHelper.prototype.getSetElements = function (addr) {
 };
 
 ScHelper.prototype.isCmdAtom = async function (cmd_addr) {
-    this.cmdAtomSet = this.cmdAtomSet || new Set(await this.getSetElements(scKeynodes.ui_user_command_class_atom));
+    this.cmdAtomSet = this.cmdAtomSet || new Set(await this.getSetElements(scKeynodes['ui_user_command_class_atom']));
     return this.cmdAtomSet.has(cmd_addr);
 };
 
 ScHelper.prototype.isCmdNoAtom = async function (cmd_addr) {
-    this.cmdNoAtomSet = this.cmdNoAtomSet || new Set(await this.getSetElements(scKeynodes.ui_user_command_class_noatom));
+    this.cmdNoAtomSet = this.cmdNoAtomSet || new Set(await this.getSetElements(scKeynodes['ui_user_command_class_noatom']));
     return this.cmdNoAtomSet.has(cmd_addr);
 };
 
 ScHelper.prototype.isCmdWithContext = async function (cmd_addr) {
-    this.cmdWithContext = this.cmdWithContext || new Set(await this.getSetElements(scKeynodes.ui_user_command_with_context));
+    this.cmdWithContext = this.cmdWithContext || new Set(await this.getSetElements(scKeynodes['ui_user_command_with_context']));
     return this.cmdWithContext.has(cmd_addr);
 };
 /*! Function resolve commands hierarchy for main menu.
@@ -119,7 +120,7 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
                 sc_type_arc_common | sc_type_const,
                 cmd_addr,
                 sc_type_arc_pos_const_perm,
-                window.scKeynodes.nrel_command_access
+                window.scKeynodes['nrel_command_access']
             ], {
                 tuple: 0
             }), SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_A, [
@@ -143,14 +144,13 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
                 sc_type_arc_common,
                 sc_type_node,
                 sc_type_arc_pos_const_perm,
-                window.scKeynodes.nrel_command_order
+                window.scKeynodes['nrel_command_order']
             ], {
                 nextChild: 2
             })));
 
         if (nextCommandConstr) {
-            let nextCommand = nextCommandConstr.get(0, "nextChild");
-            res.nextCommand = nextCommand;
+            res.nextCommand = nextCommandConstr.get(0, "nextChild");
         }
 
         // find childs
@@ -160,7 +160,7 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
                 sc_type_arc_common | sc_type_const,
                 cmd_addr,
                 sc_type_arc_pos_const_perm,
-                window.scKeynodes.nrel_ui_commands_decomposition
+                window.scKeynodes['nrel_ui_commands_decomposition']
             ], {
                 decomposition: 0
             }),
@@ -175,8 +175,7 @@ ScHelper.prototype.getMenuCommands = function (menuAddr) {
 
         let childCommandAdr = childrenConstructs.results.map((constr, index) => childrenConstructs.get(index,
             'child'));
-        let childrenCommands = await Promise.all(childCommandAdr.map(parseCommand));
-        res.childs = childrenCommands;
+        res.childs = await Promise.all(childCommandAdr.map(parseCommand));
         return res;
     };
 
@@ -203,7 +202,7 @@ ScHelper.prototype.getLanguages = function () {
  * failed, then promise rejects
  */
 ScHelper.prototype.getOutputLanguages = function () {
-    return scHelper.getSetElements(window.scKeynodes.ui_external_languages);
+    return scHelper.getSetElements(window.scKeynodes['ui_external_languages']);
 };
 
 /*! Function to find answer for a specified question
@@ -230,7 +229,7 @@ ScHelper.prototype.getAnswer = function (question_addr) {
         }, 10000);
 
         _self.sctpClient.event_create(SctpEventType.SC_EVENT_ADD_OUTPUT_ARC, _question_addr, function (addr, arg) {
-            _self.checkEdge(window.scKeynodes.nrel_answer, sc_type_arc_pos_const_perm, arg).done(
+            _self.checkEdge(window.scKeynodes['nrel_answer'], sc_type_arc_pos_const_perm, arg).done(
                 function () {
                     _self.sctpClient.get_arc(arg).done(function (res) {
                         _dfd.resolve(res[1]);
@@ -245,7 +244,7 @@ ScHelper.prototype.getAnswer = function (question_addr) {
                 sc_type_arc_common | sc_type_const,
                 sc_type_node, /// @todo possible need node struct
                 sc_type_arc_pos_const_perm,
-                window.scKeynodes.nrel_answer
+                window.scKeynodes['nrel_answer']
             ])
                 .done(function (it) {
                     _self.sctpClient.event_destroy(fn.event_id).fail(function () {
@@ -276,7 +275,7 @@ ScHelper.prototype.getSystemIdentifier = function (addr) {
         sc_type_arc_common | sc_type_const,
         sc_type_link,
         sc_type_arc_pos_const_perm,
-        window.scKeynodes.nrel_system_identifier
+        window.scKeynodes['nrel_system_identifier']
     ])
         .done(function (it) {
             self.sctpClient.get_link_content(it[0][2])
@@ -303,7 +302,7 @@ ScHelper.prototype.getSystemIdentifierPromise = function (addr) {
             sc_type_arc_common | sc_type_const,
             sc_type_link,
             sc_type_arc_pos_const_perm,
-            window.scKeynodes.nrel_system_identifier
+            window.scKeynodes['nrel_system_identifier']
         ])
             .done(function (it) {
                 self.sctpClient.get_link_content(it[0][2])
@@ -346,7 +345,7 @@ ScHelper.prototype.getIdentifier = function (addr, lang) {
             sc_type_arc_common | sc_type_const,
             sc_type_link,
             sc_type_arc_pos_const_perm,
-            window.scKeynodes.nrel_main_idtf
+            window.scKeynodes['nrel_main_idtf']
         ], {
             "x": 2
         }),
@@ -374,7 +373,7 @@ ScHelper.prototype.getIdentifier = function (addr, lang) {
 ScHelper.prototype.setLinkFormat = function (addr, format) {
     const self = this;
     window.sctpClient.create_arc(sc_type_arc_common | sc_type_const, addr, format).done(function (arc_addr) {
-        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, window.scKeynodes.nrel_format, arc_addr).fail(function () {
+        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, window.scKeynodes['nrel_format'], arc_addr).fail(function () {
             console.log("Fail in ScHelper.prototype.setLinkFormat create_arc(nrel_format, arc_addr)")
         });
     }).fail(function () {

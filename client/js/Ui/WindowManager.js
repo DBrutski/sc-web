@@ -6,6 +6,7 @@ import Main from "../Core/Main";
 import OpenComponentHandler from "./OpenComponentHandler";
 import Server from "../Core/Server";
 import Translation from "../Core/Translation";
+import * as jQuery from "jquery";
 const WindowManager = {
 
     // dictionary that contains information about windows corresponding to history items
@@ -39,7 +40,7 @@ const WindowManager = {
 
         // external language
         let ext_langs_items = '';
-        for (idx in this.ext_langs) {
+        for (let idx in this.ext_langs) {
             const addr = this.ext_langs[idx];
             ext_langs_items += '<li><a href="#" sc_addr="' + addr + '">' + addr + '</a></li>';
         }
@@ -147,7 +148,7 @@ const WindowManager = {
 
         // translate added item
         $.when(Translation.translate([question_addr])).done(function (namesMap) {
-            value = namesMap[question_addr];
+            let value = namesMap[question_addr];
             if (value) {
                 $(self.history_tabs_id + " [sc_addr='" + question_addr + "']").text(value);
             }
@@ -191,13 +192,12 @@ const WindowManager = {
                 let window_id = 'window_' + question_addr;
                 const window_html = '<div class="panel panel-default sc-window" id="' + id + '" sc_addr="' + question_addr + '" sc-addr-fmt="' + command_state.format + '">' +
                     '<div class="panel-body" id="' + window_id + '"></div>';
-                '</div>';
                 self.window_container.prepend(window_html);
 
                 self.hideActiveWindow();
                 self.windows.push(id);
             }
-            sandbox = self.sandboxes[id];
+            let sandbox = self.sandboxes[id];
             if (!sandbox) {
                 let sandbox = ComponentManager.createWindowSandboxByFormat({
                     format_addr: command_state.format,
@@ -216,7 +216,6 @@ const WindowManager = {
                 self.showActiveWindow();
                 throw "Error while create window";
             }
-            ;
         };
 
         const translated = function () {

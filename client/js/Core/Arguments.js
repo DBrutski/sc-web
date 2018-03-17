@@ -21,7 +21,7 @@ const Arguments = {
      *
      * @param {String}
      * argument SC-addr of command argument
-     * @return Returns index of appended argument
+     * @return number - index of appended argument
      */
     appendArgument: function (argument) {
 

@@ -2,15 +2,12 @@ import Arguments from "./Arguments";
 import {CommandState} from "./ComponentSandbox";
 import ComponentManager from "./ComponentManager";
 import Core from "../Ui/Core";
-import Locker from "../Ui/Locker";
 import Server from "./Server";
 import TaskPanel from "../Ui/TaskPanel";
 import Translation from "./Translation";
 import WindowManager from "../Ui/WindowManager";
-
-const scHelper = null;
-const scKeynodes = null;
-
+import ScHelper from "../Utils/sc_helper";
+import * as jQuery from "jquery";
 
 const Main = {
 
@@ -76,8 +73,6 @@ const Main = {
 
                                         function start(a) {
                                             Main.doDefaultCommand([a]);
-                                            if (params.first_time)
-                                                $('#help-modal').modal({"keyboard": true});
                                         }
 
                                         const argumentAddr = addrs['ui_start_sc_element'];
@@ -109,7 +104,7 @@ const Main = {
      * Returns sc-addr of preffered output language for current user
      */
     getDefaultExternalLang: function () {
-        return this.user.default_ext_lang;
+        return this.user['default_ext_lang'];
     },
 
     /**
@@ -183,9 +178,9 @@ const Main = {
 
     default_cmd: function () {
         if (this.user.is_authenticated) {
-            return window.scKeynodes.ui_menu_view_full_semantic_neighborhood;
+            return window.scKeynodes['ui_menu_view_full_semantic_neighborhood'];
         } else {
-            return window.scKeynodes.ui_menu_view_full_semantic_neighborhood_in_the_agreed_part_of_kb;
+            return window.scKeynodes['ui_menu_view_full_semantic_neighborhood_in_the_agreed_part_of_kb'];
         }
     }
 

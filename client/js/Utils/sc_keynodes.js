@@ -6,6 +6,7 @@
  * property - key for saving in keynodes object
  * @constructor
  */
+import * as jQuery from "jquery";
 ScKeynodes = function (sctpClient, keynodesToResolve) {
     this.sctpClient = sctpClient;
     this.keynodes = keynodesToResolve ||

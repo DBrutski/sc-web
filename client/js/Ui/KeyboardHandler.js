@@ -1,7 +1,5 @@
 import WindowManager from "./WindowManager";
-/**
- * Created by rizhi-kote on 24.4.16.
- */
+
 const KeyboardHandler = {
 
     events: {},
@@ -85,4 +83,5 @@ const KeyboardHandler = {
         }
     }
 };
+
 export default KeyboardHandler

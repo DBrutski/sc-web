@@ -1,5 +1,6 @@
 import Main from "../Core/Main";
 import Server from "../Core/Server";
+import * as jQuery from "jquery";
 const SearchPanel = {
 
     init: function () {
@@ -19,12 +20,12 @@ const SearchPanel = {
                 source: function (query, cb) {
                     $('#search-input').addClass('search-processing');
                     Server.findIdentifiersSubStr(query, function (data) {
-                        keys = [];
+                        let keys = [];
 
                         const addValues = function (key) {
                             const list = data[key];
                             if (list) {
-                                for (idx in list) {
+                                for (let idx in list) {
                                     const value = list[idx];
                                     keys.push({name: value[1], addr: value[0], group: key});
                                 }

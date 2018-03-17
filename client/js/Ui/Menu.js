@@ -2,6 +2,7 @@ import Arguments from "../Core/Arguments";
 import EventManager from "../Core/EventManager";
 import Main from "../Core/Main";
 import Server from "../Core/Server";
+import * as jQuery from "jquery";
 const Menu = {
     _items: null,
 
@@ -52,7 +53,7 @@ const Menu = {
 
         //TODO: change to children, remove intermediate 'childs'
         if (menuData.hasOwnProperty('childs')) {
-            for (i in menuData.childs) {
+            for (let i in menuData.childs) {
                 const subMenu = menuData.childs[i];
                 menuHtml += this._parseMenuItem(subMenu);
             }
@@ -80,7 +81,7 @@ const Menu = {
 
         if (item.hasOwnProperty('childs')) {
             itemHtml += '<ul class="dropdown-menu">';
-            for (i in item.childs) {
+            for (let i in item.childs) {
                 const subMenu = item.childs[i];
                 itemHtml += this._parseMenuItem(subMenu);
             }
@@ -122,7 +123,7 @@ const Menu = {
             };
 
             const menu = [];
-            for (i in data) {
+            for (let i in data) {
                 parseMenuItem(data[i], menu);
             }
 
@@ -131,7 +132,7 @@ const Menu = {
                     item.text = text;
                 }
                 if (item.subMenu) {
-                    for (i in item.subMenu) {
+                    for (let i in item.subMenu) {
                         applyTranslation(item.subMenu[i], id, text);
                     }
                 }
@@ -141,7 +142,7 @@ const Menu = {
 
                 for (let itemId in namesMap) {
                     if (namesMap.hasOwnProperty(itemId)) {
-                        for (i in menu) {
+                        for (let i in menu) {
                             applyTranslation(menu[i], itemId, namesMap[itemId]);
                         }
                     }

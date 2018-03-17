@@ -94,7 +94,7 @@ const Server = {
             this._task_timeout = window.setInterval(function () {
                 const tasks = self._pop_tasks();
 
-                for (idx in tasks) {
+                for (let idx in tasks) {
                     const task = tasks[idx];
                     self._task_active_num++;
                     $.ajax({
@@ -148,7 +148,7 @@ const Server = {
             data: null,
             type: 'GET',
             success: function (user) {
-                window.scHelper.getMenuCommands(window.scKeynodes.ui_main_menu).done(function (menu_commands) {
+                window.scHelper.getMenuCommands(window.scKeynodes['ui_main_menu']).done(function (menu_commands) {
                     const data = {};
                     data['menu_commands'] = menu_commands;
                     data['user'] = user;
@@ -194,7 +194,7 @@ const Server = {
             used = {};
         let urlEncodedArguments = '';
         let idx = 1;
-        for (i in objects) {
+        for (let i in objects) {
             const id = objects[i];
 
             if (used[id]) continue; // skip objects, that was processed
@@ -223,7 +223,7 @@ const Server = {
                 url: "api/idtf/resolve/",
                 data: urlEncodedArguments,
                 success: function (idtfs) {
-                    for (k in idtfs) {
+                    for (let k in idtfs) {
                         if (idtfs.hasOwnProperty(k)) {
                             result[k] = idtfs[k];
                         }
@@ -261,7 +261,7 @@ const Server = {
                         sc_type_arc_common | sc_type_const,
                         sc_type_node | sc_type_const | sc_type_node_struct,
                         sc_type_arc_pos_const_perm,
-                        window.scKeynodes.ui_nrel_command_template
+                        window.scKeynodes['ui_nrel_command_template']
                     ],
                     {"contour": 2}),
                 SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
@@ -375,7 +375,7 @@ const Server = {
             result = {},
             used = {};
 
-        for (i = 0; i < idtfList.length; i++) {
+        for (let i = 0; i < idtfList.length; i++) {
             const arg = idtfList[i];
 
             const cached = this._sys_identifiers_cache.get(arg);
@@ -400,7 +400,7 @@ const Server = {
                     url: "api/addr/resolve/",
                     data: addresses,
                     success: function (addrs) {
-                        for (i in need_resolve) {
+                        for (let i in need_resolve) {
                             const key = need_resolve[i];
                             const addr = addrs[key];
                             if (addr) {
@@ -424,7 +424,7 @@ const Server = {
      */
     getLinksFormat: function (links, success, error) {
         let urlEncodedLinks = '';
-        for (i = 0; i < links.length; i++) {
+        for (let i = 0; i < links.length; i++) {
             const arg = links[i];
             urlEncodedLinks += i.toString() + '_=' + arg + '&';
         }
@@ -503,7 +503,7 @@ const Server = {
      */
     getTooltips: function (addrs, success, error) {
         let urlEncodedTooltips = '';
-        for (i = 0; i < addrs.length; i++) {
+        for (let i = 0; i < addrs.length; i++) {
             const arg = addrs[i];
             urlEncodedTooltips += i.toString() + '_=' + arg + '&';
         }
