@@ -1,5 +1,8 @@
 {
-  "scripts": {},
+  "scripts": {
+    "postinstall": "webpack",
+    "start": "webpack --watch"
+  },
   "name": "sc-web",
   "version": "1.0.0",
   "dependencies": {
