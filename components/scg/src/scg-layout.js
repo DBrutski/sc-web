@@ -12,11 +12,29 @@ var SCgLayoutObjectType = {
 /**
  * Base layout algorithm
  */
-SCg.LayoutAlgorithm = function (nodes, edges, contours, onTickUpdate) {
+SCg.LayoutAlgorithm = function(nodes, edges, contours, onTickUpdate) {
     this.nodes = nodes;
     this.edges = edges;
     this.contours = contours;
     this.onTickUpdate = onTickUpdate;
+
+    this.nodes.forEach(node => node.object.setPosition = (() => {
+        let original = node.object.setPosition.bind(node.object);
+        return position => {
+            original(position);
+            node.px = node.x;
+            node.py = node.y;
+            node.x = position.x;
+            node.y = position.y;
+        };
+    })());
+    this.nodes.forEach(node => node.object._setSelected = (() => {
+        let original = node.object._setSelected.bind(node.object);
+        return value => {
+            original(value);
+            node.fixed = value;
+        };
+    })());
 };
 
 SCg.LayoutAlgorithm.prototype = {
@@ -25,18 +43,18 @@ SCg.LayoutAlgorithm.prototype = {
 
 // --------------------------
 
-SCg.LayoutAlgorithmForceBased = function (nodes, edges, contours, onTickUpdate, rect) {
+SCg.LayoutAlgorithmForceBased = function(nodes, edges, contours, onTickUpdate, rect) {
     SCg.LayoutAlgorithm.call(this, nodes, edges, contours, onTickUpdate);
     this.rect = rect;
 };
 
 SCg.LayoutAlgorithmForceBased.prototype = Object.create(SCg.LayoutAlgorithm);
 
-SCg.LayoutAlgorithmForceBased.prototype.destroy = function () {
+SCg.LayoutAlgorithmForceBased.prototype.destroy = function() {
     this.stop();
 };
 
-SCg.LayoutAlgorithmForceBased.prototype.stop = function () {
+SCg.LayoutAlgorithmForceBased.prototype.stop = function() {
     if (this.force) {
         this.force.stop();
         delete this.force;
@@ -45,7 +63,7 @@ SCg.LayoutAlgorithmForceBased.prototype.stop = function () {
 
 };
 
-SCg.LayoutAlgorithmForceBased.prototype.start = function () {
+SCg.LayoutAlgorithmForceBased.prototype.start = function() {
 
     this.stop();
 
@@ -59,7 +77,7 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
         .size(this.rect)
         .friction(0.9)
         .gravity(0.03)
-        .linkDistance(function (edge) {
+        .linkDistance(function(edge) {
 
             var p1 = edge.source.object.getConnectionPos(edge.target.object.position, edge.object.source_dot);
             var p2 = edge.target.object.getConnectionPos(edge.source.object.position, edge.object.target_dot);
@@ -73,7 +91,7 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
 
             return 100 + d;
         })
-        .linkStrength(function (edge) {
+        .linkStrength(function(edge) {
             if (edge.source.type == SCgLayoutObjectType.DotPoint ||
                 edge.target.type == SCgLayoutObjectType.DotPoint) {
                 return 1;
@@ -81,7 +99,7 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
 
             return 0.3;
         })
-        .charge(function (node) {
+        .charge(function(node) {
             if (node.type == SCgLayoutObjectType.DotPoint) {
                 return 0;
             } else if (node.type == SCgLayoutObjectType.Link) {
@@ -90,13 +108,13 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
 
             return -700;
         })
-        .on('tick', function () {
+        .on('tick', function() {
             self.onLayoutTick();
         })
         .start();
 };
 
-SCg.LayoutAlgorithmForceBased.prototype.onLayoutTick = function () {
+SCg.LayoutAlgorithmForceBased.prototype.onLayoutTick = function() {
 
     var dots = [];
     for (idx in this.nodes) {
@@ -131,7 +149,7 @@ SCg.LayoutAlgorithmForceBased.prototype.onLayoutTick = function () {
 
 // ------------------------------------
 
-SCg.LayoutManager = function () {
+SCg.LayoutManager = function() {
 
 };
 
@@ -139,7 +157,7 @@ SCg.LayoutManager.prototype = {
     constructor: SCg.LayoutManager
 };
 
-SCg.LayoutManager.prototype.init = function (scene) {
+SCg.LayoutManager.prototype.init = function(scene) {
     this.scene = scene;
     this.nodes = null;
     this.edges = null;
@@ -150,7 +168,7 @@ SCg.LayoutManager.prototype.init = function (scene) {
 /**
  * Prepare objects for layout
  */
-SCg.LayoutManager.prototype.prepareObjects = function () {
+SCg.LayoutManager.prototype.prepareObjects = function() {
 
     this.nodes = new Array();
     this.edges = new Array();
@@ -252,7 +270,7 @@ SCg.LayoutManager.prototype.prepareObjects = function () {
 /**
  * Starts layout in scene
  */
-SCg.LayoutManager.prototype.doLayout = function () {
+SCg.LayoutManager.prototype.doLayout = function() {
 
     if (this.algorithm) {
         this.algorithm.stop();
@@ -266,7 +284,7 @@ SCg.LayoutManager.prototype.doLayout = function () {
     this.algorithm.start();
 };
 
-SCg.LayoutManager.prototype.onTickUpdate = function () {
+SCg.LayoutManager.prototype.onTickUpdate = function() {
     this.scene.updateObjectsVisual();
     this.scene.pointed_object = null;
 };

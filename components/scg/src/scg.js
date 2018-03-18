@@ -560,7 +560,7 @@ SCg.Editor.prototype = {
                 var file = input_content[0].files[0];
                 if (file != undefined) {
                     var fileReader = new FileReader();
-                    fileReader.onload = function() {
+                    fileReader.onload = function () {
                         var scLinkHelper = new ScFileLinkHelper(file, this.result);
                         if (obj.fileReaderResult != scLinkHelper.fileArrayBuffer || obj.contentType !=
                             scLinkHelper.type) {
