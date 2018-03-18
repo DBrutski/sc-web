@@ -372,7 +372,7 @@ SctpClient.prototype._push_task = function (task) {
                 t.dfd.reject();
 
             if (self.task_queue.length > 0)
-                self.task_timeout = window.setTimeout(process, self.task_frequency);
+                self.task_timeout = window.setTimeout(process, 0);
             else {
                 window.clearTimeout(self.task_timeout);
                 self.task_timeout = 0;
