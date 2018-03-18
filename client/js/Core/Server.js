@@ -1,8 +1,6 @@
 import EventManager from "./EventManager";
 import AppCache from "../Utils/AppCache";
 import {SctpConstrIter, SctpIteratorType} from "../Utils/sctp";
-import * as R from "ramda";
-
 
 
 export const Server = {
@@ -164,13 +162,7 @@ export const Server = {
 
                         window.scHelper.getOutputLanguages().done(function (out_langs) {
                             data['external_languages'] = out_langs;
-
-                            window.scHelper.getMenuCommands(window.scKeynodes
-                                .menu_eekb).done(function (menu_eekb) {
-                                data['menu_eekb'] = menu_eekb;
-
-                                callback(data);
-                            });
+                            callback(data);
                         });
                     });
                 });
@@ -244,7 +236,7 @@ export const Server = {
         }
     },
 
-    _makeArgumentsList: function(arguments_list) {
+    _makeArgumentsList: function (arguments_list) {
         let urlEncodedArguments = {};
         for (let i = 0; i < arguments_list.length; i++) {
             const arg = arguments_list[i];

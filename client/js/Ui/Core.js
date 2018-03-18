@@ -7,7 +7,6 @@ import SearchPanel from "./SearchPanel";
 import Server from "../Core/Server";
 import UserPanel from "./UserPanel";
 import WindowManager from "./WindowManager";
-import EekbPanel from "./eekbPanel"
 import KeyboardHandler from "./KeyboardHandler";
 import * as jQuery from "jquery";
 
@@ -40,7 +39,6 @@ export const Core = {
             LanguagePanel.init(data),
             WindowManager.init(data),
             SearchPanel.init(),
-            new EekbPanel().init(data),
             KeyboardHandler.init(WindowManager),
             self.resolveElementsAddr('body')
         ).done(function() {

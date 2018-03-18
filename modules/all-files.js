@@ -1,39 +1,7 @@
 module.exports = {
     dev: {
         js: [
-            '/client/js/Core/namespace.js',
-            '/client/js/Ui/namespace.js',
-            '/client/js/Utils/sc_keynodes.js',
-            '/client/js/Utils/parseURL.js',
-            '/client/js/Utils/ScHelper.js',
-            '/client/js/Utils/StringView.js',
-            '/client/js/Utils/AppCache.js',
-            '/client/js/Utils/sctp.js',
-            '/client/js/Utils/fQueue.js',
-            '/client/js/Utils/BinaryData.js',
-            '/client/js/Utils/TripleUtils.js',
-            '/client/js/Utils/logUtils.js',
-            '/client/js/Core/Debug.js',
-            '/client/js/Core/Main.js',
-            '/client/js/Core/Server.js',
-            '/client/js/Core/Arguments.js',
-            '/client/js/Core/ComponentSandbox.js',
-            '/client/js/Core/Translation.js',
-            '/client/js/Core/ComponentManager.js',
-            '/client/js/Core/EventManager.js',
-            '/client/js/Ui/Core.js',
-            '/client/js/Ui/menu.js',
-            'client/js/Ui/ContextSwitcher.js',
-            '/client/js/Ui/eekbPanel.js',
-            '/client/js/Ui/langpanel.js',
-            '/client/js/Ui/Locker.js',
-            '/client/js/Ui/searchpanel.js',
-            '/client/js/Ui/KeyboardHandler.js',
-            '/client/js/Ui/TaskPanel.js',
-            '/client/js/Ui/ArgumentsPanel.js',
-            '/client/js/Ui/windowmanager.js',
-            '/client/js/Ui/OpenComponentHandler.js',
-            '/client/js/Ui/userpanel.js',
+            "/client/dist/app.bundle.js",
             "/static/components/js/scs/scs.js",
             "/static/components/js/scg/scg.js",
             "/static/components/js/image/image.js",
@@ -44,7 +12,6 @@ module.exports = {
             "/static/components/js/github/github.js",
             "/static/components/js/pdf/pdf.js",
             "/static/components/js/file-saver/FileSaver.min.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"
         ],
         css: [
             "/static/components/css/scg.css",
@@ -52,7 +19,6 @@ module.exports = {
             "/static/components/css/html.css",
             "/static/components/css/github.css",
             "/client/css/core.css",
-            "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css", "/static/components/css/github.css"
         ]
     },
     current: {

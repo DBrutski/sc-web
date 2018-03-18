@@ -11,8 +11,7 @@ import * as jQuery from "jquery";
 export default function ScKeynodes(sctpClient, keynodesToResolve) {
     this.sctpClient = sctpClient;
     this.keynodes = keynodesToResolve ||
-        [['ui_menu_root_for_eekb', 'menu_eekb'],
-            'ui_nrel_command_template',
+        ['ui_nrel_command_template',
             'question',
             'ui_menu_view_full_semantic_neighborhood_in_the_agreed_part_of_kb',
             'ui_menu_view_full_semantic_neighborhood',
@@ -72,7 +71,7 @@ ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
     const dfd = new jQuery.Deferred();
     const self = this;
 
-    this.sctpClient.find_element_by_system_identifier(sysIdtf).then(function (res) {
+    this.sctpClient.find_element_by_system_identifier(sysIdtf).done(function (res) {
 
         console.log('Resolved keynode: ' + sysIdtf + ' = ' + res);
         if (property) {
@@ -82,9 +81,9 @@ ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
         }
 
         dfd.resolve(res);
-    }, function () {
+    }).fail(function () {
+        console.error("Can't resolve keynode ",sysIdtf);
         dfd.reject();
-        throw "Can't resolve keynode " + sysIdtf;
     });
 
     return dfd.promise();
@@ -103,9 +102,9 @@ ScKeynodes.prototype.resolveArrayOfKeynodes = function (sysIdtfs) {
     const self = this;
     let promises = sysIdtfs.map((val) => this._executeSysIdtf(val));
     $.when.apply($, promises
-    ).then(function () {
+    ).done(function () {
         dfd.resolve(self);
-    }, function () {
+    }).fail(function () {
         throw "Can't resolve keynode";
     });
 

@@ -12,41 +12,6 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         concat: {
-            webcore: {
-                src: [webCoreCompPath + 'Utils/ScKeynodes.js',
-                    webCoreCompPath + 'Utils/parseURL.js',
-                    webCoreCompPath + 'Utils/ScHelper.js',
-                    webCoreCompPath + 'Utils/StringView.js',
-                    webCoreCompPath + 'Utils/AppCache.js',
-                    webCoreCompPath + 'Utils/sctp.js',
-                    webCoreCompPath + 'Utils/fQueue.js',
-                    webCoreCompPath + 'Utils/BinaryData.js',
-                    webCoreCompPath + 'Utils/TripleUtils.js',
-                    webCoreCompPath + 'Utils/ScLinkHelper.js',
-                    webCoreCompPath + 'Core/namespace.js',
-                    webCoreCompPath + 'Core/Debug.js',
-                    webCoreCompPath + 'Core/Main.js',
-                    webCoreCompPath + 'Core/Server.js',
-                    webCoreCompPath + 'Core/Arguments.js',
-                    webCoreCompPath + 'Core/ComponentSandbox.js',
-                    webCoreCompPath + 'Core/Translation.js',
-                    webCoreCompPath + 'Core/ComponentManager.js',
-                    webCoreCompPath + 'Core/EventManager.js',
-                    webCoreCompPath + 'Ui/namespace.js',
-                    webCoreCompPath + 'Ui/Menu.js',
-                    webCoreCompPath + 'Ui/LanguagePanel.js',
-                    webCoreCompPath + 'Ui/Locker.js',
-                    webCoreCompPath + 'Ui/Core.js',
-                    webCoreCompPath + 'Ui/SearchPanel.js',
-                    webCoreCompPath + 'Ui/KeyboardHandler.js',
-                    webCoreCompPath + 'Ui/TaskPanel.js',
-                    webCoreCompPath + 'Ui/ArgumentsPanel.js',
-                    webCoreCompPath + 'Ui/WindowManager.js',
-                    webCoreCompPath + 'Ui/OpenComponentHandler.js',
-                    webCoreCompPath + 'Ui/UserPanel.js'
-                ],
-                dest: clientJsDirPath + 'sc-web-Core.js',
-            },
             github: {
                 src: [githubDirPath + 'src/*.js'],
                 dest: githubDirPath + 'static/components/js/github/github.js'
@@ -104,12 +69,6 @@ module.exports = function(grunt) {
                     scsDirPath + 'src/scs-component.js'
                 ],
                 dest: scsDirPath + 'static/components/js/scs/scs.js'
-            },
-            bundle: {
-                src: ["build/concat.js",
-                    "build/eekbPanel.bundle.js"
-                ],
-                dest: clientJsDirPath + 'sc-web-Core.js'
             }
         },
         copy: {
@@ -199,10 +158,6 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            core: {
-                files: webCoreCompPath + '**',
-                tasks: ['concat:webcore'],
-            },
             githubJs: {
                 files: githubDirPath + 'src/**',
                 tasks: ['concat:github', 'copy:githubJs'],
@@ -249,9 +204,6 @@ module.exports = function(grunt) {
             },
         },
         exec: {
-            webpack: {
-                command: "node ./node_modules/webpack/bin/webpack.js"
-            },
             "dev-html": {
                 command: "node modules/create-html.js dev client/templates/components.html"
             }
@@ -265,6 +217,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['build', 'watch']);
-    grunt.registerTask('build', ['concat', 'copy', 'concat:bundle', "exec:dev-html"]);
+    grunt.registerTask('build', ['concat', 'copy', "exec:dev-html"]);
 
 };
