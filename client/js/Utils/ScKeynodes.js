@@ -8,7 +8,7 @@ import * as jQuery from "jquery";
  * property - key for saving in keynodes object
  * @constructor
  */
-export default function ScKeynodes(sctpClient, keynodesToResolve) {
+export function ScKeynodes(sctpClient, keynodesToResolve) {
     this.sctpClient = sctpClient;
     this.keynodes = keynodesToResolve ||
         ['ui_nrel_command_template',
@@ -131,3 +131,5 @@ ScKeynodes.prototype.getSysIdtfByAddress = function (scAddr) {
         return undefined;
     }
 };
+
+export default ScKeynodes;
