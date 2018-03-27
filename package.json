@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "postinstall": "webpack; grunt build",
-    "start": "webpack --watch & grunt"
+    "postinstall": "node_modules/webpack/bin/webpack.js; node_modules/grunt/bin/grunt.js build",
+    "start": "node_modules/webpack/bin/webpack.js --watch & node_modules/grunt/bin/grunt"
   },
   "name": "sc-web",
   "version": "1.0.0",
