@@ -1,5 +1,5 @@
-import EventManager from "./EventManager";
-import AppCache from "../Utils/AppCache";
+import {EventManager} from "./EventManager";
+import {AppCache} from "../Utils/AppCache";
 import {SctpConstrIter, SctpIteratorType} from "../Utils/sctp";
 
 
@@ -520,4 +520,3 @@ export const Server = {
         });
     }
 };
-export default Server

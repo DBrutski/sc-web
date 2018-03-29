@@ -1,19 +1,10 @@
-/**
- * Create new instance of component sandbox.
- * @param {String} container Id of dom object, that will contain component
- * @param {String} addr sc-addr of sc-link or sc-structure, that edit or viewed with sandbox
- * @param {Boolean} is_struct If that value is true, then addr is a sc-addr to viewed structure; otherwise the last one is a sc-link
- * @param {String} format_addr sc-addr of window format
- * @param {String} ext_lang_addr sc-addr of external language
- * @param {Object} keynodes Dictionary that contains keynode addr by system identifiers
- */
-import Arguments from "./Arguments";
-import Core from "../Ui/Core";
-import EventManager from "./EventManager";
-import Main from "./Main";
-import Server from "./Server";
-import Translation from "./Translation";
-import WindowManager from "../Ui/WindowManager";
+import {Arguments} from "./Arguments";
+import {Core} from "../Ui/Core";
+import {EventManager} from "./EventManager";
+import {Main} from "./Main";
+import {Server} from "./Server";
+import {Translation} from "./Translation";
+import {WindowManager} from "../Ui/WindowManager";
 import * as jQuery from "jquery";
 import "../Utils/ScTypes"
 import {SctpIteratorType} from "../Utils/sctp";
@@ -26,6 +17,15 @@ export const CommandState = function (command_addr, command_args, format) {
     this.format = format;
 };
 
+/**
+ * Create new instance of component sandbox.
+ * @param {String} container Id of dom object, that will contain component
+ * @param {String} addr sc-addr of sc-link or sc-structure, that edit or viewed with sandbox
+ * @param {Boolean} is_struct If that value is true, then addr is a sc-addr to viewed structure; otherwise the last one is a sc-link
+ * @param {String} format_addr sc-addr of window format
+ * @param {String} ext_lang_addr sc-addr of external language
+ * @param {Object} keynodes Dictionary that contains keynode addr by system identifiers
+ */
 export const ComponentSandbox = function (options) {
 
     this.command_state = options.command_state;

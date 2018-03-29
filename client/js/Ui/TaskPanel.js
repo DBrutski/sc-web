@@ -1,5 +1,6 @@
-import Server from "../Core/Server";
+import {Server} from "../Core/Server";
 import * as jQuery from "jquery";
+
 export const TaskPanel = {
     _container: '#task_panel',
     _text_container: '#task_num',
@@ -42,4 +43,3 @@ export const TaskPanel = {
         //Locker.hide();
     }
 };
-export default TaskPanel

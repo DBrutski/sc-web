@@ -1,8 +1,9 @@
-import EventManager from "../Core/EventManager";
-import Locker from "./Locker";
-import Server from "../Core/Server";
-import Translation from "../Core/Translation";
+import {EventManager} from "../Core/EventManager";
+import {Locker} from "./Locker";
+import {Server} from "../Core/Server";
+import {Translation} from "../Core/Translation";
 import * as jQuery from "jquery";
+
 export const LanguagePanel = {
 
     /*!
@@ -71,4 +72,3 @@ export const LanguagePanel = {
     }
 
 };
-export default LanguagePanel

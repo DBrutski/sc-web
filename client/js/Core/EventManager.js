@@ -59,4 +59,3 @@ export const EventManager = {
         }
     }
 };
-export default EventManager

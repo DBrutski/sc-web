@@ -1,7 +1,7 @@
-import ComponentSandbox from "./ComponentSandbox";
-import KeyboardHandler from "../Ui/KeyboardHandler";
-import OpenComponentHandler from "../Ui/OpenComponentHandler";
-import Server from "./Server";
+import {ComponentSandbox} from "./ComponentSandbox";
+import {KeyboardHandler} from "../Ui/KeyboardHandler";
+import {OpenComponentHandler} from "../Ui/OpenComponentHandler";
+import {Server} from "./Server";
 import * as jQuery from "jquery";
 
 export const ComponentType = {
@@ -256,5 +256,3 @@ export const ComponentManager = {
         }
     }
 };
-
-export default ComponentManager;

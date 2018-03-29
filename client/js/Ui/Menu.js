@@ -1,7 +1,7 @@
-import Arguments from "../Core/Arguments";
-import EventManager from "../Core/EventManager";
-import Main from "../Core/Main";
-import Server from "../Core/Server";
+import {Arguments} from "../Core/Arguments";
+import {EventManager} from "../Core/EventManager";
+import {Main} from "../Core/Main";
+import {Server} from "../Core/Server";
 import * as jQuery from "jquery";
 export const Menu = {
     _items: null,
@@ -190,4 +190,3 @@ export const Menu = {
         return this._items;
     }
 };
-export default Menu

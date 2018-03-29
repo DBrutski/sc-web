@@ -16,4 +16,3 @@ export const OpenComponentHandler = {
         }
     }
 };
-export default OpenComponentHandler

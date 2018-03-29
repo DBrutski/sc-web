@@ -1,4 +1,4 @@
-import EventManager from "./EventManager";
+import {EventManager} from "./EventManager";
 /**
  * Object controls list of command parameters.
  * It can fires next events:
@@ -121,4 +121,3 @@ export const Arguments = {
     }
 
 };
-export default Arguments

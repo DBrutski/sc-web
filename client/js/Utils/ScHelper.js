@@ -3,9 +3,9 @@ import "./ScTypes";
 
 import {SctpConstrIter, SctpEventType, SctpIteratorType} from "./sctp";
 
-export default function ScHelper(sctpClient) {
+export function ScHelper(sctpClient) {
     this.sctpClient = sctpClient;
-};
+}
 
 ScHelper.prototype.init = function () {
     const dfd = new jQuery.Deferred();

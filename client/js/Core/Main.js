@@ -1,18 +1,18 @@
 import "../Utils/sctp";
-import ScKeynodes from "../Utils/ScKeynodes";
-import Arguments from "./Arguments";
+import {ScKeynodes} from "../Utils/ScKeynodes";
+import {Arguments} from "./Arguments";
 import {CommandState} from "./ComponentSandbox";
-import ComponentManager from "./ComponentManager";
-import Core from "../Ui/Core";
-import Server from "./Server";
-import TaskPanel from "../Ui/TaskPanel";
-import Translation from "./Translation";
-import WindowManager from "../Ui/WindowManager";
-import ScHelper from "../Utils/ScHelper";
+import {ComponentManager} from "./ComponentManager";
+import {Core} from "../Ui/Core";
+import {Server} from "./Server";
+import {TaskPanel} from "../Ui/TaskPanel";
+import {Translation} from "./Translation";
+import {WindowManager} from "../Ui/WindowManager";
+import {ScHelper} from "../Utils/ScHelper";
 import * as jQuery from "jquery";
 import {SctpClientCreate, SctpIteratorType} from "../Utils/sctp";
 import "../Utils/ScTypes"
-import parseURL from "../Utils/parseURL";
+import {parseURL} from "../Utils/parseURL";
 
 export const Main = {
 
@@ -192,5 +192,3 @@ export const Main = {
     }
 
 };
-
-export default Main

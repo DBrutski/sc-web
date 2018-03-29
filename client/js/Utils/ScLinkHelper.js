@@ -1,11 +1,10 @@
-
-const ScFileLinkTypes = {
+export const ScFileLinkTypes = {
     html: "html",
     pdf: "pdf",
     image: "image"
 };
 
-class ScFileLinkHelper {
+export class ScFileLinkHelper {
 
     constructor(file, fileArrayBuffer) {
         this.file = file;

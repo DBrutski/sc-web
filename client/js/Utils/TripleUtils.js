@@ -1,4 +1,4 @@
-TripleUtils = function () {
+export const TripleUtils = function () {
     this.outputEdges = {};
     this.inputEdges = {};
     this.types = {};
@@ -28,13 +28,13 @@ TripleUtils.prototype = {
         // iterate all output edges from addr1
         let list = this.outputEdges[addr1];
         if (!list) return null;
-        for (l in list) {
+        for (const l in list) {
             const edge = list[l];
             if (this._compareType(type2, this._getType(edge.edge)) && this._compareType(type3, this._getType(edge.trg))) {
                 // second triple iteration
                 const list2 = this.inputEdges[edge.edge];
                 if (list2) {
-                    for (l2 in list2) {
+                    for (const l2 in list2) {
                         const edge2 = list2[l2];
                         if (this._compareType(type4, this._getType(edge2.edge)) && (edge2.src === addr5)) {
                             if (!res) res = [];
@@ -58,13 +58,13 @@ TripleUtils.prototype = {
         if (!list) return null;
 
         let res = null;
-        for (l in list) {
+        for (const l in list) {
             const edge = list[l];
             if (this._compareType(type2, this._getType(edge.edge)) && (addr1 === edge.src)) {
                 let list2 = this.inputEdges[addr5];
                 if (!list2) continue;
 
-                for (l2 in list2) {
+                for (const l2 in list2) {
                     const edge2 = list2[l2];
                     if (this._compareType(type4, this._getType(edge2.edge)) && (addr3 === edge.src)) {
                         if (!res) res = [];
@@ -86,7 +86,7 @@ TripleUtils.prototype = {
         if (!list) return null;
 
         let res = null;
-        for (l in list) {
+        for (const l in list) {
             const edge = list[l];
             if (this._compareType(type2, edge.edge) && (addr1 === edge.src)) {
                 if (!res) res = [];
@@ -110,7 +110,7 @@ TripleUtils.prototype = {
         if (!list) return null;
 
         let res = null;
-        for (l in list) {
+        for (const l in list) {
             const edge = list[l];
             if (this._compareType(type2, this._getType(edge.edge)) && this._compareType(type3, this._getType(edge.trg))) {
                 if (!res) res = [];
@@ -135,7 +135,7 @@ TripleUtils.prototype = {
     checkAnyOutputEdgeType: function (srcAddr, edgeType) {
         const list = this.outputEdges[srcAddr];
         if (list) {
-            for (l in list) {
+            for (const l in list) {
                 if (this._checkType(edgeType, this._getType(list[l].edge)))
                     return true;
             }
@@ -146,7 +146,7 @@ TripleUtils.prototype = {
     checkAnyInputEdgeType: function (trgAddr, edgeType) {
         const list = this.inputEdges[trgAddr];
         if (list) {
-            for (l in list) {
+            for (const l in list) {
                 if (this._checkType(edgeType, this._getType(list[l].edge)))
                     return true;
             }
@@ -176,7 +176,7 @@ TripleUtils.prototype = {
     _removeOutputEdge: function (srcAddr, edgeAddr) {
         const list = this.outputEdges[srcAddr];
         if (list) {
-            for (e in list) {
+            for (const e in list) {
                 const edge = list[e];
                 if (edge.edge === edgeAddr) {
                     this.outputEdges.splice(e, 1);
@@ -201,7 +201,7 @@ TripleUtils.prototype = {
     _removeInputEdge: function (trgAddr, edgeAddr) {
         const list = this.inputEdges[trgAddr];
         if (list) {
-            for (e in list) {
+            for (const e in list) {
                 const edge = list[e];
                 if (edge.edge === edgeAddr) {
                     this.inputEdges.splice(e, 1);

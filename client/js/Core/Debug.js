@@ -26,4 +26,3 @@ export const Debug = {
         console.log("Error: " + this.codeToText(code) + ". " + message);
     }
 };
-export default Debug;

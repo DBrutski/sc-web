@@ -1,4 +1,4 @@
-import WindowManager from "./WindowManager";
+import {WindowManager} from "./WindowManager";
 
 export const KeyboardHandler = {
 
@@ -83,5 +83,3 @@ export const KeyboardHandler = {
         }
     }
 };
-
-export default KeyboardHandler

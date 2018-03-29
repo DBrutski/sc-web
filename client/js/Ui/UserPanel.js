@@ -1,5 +1,6 @@
-import EventManager from "../Core/EventManager";
+import {EventManager} from "../Core/EventManager";
 import * as jQuery from "jquery";
+
 export const UserPanel = {
 
     /*!
@@ -50,4 +51,3 @@ export const UserPanel = {
 
 
 };
-export default UserPanel

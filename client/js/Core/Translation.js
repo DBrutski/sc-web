@@ -1,3 +1,8 @@
+import {EventManager} from "./EventManager";
+import {Server} from "./Server";
+import * as jQuery from "jquery";
+
+
 /**
  * This object conrols available modes for natural languages (russina, english ant etc.)
  * It can fires next events:
@@ -7,9 +12,6 @@
  * - "translation/change_language_start" - this event emits on language change start. Parameter: empty
  * (this array couldn't be cleared, listener just append new elements).
  */
-import EventManager from "./EventManager";
-import Server from "./Server";
-import * as jQuery from "jquery";
 export const Translation = {
 
     listeners: [],
@@ -106,4 +108,3 @@ export const Translation = {
     }
 
 };
-export default Translation

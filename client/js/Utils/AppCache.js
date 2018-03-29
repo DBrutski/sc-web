@@ -1,4 +1,4 @@
-export default function AppCache(opt) {
+export function AppCache(opt) {
     this.opt = opt;
     this.cache = [];
 }

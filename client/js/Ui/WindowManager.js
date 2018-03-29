@@ -1,12 +1,13 @@
-import ArgumentsPanel from "./ArgumentsPanel";
+import {ArgumentsPanel} from "./ArgumentsPanel";
 import {CommandState} from "../Core/ComponentSandbox";
-import ComponentManager from "../Core/ComponentManager";
-import EventManager from "../Core/EventManager";
-import Main from "../Core/Main";
-import OpenComponentHandler from "./OpenComponentHandler";
-import Server from "../Core/Server";
-import Translation from "../Core/Translation";
+import {ComponentManager} from "../Core/ComponentManager";
+import {EventManager} from "../Core/EventManager";
+import {Main} from "../Core/Main";
+import {OpenComponentHandler} from "./OpenComponentHandler";
+import {Server} from "../Core/Server";
+import {Translation} from "../Core/Translation";
 import * as jQuery from "jquery";
+
 export const WindowManager = {
 
     // dictionary that contains information about windows corresponding to history items
@@ -380,4 +381,3 @@ export const WindowManager = {
 
     },
 };
-export default WindowManager

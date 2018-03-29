@@ -131,5 +131,3 @@ ScKeynodes.prototype.getSysIdtfByAddress = function (scAddr) {
         return undefined;
     }
 };
-
-export default ScKeynodes;

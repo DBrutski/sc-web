@@ -1,5 +1,3 @@
-// @flow
-
 function assert(message/*: string | () => string*/) {
     if (process.env.END === 'develope') {
         if (typeof message === 'string') throw new Error(message);

@@ -1,13 +1,13 @@
-import Arguments from "../Core/Arguments";
-import ArgumentsPanel from "./ArgumentsPanel";
-import LanguagePanel from "./LanguagePanel";
-import Main from "../Core/Main";
-import Menu from "./Menu";
-import SearchPanel from "./SearchPanel";
-import Server from "../Core/Server";
-import UserPanel from "./UserPanel";
-import WindowManager from "./WindowManager";
-import KeyboardHandler from "./KeyboardHandler";
+import {Arguments} from "../Core/Arguments";
+import {ArgumentsPanel} from "./ArgumentsPanel";
+import {LanguagePanel} from "./LanguagePanel";
+import {Main} from "../Core/Main";
+import {Menu} from "./Menu";
+import {SearchPanel} from "./SearchPanel";
+import {Server} from "../Core/Server";
+import {UserPanel} from "./UserPanel";
+import {WindowManager} from "./WindowManager";
+import {KeyboardHandler} from "./KeyboardHandler";
 import * as jQuery from "jquery";
 
 export const Core = {
@@ -157,4 +157,3 @@ export const Core = {
         return dfd.promise();
     }
 };
-export default Core

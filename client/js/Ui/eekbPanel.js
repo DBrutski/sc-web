@@ -1,8 +1,8 @@
-import Arguments from "../Core/Arguments";
-import EventManager from "../Core/EventManager";
-import Main from "../Core/Main";
-import Server from "../Core/Server";
-import ContextSwitcher from "./ContextSwitcher";
+import {Arguments} from "../Core/Arguments";
+import {EventManager} from "../Core/EventManager";
+import {Main} from "../Core/Main";
+import {Server} from "../Core/Server";
+import {ContextSwitcher} from "./ContextSwitcher";
 import "bootstrap-treeview/dist/bootstrap-treeview.min";
 import "bootstrap-treeview/dist/bootstrap-treeview.min.css";
 

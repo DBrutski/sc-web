@@ -1,6 +1,7 @@
-import Main from "../Core/Main";
-import Server from "../Core/Server";
+import {Main} from "../Core/Main";
+import {Server} from "../Core/Server";
 import * as jQuery from "jquery";
+
 export const SearchPanel = {
 
     init: function () {
@@ -84,4 +85,3 @@ export const SearchPanel = {
     },
 
 };
-export default SearchPanel

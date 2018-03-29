@@ -1,7 +1,8 @@
-import Arguments from "../Core/Arguments";
-import EventManager from "../Core/EventManager";
-import Translation from "../Core/Translation";
+import {Arguments} from "../Core/Arguments";
+import {EventManager} from "../Core/EventManager";
+import {Translation} from "../Core/Translation";
 import * as jQuery from "jquery";
+
 export const ArgumentsPanel = {
     _container: '#arguments_buttons',
 
@@ -135,4 +136,3 @@ export const ArgumentsPanel = {
     }
 
 };
-export default ArgumentsPanel
