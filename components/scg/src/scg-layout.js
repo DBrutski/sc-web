@@ -17,24 +17,6 @@ SCg.LayoutAlgorithm = function(nodes, edges, contours, onTickUpdate) {
     this.edges = edges;
     this.contours = contours;
     this.onTickUpdate = onTickUpdate;
-
-    this.nodes.forEach(node => node.object.setPosition = (() => {
-        let original = node.object.setPosition.bind(node.object);
-        return position => {
-            original(position);
-            node.px = node.x;
-            node.py = node.y;
-            node.x = position.x;
-            node.y = position.y;
-        };
-    })());
-    this.nodes.forEach(node => node.object._setSelected = (() => {
-        let original = node.object._setSelected.bind(node.object);
-        return value => {
-            original(value);
-            node.fixed = value;
-        };
-    })());
 };
 
 SCg.LayoutAlgorithm.prototype = {
