@@ -865,13 +865,23 @@ SctpClient.prototype.get_statistics = function () {
     throw "Not implemented";
 };
 
-export function SctpClientCreate() {
-    const dfd = jQuery.Deferred();
+/**
+ * lazy init of sctpClient
+ * @constructor
+ */
+export const SctpClientCreate =
+    (function () {
+        var sctpClientPromise;
+        return function () {
+            if (!sctpClientPromise) {
+                const dfd = jQuery.Deferred();
 
-    const sctp_client = new SctpClient({onClose: alert.bind(undefined, "Websocket closed")});
-    sctp_client.connect('/sctp', function () {
-        dfd.resolve(sctp_client);
-    });
-
-    return dfd.promise();
-};
+                const sctp_client = new SctpClient({onClose: alert.bind(undefined, "Websocket closed")});
+                sctp_client.connect('/sctp', function () {
+                    dfd.resolve(sctp_client);
+                });
+                sctpClientPromise = dfd.promise();
+            }
+            return sctpClientPromise;
+        }
+    })();
