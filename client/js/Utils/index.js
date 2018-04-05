@@ -9,3 +9,4 @@ export * from "./ScTypes";
 export * from "./TripleUtils";
 export * from "./parseURL";
 export * from "./AppCache";
+export * from "./fQueue";

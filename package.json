@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node_modules/webpack/bin/webpack.js --watch & node_modules/grunt/bin/grunt"
+    "start": "node_modules/webpack/bin/webpack.js --watch & node_modules/grunt/bin/grunt",
+    "watch": "webpack --watch"
   },
   "name": "sc-web",
   "version": "1.0.0",

@@ -1,6 +1,6 @@
 import $ from "jquery";
-import {Locker} from "./Ui/Locker";
-import {Main} from "./Core/Main";
+import {Locker} from "ui";
+import {Main} from "core";
 import "../css/core.css";
 
 $(document).ready(function() {

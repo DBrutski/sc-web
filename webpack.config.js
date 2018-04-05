@@ -2,9 +2,13 @@ var path = require("path");
 module.exports = {
     entry: {
         SCWeb: ["./client/js/index.js"],
+        ui: ["./client/js/Ui/index.js"],
+        core: ["./client/js/Core/index.js"],
+        utils: ["./client/js/Utils/index.js"],
+        startup: ["./client/js/startup.js"],
     },
     output: {
-        library: "SCWeb",
+        library: "[name]",
         path: path.resolve(__dirname, "client/dist"),
         publicPath: "/assets/",
         filename: "[name].js",
@@ -13,6 +17,9 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
+    externals: [
+        'ui', 'core', 'utils'
+    ],
     devServer: {
         proxy: [
             {
@@ -32,5 +39,5 @@ module.exports = {
             {test: /\.js$/, use: 'babel-loader', exclude: /node_modules/}
         ]
     },
-    devtool: "eval"
+    devtool: "eval-source-map"
 };
