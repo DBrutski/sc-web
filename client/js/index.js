@@ -1,10 +1,15 @@
-import * as Core from "core";
-import * as Ui from "ui";
-import * as Utils from "utils";
+import * as Core from "./Core/index";
+import * as Ui from "./Ui/index";
+import * as Utils from "./Utils/index";
 import * as R from "ramda";
 export const core = Core;
 export const ui = Ui;
 export const utils = Utils;
+
+// Promise.prototype.done = Promise.prototype.then;
+// Promise.prototype.fail = Promise.prototype.catch;
+
+window.utils = Object.assign({__esModule: true},utils);
 
 // Export legacy global objects
 const keys = [
