@@ -1,4 +1,5 @@
-var path = require("path");
+const path = require("path");
+const webpack = require("webpack");
 module.exports = {
     entry: {
         SCWeb: ["./client/js/index.js"],
@@ -37,5 +38,9 @@ module.exports = {
             {test: /\.js$/, use: 'babel-loader', exclude: /node_modules/}
         ]
     },
-    devtool: "eval-source-map"
+    devtool: "eval-source-map",
+    plugins: [new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery'
+    })]
 };
