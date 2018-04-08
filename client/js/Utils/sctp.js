@@ -1,5 +1,11 @@
 import StringView from "./StringView";
 
+export class SctpError extends Error{
+    constructor(sctpResultCode){
+        super(sctpResultCode);
+    }
+}
+
 export const SctpCommandType = {
     SCTP_CMD_UNKNOWN: 0x00, // unkown command
     SCTP_CMD_CHECK_ELEMENT: 0x01, // check if specified sc-element exist
@@ -369,7 +375,7 @@ SctpClient.prototype._push_task = function (task) {
             if (resCode === SctpResultCode.SCTP_RESULT_OK) {
                 t.dfd.resolve(r);
             } else
-                t.dfd.reject();
+                t.dfd.reject(new SctpError(resCode));
 
             if (self.task_queue.length > 0)
                 self.task_timeout = window.setTimeout(process, 0);
@@ -856,7 +862,7 @@ SctpClient.prototype.event_emit = function () {
             }
             dfd.resolve(events);
         }).fail(function (data) {
-        dfd.reject();
+        dfd.reject(data);
     });
     return dfd.promise();
 };
