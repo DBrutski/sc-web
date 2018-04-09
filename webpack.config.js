@@ -3,9 +3,6 @@ const webpack = require("webpack");
 module.exports = {
     entry: {
         SCWeb: ["./client/js/index.js"],
-        ui: ["./client/js/Ui/index.js"],
-        core: ["./client/js/Core/index.js"],
-        utils: ["./client/js/Utils/index.js"],
         startup: ["./client/js/startup.js"],
     },
     output: {
@@ -18,7 +15,7 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
-    externals: ['SCWeb'],
+    externals: ['SCWeb', 'jquery'],
     devServer: {
         proxy: [
             {
