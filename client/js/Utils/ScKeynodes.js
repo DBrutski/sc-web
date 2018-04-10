@@ -1,5 +1,3 @@
-import * as jQuery from "jquery";
-
 /**
  * Resolve sc-keynodes via sys-id and save it in this
  * @param sctpClient - already initialized sctp client
@@ -8,6 +6,9 @@ import * as jQuery from "jquery";
  * property - key for saving in keynodes object
  * @constructor
  */
+import * as jQuery from "jquery";
+import * as R from "ramda";
+
 export function ScKeynodes(sctpClient, keynodesToResolve) {
     this.sctpClient = sctpClient;
     this.keynodes = keynodesToResolve ||
@@ -67,7 +68,7 @@ ScKeynodes.prototype.init = function () {
  * @param property - key for saving
  * @returns {*}
  */
-ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
+ScKeynodes.prototype.resolveKeynode = R.memoize(function (sysIdtf, property) {
     const dfd = new jQuery.Deferred();
     const self = this;
 
@@ -82,12 +83,11 @@ ScKeynodes.prototype.resolveKeynode = function (sysIdtf, property) {
 
         dfd.resolve(res);
     }).fail(function () {
-        console.error("Can't resolve keynode ",sysIdtf);
+        console.error("Can't resolve keynode ", sysIdtf);
         dfd.reject();
     });
-
     return dfd.promise();
-};
+});
 
 /**
  * Resolve array of sc-addr

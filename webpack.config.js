@@ -15,7 +15,7 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
     },
-    externals: ['SCWeb', 'jquery'],
+    externals: {'SCWeb': 'SCWeb', 'jquery': 'jQuery'},
     devServer: {
         proxy: [
             {

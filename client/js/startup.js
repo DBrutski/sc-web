@@ -1,7 +1,6 @@
-import $ from "jquery";
-import {Locker} from "ui";
-import {Main} from "core";
-import "../css/core.css";
+import {core, ui} from "SCWeb";
+const {Locker} = ui;
+const {Main} = core;
 
 $(document).ready(function() {
 
