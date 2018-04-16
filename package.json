@@ -2,13 +2,15 @@
   "scripts": {
     "start": "node_modules/webpack/bin/webpack.js --watch & node_modules/grunt/bin/grunt",
     "watch": "webpack --watch",
+    "reactcards": "reactcards -p 8002 -e ./client/js/reactcards.js",
     "test": "jest "
   },
   "name": "sc-web",
   "version": "1.0.0",
   "dependencies": {
+    "@types/jest": "^22.2.3",
     "@types/ramda": "^0.25.21",
-    "@types/react": "^16.3.10",
+    "@types/react": "^16.3.11",
     "@types/react-dom": "^16.0.5",
     "bootstrap": "^4.1.0",
     "jquery": "^3.3.1",
@@ -30,8 +32,10 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-exec": "^2.0.0",
     "jest": "^22.4.3",
+    "reactcards": "^0.4.0",
     "ts-jest": "^22.4.3",
-    "ts-loader": "^4.2.0",
+    "ts-loader": "^3.x",
+    "typescript": "^2.8.1",
     "webpack": "^3.1.0"
   },
   "jest": {

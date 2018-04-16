@@ -33,7 +33,7 @@ module.exports = {
         rules: [
             {test: /\.css$/, use: 'css-loader'},
             {test: /\.jsx?$/, use: 'babel-loader', exclude: /node_modules/},
-            {test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/},
+            {test: /\.(ts|tsx)$/, use: 'ts-loader', exclude: /node_modules/},
         ]
     },
     devtool: "eval-source-map",

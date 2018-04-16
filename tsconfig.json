@@ -3,7 +3,7 @@
     "jsx": "react"
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
+    "client/**/*.ts",
+    "client/**/*.tsx"
   ]
 }
