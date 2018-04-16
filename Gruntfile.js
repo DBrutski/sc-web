@@ -217,6 +217,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
 
     grunt.registerTask('default', ['build', 'watch']);
-    grunt.registerTask('build', ['concat', 'copy', "exec:dev-html"]);
+    grunt.registerTask('build', ['concat', 'copy']);
 
 };
