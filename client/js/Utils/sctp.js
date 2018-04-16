@@ -339,7 +339,6 @@ SctpClient.prototype._registerHandlers = function (self, success) {
             self.onError && self.onError(e);
         } finally {
             $('#sc-ui-locker').removeClass('shown');
-            alert('WebSocket error');
         }
     };
 };
@@ -893,8 +892,8 @@ export const SctpClientCreate =
                 const dfd = jQuery.Deferred();
 
                 const fsm = new SctpClientControl();
-                const sctp_client = new SctpClient({onClose: fsm.con, onError: fsm.error});
-                fsm.onReconnect(sctp_client.connect.bind(sctp_client));
+                const sctp_client = new SctpClient({onClose: fsm.error, onConnect: fsm.con});
+                fsm.onReconnect(() => sctp_client.connect("/sctp"));
                 sctp_client.connect('/sctp', function () {
                     dfd.resolve(sctp_client);
                 });

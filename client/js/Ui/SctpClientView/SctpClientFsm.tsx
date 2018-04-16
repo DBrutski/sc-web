@@ -10,7 +10,10 @@ export function SctpClientFsm() {
                 con: "CONNECTED"
             },
             ERROR: {
-                reconnect: "CONNECTION"
+                reconnect: function () {
+                    this.emit("reconnect");
+                    this.transition("CONNECTION");
+                }
             },
             CONNECTION: {
                 error: "ERROR",

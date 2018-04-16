@@ -10,12 +10,11 @@ export class SctpClientControl {
 
     constructor() {
         this.fsm = SctpClientFsm();
-        this.emit = this.fsm.emit.bind(this.fsm, "reconnect");
-        this.fsm.on("*", this.render);
+        this.fsm.on("transition", this.render);
     }
 
     error = () => {
-        this.fsm.emit("error")
+        this.fsm.handle("error")
     };
 
     onReconnect(fun) {
@@ -23,12 +22,16 @@ export class SctpClientControl {
     }
 
     con = () => {
-        this.fsm.emit("con")
+        this.fsm.handle("con")
+    };
+
+    reconnect = () => {
+        this.fsm.handle("reconnect");
     };
 
     render = () => {
         ReactDOM.render(<SctpClientView state={this.fsm.state}
-                                       reconnect={this.emit}/>,
+                                        reconnect={this.reconnect}/>,
             document.getElementById("sctp-reconnection"))
     }
 }

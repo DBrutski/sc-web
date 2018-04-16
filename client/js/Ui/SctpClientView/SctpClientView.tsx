@@ -27,7 +27,10 @@ export class SctpClientView extends React.Component<SctpClientViewProps, any> {
     private styles(): CSSProperties {
         return {
             display: this.isVisible() ? "block" : "none",
-            position: "absolute"
+            position: "fixed",
+            bottom: "10%",
+            right: "5%",
+            zIndex: 1000
         };
     }
 }
