@@ -1,14 +1,8 @@
+import EekbPanel from "./eekbPanel"
+
 describe("eekbLLogic", () => {
     let joc = jasmine.objectContaining;
     let eekbMenuPanel;
-    SCWeb = {
-        core: {
-            EventManager: {},
-            Main: {},
-            Arguments: {},
-            Server: {}
-        }
-    };
 
     beforeEach(() => {
         eekbMenuPanel = new EekbPanel();
