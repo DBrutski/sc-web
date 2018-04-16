@@ -325,13 +325,21 @@ SctpClient.prototype._registerHandlers = function (self, success) {
         const CLOSE_GOING_AWAY = 1001;
         try {
             console.log('Closed websocket connection');
-            self.onClose && self.onClose(e);
             self.task_queue.forEach((task) => task.dfd.reject(e))
-        } finally {
-            if (!(e.code === CLOSE_NORMAL || e.code === CLOSE_GOING_AWAY)) {
-                $('#sc-ui-locker').removeClass('shown');
-            }
+        } catch (e) {
+            console.log(e)
         }
+        try {
+            self.onClose && self.onClose(e);
+        } catch (e) {
+            console.log(e)
+        }
+        if (!(e.code === CLOSE_NORMAL || e.code === CLOSE_GOING_AWAY)) {
+            $('#sc-ui-locker').removeClass('shown');
+        }
+        window.clearInterval(self.event_emit_interval);
+        window.clearTimeout(self.task_timeout);
+        delete self.task_timeout;
     };
     this.socket.onerror = function (e) {
         try {
@@ -356,7 +364,7 @@ SctpClient.prototype.connect = function (url, success) {
 };
 
 SctpClient.prototype._schedule_emit_event = function () {
-    window.setInterval(this.event_emit.bind(this), this.eventFrequency);
+    this.event_emit_interval = window.setInterval(this.event_emit.bind(this), this.eventFrequency);
 };
 
 SctpClient.prototype._push_task = function (task) {
