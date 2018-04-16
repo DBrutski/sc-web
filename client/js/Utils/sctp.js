@@ -1,7 +1,8 @@
 import StringView from "./StringView";
+import {SctpClientControl} from "../Ui/SctpClientView/SctpClientControl";
 
-export class SctpError extends Error{
-    constructor(sctpResultCode){
+export class SctpError extends Error {
+    constructor(sctpResultCode) {
         super(sctpResultCode);
     }
 }
@@ -301,20 +302,18 @@ export function SctpClient(options) {
     this.eventFrequency = options.eventFrequency || 1000;
     this.onError = options.onError;
     this.onClose = options.onClose;
-};
+    this.onConnect = options.onConnect;
+}
 
 SctpClient.prototype.close = function () {
     this.socket.close();
 };
 
-SctpClient.prototype.connect = function (url, success) {
-    this.socket = new WebSocket('ws://' + window.location.host + '/sctp'/*, ['soap', 'xmpp']*/);
-    this.socket.binaryType = 'arraybuffer';
-
-    const self = this;
+SctpClient.prototype._registerHandlers = function (self, success) {
     this.socket.onopen = function () {
         console.log('Connected to websocket');
-        success();
+        self.onConnect && self.onConnect();
+        success && success();
 
         self._schedule_emit_event();
     };
@@ -343,7 +342,18 @@ SctpClient.prototype.connect = function (url, success) {
             alert('WebSocket error');
         }
     };
+};
 
+SctpClient.prototype.createSocket = function (url) {
+
+    this.url = 'ws://' + window.location.host + (url || '/sctp');
+    this.socket = new WebSocket(this.url);
+    this.socket.binaryType = 'arraybuffer';
+};
+
+SctpClient.prototype.connect = function (url, success) {
+    this.createSocket(url);
+    this._registerHandlers(this, success);
 };
 
 SctpClient.prototype._schedule_emit_event = function () {
@@ -882,7 +892,9 @@ export const SctpClientCreate =
             if (!sctpClientPromise) {
                 const dfd = jQuery.Deferred();
 
-                const sctp_client = new SctpClient({onClose: alert.bind(undefined, "Websocket closed")});
+                const fsm = new SctpClientControl();
+                const sctp_client = new SctpClient({onClose: fsm.con, onError: fsm.error});
+                fsm.onReconnect(sctp_client.connect.bind(sctp_client));
                 sctp_client.connect('/sctp', function () {
                     dfd.resolve(sctp_client);
                 });
