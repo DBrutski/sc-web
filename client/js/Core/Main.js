@@ -13,7 +13,21 @@ import * as jQuery from "jquery";
 import {SctpClientCreate, SctpIteratorType} from "../Utils/sctp";
 import "../Utils/ScTypes"
 import {parseURL} from "../Utils/parseURL";
+import {removeRedundantElements} from "../Utils/removeRedundantElements";
 
+const isSimpleView = false;
+async function getQuestionAddr(result){
+    if(!result.question){
+        return;
+    }
+
+    //Константа в глобальной области видимости, только для тестирования
+    //Нужно заменить с учетом логики переключателя
+    if(isSimpleView){
+        return removeRedundantElements(result.question);
+    }
+    return result.question;
+}
 export const Main = {
 
     window_types: [],
@@ -114,6 +128,7 @@ export const Main = {
         return this.user['default_ext_lang'];
     },
 
+
     /**
      * Initiate user interface command
      * @param {String} cmd_addr sc-addr of user command
@@ -122,14 +137,17 @@ export const Main = {
     doCommand: function (cmd_addr, cmd_args) {
         Arguments.clear();
         Server.doCommand(cmd_addr, cmd_args, function (result) {
-            if (result.question) {
-                const commandState = new CommandState(cmd_addr, cmd_args);
-                WindowManager.appendHistoryItem(result.question, commandState);
-            } else if (result.command !== undefined) {
+            getQuestionAddr(result)
+                .then(function (question) {
+                    if (question) {
+                        const commandState = new CommandState(cmd_addr, cmd_args);
+                        WindowManager.appendHistoryItem(question, commandState);
+                    } else if (result.command !== undefined) {
 
-            } else {
-                alert("There are no any answer. Try another request");
-            }
+                    } else {
+                        alert("There are no any answer. Try another request");
+                    }
+                });
         });
     },
 

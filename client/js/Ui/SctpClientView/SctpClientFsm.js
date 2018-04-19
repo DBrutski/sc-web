@@ -1,17 +1,19 @@
-"use strict";
-exports.__esModule = true;
-var machina = require("machina");
-function SctpClientFsm() {
+import * as machina from "machina";
+
+export function SctpClientFsm() {
     return new machina.Fsm({
         namespaces: "SctpClientFsm",
         initialState: "INIT",
         states: {
             INIT: {
                 error: "ERROR",
-                succ: "CONNECTED"
+                con: "CONNECTED"
             },
             ERROR: {
-                connect: "CONNECTION"
+                reconnect: function () {
+                    this.emit("reconnect");
+                    this.transition("CONNECTION");
+                }
             },
             CONNECTION: {
                 error: "ERROR",
@@ -23,4 +25,3 @@ function SctpClientFsm() {
         }
     });
 }
-exports.SctpClientFsm = SctpClientFsm;

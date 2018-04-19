@@ -2,7 +2,6 @@
   "scripts": {
     "start": "node_modules/webpack/bin/webpack.js --watch & node_modules/grunt/bin/grunt",
     "watch": "webpack --watch",
-    "reactcards": "reactcards -p 8002 -e ./client/js/reactcards.js",
     "test": "jest "
   },
   "name": "sc-web",
