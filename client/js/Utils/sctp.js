@@ -323,11 +323,15 @@ SctpClient.prototype._registerHandlers = function (self, success) {
     this.socket.onclose = function (e) {
         const CLOSE_NORMAL = 1000;
         const CLOSE_GOING_AWAY = 1001;
-        try {
-            console.log('Closed websocket connection');
-            self.task_queue.forEach((task) => task.dfd.reject(e))
-        } catch (e) {
-            console.log(e)
+        console.log('Closed websocket connection');
+        for (const task in self.task_queue) {
+            try {
+                task.dfd.reject(e);
+            } catch (e) {
+                console.error(e)
+            } finally {
+                self.task_queue = [];
+            }
         }
         try {
             self.onClose && self.onClose(e);
