@@ -11,10 +11,11 @@ import {SctpIteratorType} from "../Utils/sctp";
 
 export const scAddrsDict = {};
 
-export const CommandState = function (command_addr, command_args, format) {
+export const CommandState = function (command_addr, command_args, format, question) {
     this.command_addr = command_addr;
     this.command_args = command_args || [];
     this.format = format;
+    this.question = question;
 };
 
 /**

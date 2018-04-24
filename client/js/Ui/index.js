@@ -10,3 +10,4 @@ export * from "./WindowManager";
 export * from "./ContextSwitcher";
 export * from "./LanguagePanel";
 export * from "./TaskPanel";
+export * from "./RemoveElements";

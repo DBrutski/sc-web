@@ -81,7 +81,7 @@
         </div>
 
         <label><input type="checkbox" id="mode-switching-checkbox" checked>Продвинутый режим</label>
-        <button id="button-for-view-advanced-elements" onclick="getElementsForRemove(cont_idtf)"> Кнопка для отображения удаляемых элементов</button>
+        <button id="button-for-view-advanced-elements"> Кнопка для отображения удаляемых элементов</button>
         <input id="input-for-view-advanced-elements" type="text" size="20">
             
 
@@ -168,144 +168,12 @@
         </div><!-- /.modal-dialog -->
     </div>
 
-
-    <script type="text/javascript">
-
-        $(document).ready(function() {
-
-            $('#windows-list').click(function () {
-                $('#static-window-container').toggle();
-            });
-
-            SCWeb.ui.Locker.show();
-            var params = {
-                        menu_container_id: 'menu_container',
-                        {% if first_time == "1" %}first_time: true,{% end %}
-                    };
-            $.when(SCWeb.core.Main.init(params)).done(function() {
-                SCWeb.ui.Locker.hide();
-            });
-
-            if (c.checked) {
-                document.getElementsByClassName("mode-switching-panel")[0].style.display = "";
-            } else {
-                document.getElementsByClassName("mode-switching-panel")[0].style.display = "none";
-            }
-        });
-
-
-        var c = document.querySelector('#mode-switching-checkbox');
-        c.onclick = function() {
-            if (c.checked) {
-                document.getElementsByClassName("mode-switching-panel")[0].style.display = "";
-            } else {
-                document.getElementsByClassName("mode-switching-panel")[0].style.display = "none";
-            }
-        };
-
-        // var button = document.querySelector('#button-for-view-advanced-elements');
-
-        var cont_idtf = document.getElementById("input-for-view-advanced-elements").value;
-        // button.onclick = getElementsForRemove(cont_idtf);
-        function getElementsForRemove(cont_idtf) {
-            var for_remove; //удаляемые элементы
-
-            //создание узла, содержащего удаляемые элементы
-            window.sctpClient.create_node(sc_type_node).done(function (res) {
-                for_remove = res;
-                //поиск исходных данных (контура) по idtf
-                scKeynodes.resolveKeynode(cont_idtf).done(function(){
-                    var cont = scKeynodes[cont_idtf];
-                    //перебор всех элементов в контуре
-                    window.sctpClient.iterate_constr(
-                        SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_A,
-                            [cont,
-                                sc_type_arc_pos_const_perm,
-                                0
-                            ])
-                    ).done(function (results) {
-                        //запись узла nrel_system_identifier в удаляемые
-                        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, window.scKeynodes.nrel_system_identifier);
-                        results.results.forEach(function (elem) {
-                            //поиск конструкций с nrel_system_identifier
-                            window.sctpClient.iterate_constr(
-                                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-                                    [elem[2],
-                                        sc_type_arc_common | sc_type_const,
-                                        0,          //можно заменить на sc_type_link, наверное.
-                                        sc_type_arc_pos_const_perm,
-                                        window.scKeynodes.nrel_system_identifier
-                                    ])
-                            ).done(function (results) {
-                                //запись элементов [2-4] из пятерки в удаляемые элементы
-                                results.results.forEach(function (res) {
-                                    window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[1]);
-                                    window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[2]);
-                                    window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[3]);
-                                });
-                            });
-
-                            //поиск конструкций elem => nrel_main_idtf: node
-                            var current_lang = SCWeb.core.ComponentSandbox.prototype.getCurrentLanguage();
-                            window.sctpClient.iterate_constr(
-                                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-                                    [elem[2],
-                                        sc_type_arc_common | sc_type_const,
-                                        0,
-                                        sc_type_arc_pos_const_perm,
-                                        window.scKeynodes.nrel_main_idtf
-                                    ])
-                            ).done(function (results) {
-                                results.results.forEach(function (main_idtf_5_iterator) {
-                                    //поиск конструкции some_lang -> node
-                                    window.sctpClient.iterate_constr(
-                                        SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3A_A_F,
-                                            [0,
-                                                sc_type_arc_pos_const_perm,
-                                                main_idtf_5_iterator[2]
-                                            ])
-                                    ).done(function (results) {
-                                        results.results.forEach(function (current_language_3_iterator) {
-                                            //поиск конструкции languages -> some_lang
-                                            window.sctpClient.iterate_constr(
-                                                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_F,
-                                                    [window.scKeynodes.languages,
-                                                        sc_type_arc_pos_const_perm,
-                                                        current_language_3_iterator[0]
-                                                    ])
-                                            ).done(function (results) {
-                                                results.results.forEach(function (belong_to_languages_3_iterator) {
-                                                    if (belong_to_languages_3_iterator[2] != current_lang){
-                                                        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, current_language_3_iterator[0]);
-                                                        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, current_language_3_iterator[1]);
-                                                        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[1]);
-                                                        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[2]);
-                                                        window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[3]);
-                                                    }
-                                                });
-
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                        SCWeb.core.Main.doDefaultCommand([for_remove]); // для отображения на ui результата работы функции
-                        return for_remove;
-                    });
-                });
-            });
-        }
-        
-    </script>
-
-
 <div id="sc-ui-locker">
     <div id="sc-ui-locker-text">Loading...</div>
     <div id="sc-ui-locker-icon"></div>   
 </div>
 
-
+<div id="sctp-reconnection"></div>
 </body>
 {% end %}
 
