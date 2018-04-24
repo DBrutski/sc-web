@@ -2,7 +2,7 @@ function isTripleSystem(set, triple) {
     return set.has(triple[0].addr) || set.has(triple[1].addr) || set.has(triple[2].addr);
 }
 function removeSystemTriples(set, triples) {
-    triples.filter((triple) => !isTripleSystem(set, triple));
+    return triples.filter((triple) => !isTripleSystem(set, triple));
 }
 
 async function getSystemSet(question) {

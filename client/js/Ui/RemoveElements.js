@@ -25,7 +25,7 @@ export function getElementsForRemove(addr) {
     var for_remove = new Set(); //удаляемые элементы
     var dfd = $.Deferred();
     //создание узла, содержащего удаляемые элементы
-    return window.sctpClient.create_node(sc_type_node).done(function (res) {
+    window.sctpClient.create_node(sc_type_node).done(function (res) {
         // for_remove = res;
         //поиск исходных данных (контура) по idtf
         var cont = addr;
@@ -46,16 +46,13 @@ export function getElementsForRemove(addr) {
                     SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
                         [elem[2],
                             sc_type_arc_common | sc_type_const,
-                            0,          //можно заменить на sc_type_link, наверное.
+                            0,
                             sc_type_arc_pos_const_perm,
                             window.scKeynodes.nrel_system_identifier
                         ])
                 ).done(function (results) {
                     //запись элементов [2-4] из пятерки в удаляемые элементы
                     results.results.forEach(function (res) {
-                        // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[1]);
-                        // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[2]);
-                        // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[3]);
                         for_remove.add(res[1]);
                         for_remove.add(res[2]);
                         for_remove.add(res[3]);
@@ -93,11 +90,6 @@ export function getElementsForRemove(addr) {
                                 ).done(function (results) {
                                     results.results.forEach(function (belong_to_languages_3_iterator) {
                                         if (belong_to_languages_3_iterator[2] != current_lang) {
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, current_language_3_iterator[0]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, current_language_3_iterator[1]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[1]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[2]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[3]);
                                             for_remove.add(current_language_3_iterator[0]);
                                             for_remove.add(current_language_3_iterator[1]);
                                             for_remove.add(main_idtf_5_iterator[1]);
@@ -105,7 +97,6 @@ export function getElementsForRemove(addr) {
                                             for_remove.add(main_idtf_5_iterator[3]);
                                         }
                                     });
-
                                 });
                             });
                         });
