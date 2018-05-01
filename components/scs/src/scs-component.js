@@ -57,8 +57,11 @@ var SCsViewer = function (sandbox) {
         return this.viewer.getAddrs();
     };
 
-    this.sandbox.eventDataAppend = $.proxy(this.receiveData, this);
-    this.sandbox.eventGetObjectsToTranslate = $.proxy(this.getObjectsToTranslate, this);
+    this.sandbox.eventDataAppend = new Promise(resolve => {
+        $.proxy(this.receiveData, this);
+        return resolve;
+    });
+    this.sandbox.eventGetObjectsToTranslate = this.sandbox.eventDataAppend.then(() => $.proxy(this.getObjectsToTranslate, this));
     this.sandbox.eventApplyTranslation = $.proxy(this.updateTranslation, this);
 
     this.viewer = new SCs.Viewer();
