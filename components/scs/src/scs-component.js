@@ -22,17 +22,20 @@ var SCsViewer = function (sandbox) {
     // ---- window interface -----
     this.receiveData = function (data) {
         this.data = data;
-        this.viewer.appendData(data);
 
         var dfd = new jQuery.Deferred();
 
-        $.when(this.sandbox.createViewersForScLinks(this.viewer.getLinks())).then(
-            function () {
-                dfd.resolve();
-            },
-            function () {
-                dfd.reject();
+        this.viewer.appendData(data)
+            .then(() => {
+                $.when(this.sandbox.createViewersForScLinks(this.viewer.getLinks())).then(
+                    function () {
+                        dfd.resolve();
+                    },
+                    function () {
+                        dfd.reject();
+                    });
             });
+
         return dfd.promise();
     };
 
@@ -57,11 +60,8 @@ var SCsViewer = function (sandbox) {
         return this.viewer.getAddrs();
     };
 
-    this.sandbox.eventDataAppend = new Promise(resolve => {
-        $.proxy(this.receiveData, this);
-        return resolve;
-    });
-    this.sandbox.eventGetObjectsToTranslate = this.sandbox.eventDataAppend.then(() => $.proxy(this.getObjectsToTranslate, this));
+    this.sandbox.eventDataAppend = this.receiveData.bind(this);
+    this.sandbox.eventGetObjectsToTranslate = this.getObjectsToTranslate.bind(this);
     this.sandbox.eventApplyTranslation = $.proxy(this.updateTranslation, this);
 
     this.viewer = new SCs.Viewer();

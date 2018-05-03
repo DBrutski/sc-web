@@ -22,7 +22,7 @@ $(document).ready(function () {
 
 // button.onclick = getElementsForRemove(cont_idtf);
 export function getElementsForRemove(addr) {
-    var for_remove = new Set(); //удаляемые элементы
+    var for_remove = []; //удаляемые элементы
     var dfd = $.Deferred();
     //создание узла, содержащего удаляемые элементы
     window.sctpClient.create_node(sc_type_node).done(function (res) {
@@ -39,7 +39,7 @@ export function getElementsForRemove(addr) {
         ).done(function (results) {
             //запись узла nrel_system_identifier в удаляемые
             // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, window.scKeynodes.nrel_system_identifier);
-            for_remove.add(scKeynodes.nrel_system_identifier);
+            for_remove.push(scKeynodes.nrel_system_identifier);
             results.results.forEach(function (elem) {
                 //поиск конструкций с nrel_system_identifier
                 window.sctpClient.iterate_constr(
@@ -53,9 +53,9 @@ export function getElementsForRemove(addr) {
                 ).done(function (results) {
                     //запись элементов [2-4] из пятерки в удаляемые элементы
                     results.results.forEach(function (res) {
-                        for_remove.add(res[1]);
-                        for_remove.add(res[2]);
-                        for_remove.add(res[3]);
+                        for_remove.push(res[1]);
+                        for_remove.push(res[2]);
+                        for_remove.push(res[3]);
                     });
                 });
 
@@ -90,11 +90,11 @@ export function getElementsForRemove(addr) {
                                 ).done(function (results) {
                                     results.results.forEach(function (belong_to_languages_3_iterator) {
                                         if (belong_to_languages_3_iterator[2] != current_lang) {
-                                            for_remove.add(current_language_3_iterator[0]);
-                                            for_remove.add(current_language_3_iterator[1]);
-                                            for_remove.add(main_idtf_5_iterator[1]);
-                                            for_remove.add(main_idtf_5_iterator[2]);
-                                            for_remove.add(main_idtf_5_iterator[3]);
+                                            for_remove.push(current_language_3_iterator[0]);
+                                            for_remove.push(current_language_3_iterator[1]);
+                                            for_remove.push(main_idtf_5_iterator[1]);
+                                            for_remove.push(main_idtf_5_iterator[2]);
+                                            for_remove.push(main_idtf_5_iterator[3]);
                                         }
                                     });
                                 });
