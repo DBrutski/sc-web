@@ -21,90 +21,97 @@ $(document).ready(function () {
 });
 
 // button.onclick = getElementsForRemove(cont_idtf);
-export function getElementsForRemove(addr) {
+export async function getElementsForRemove(addr) {
+
+    //checkbox allow all scn constructions
+    if (c.checked) return [];
+
     var for_remove = []; //удаляемые элементы
-    var dfd = $.Deferred();
-    //создание узла, содержащего удаляемые элементы
-    window.sctpClient.create_node(sc_type_node).done(function (res) {
-        // for_remove = res;
-        //поиск исходных данных (контура) по idtf
-        var cont = addr;
-        //перебор всех элементов в контуре
-        return window.sctpClient.iterate_constr(
+    var cont = addr;
+    //заносим в множестов for_remove отношение nrel_system_identifier
+    for_remove.push(scKeynodes.nrel_system_identifier);
+    try {
+        var systemIdtfConstrs = await new Promise((success, faild) => window.sctpClient.iterate_constr(
+            //итератор для элементов контура
             SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_A,
                 [cont,
                     sc_type_arc_pos_const_perm,
                     0
-                ])
-        ).done(function (results) {
-            //запись узла nrel_system_identifier в удаляемые
-            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, window.scKeynodes.nrel_system_identifier);
-            for_remove.push(scKeynodes.nrel_system_identifier);
-            results.results.forEach(function (elem) {
-                //поиск конструкций с nrel_system_identifier
-                window.sctpClient.iterate_constr(
-                    SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-                        [elem[2],
-                            sc_type_arc_common | sc_type_const,
-                            0,
-                            sc_type_arc_pos_const_perm,
-                            window.scKeynodes.nrel_system_identifier
-                        ])
-                ).done(function (results) {
-                    //запись элементов [2-4] из пятерки в удаляемые элементы
-                    results.results.forEach(function (res) {
-                        for_remove.push(res[1]);
-                        for_remove.push(res[2]);
-                        for_remove.push(res[3]);
-                    });
-                });
+                ], {
+                    "contour_elem": 2
+                }),
+            //итератор для поиска nrel_system_identifier
+            SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
+                ["contour_elem",
+                    sc_type_arc_common | sc_type_const,
+                    0,
+                    sc_type_arc_pos_const_perm,
+                    window.scKeynodes.nrel_system_identifier
+                ], {
+                    "idtf_arc": 1,
+                    "idtf_node": 2,
+                    "idtf_relation": 3
+                })
+        ).then(success, faild));
+        for (let idx in systemIdtfConstrs.results) {
+            for_remove.push(systemIdtfConstrs.get(idx, "idtf_arc"));
+            for_remove.push(systemIdtfConstrs.get(idx, "idtf_node"));
+            for_remove.push(systemIdtfConstrs.get(idx, "idtf_relation"));
+        }
+    } catch (e) {
+        console.error("Cannot find system_idtf in contour", e);
+    }
 
-                //поиск конструкций elem => nrel_main_idtf: node
-                var current_lang = SCWeb.core.ComponentSandbox.prototype.getCurrentLanguage();
-                window.sctpClient.iterate_constr(
-                    SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-                        [elem[2],
-                            sc_type_arc_common | sc_type_const,
-                            0,
-                            sc_type_arc_pos_const_perm,
-                            window.scKeynodes.nrel_main_idtf
-                        ])
-                ).done(function (results) {
-                    results.results.forEach(function (main_idtf_5_iterator) {
-                        //поиск конструкции some_lang -> node
-                        window.sctpClient.iterate_constr(
-                            SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3A_A_F,
-                                [0,
-                                    sc_type_arc_pos_const_perm,
-                                    main_idtf_5_iterator[2]
-                                ])
-                        ).done(function (results) {
-                            results.results.forEach(function (current_language_3_iterator) {
-                                //поиск конструкции languages -> some_lang
-                                window.sctpClient.iterate_constr(
-                                    SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_F,
-                                        [window.scKeynodes.languages,
-                                            sc_type_arc_pos_const_perm,
-                                            current_language_3_iterator[0]
-                                        ])
-                                ).done(function (results) {
-                                    results.results.forEach(function (belong_to_languages_3_iterator) {
-                                        if (belong_to_languages_3_iterator[2] != current_lang) {
-                                            for_remove.push(current_language_3_iterator[0]);
-                                            for_remove.push(current_language_3_iterator[1]);
-                                            for_remove.push(main_idtf_5_iterator[1]);
-                                            for_remove.push(main_idtf_5_iterator[2]);
-                                            for_remove.push(main_idtf_5_iterator[3]);
-                                        }
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-            dfd.resolve(for_remove);
-        });
-    });
-    return dfd.promise();
+    //текущий язык
+    var current_lang = SCWeb.core.ComponentSandbox.prototype.getCurrentLanguage();
+
+    try {
+        //итератор для поиска nrel_main_idtf
+        var mainIdtfConstr = await
+            new Promise((success, faild) => window.sctpClient.iterate_constr(
+                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_A,
+                    [cont,
+                        sc_type_arc_pos_const_perm,
+                        0
+                    ], {"contour_elem": 2}),
+                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
+                    ["contour_elem",
+                        sc_type_arc_common | sc_type_const,
+                        0,
+                        sc_type_arc_pos_const_perm,
+                        window.scKeynodes.nrel_main_idtf
+                    ], {
+                        "idtf_arc": 1,
+                        "idtf_node": 2,
+                        "idtf_relation": 3
+                    }),
+                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3A_A_F,
+                    [0,
+                        sc_type_arc_pos_const_perm,
+                        "idtf_node"
+                    ], {
+                        "language": 0,
+                        "language_arc": 1
+                    }),
+                SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_F,
+                    [window.scKeynodes.languages,
+                        sc_type_arc_pos_const_perm,
+                        "language"
+                    ])
+            ).then(success, faild));
+
+        for (let idx in mainIdtfConstr.results) {
+            if (mainIdtfConstr.get(idx, "language") !== current_lang) {
+                for_remove.push(mainIdtfConstr.get(idx, "idtf_arc"));
+                for_remove.push(mainIdtfConstr.get(idx, "idtf_node"));
+                for_remove.push(mainIdtfConstr.get(idx, "idtf_relation"));
+                for_remove.push(mainIdtfConstr.get(idx, "language"));
+                for_remove.push(mainIdtfConstr.get(idx, "language_arc"));
+            }
+        }
+    } catch (e) {
+        console.error("Cannot find main_idtf in contour", e);
+    }
+    return for_remove;
+
 }
