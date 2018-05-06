@@ -5,6 +5,7 @@ import * as R from "ramda";
 export const core = Core;
 export const ui = Ui;
 export const utils = Utils;
+export * from "./Utils/index";
 
 // Promise.prototype.done = Promise.prototype.then;
 // Promise.prototype.fail = Promise.prototype.catch;
