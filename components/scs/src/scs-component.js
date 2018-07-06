@@ -2,6 +2,7 @@ SCsComponent = {
     ext_lang: 'scs_code',
     formats: ['format_scs_json'],
     factory: function (sandbox) {
+        window.sandbox=sandbox;
         return new SCsViewer(sandbox);
     },
     getRequestKeynodes: function () {
@@ -38,6 +39,23 @@ var SCsViewer = function (sandbox) {
 
         return dfd.promise();
     };
+
+    this.updateContent = jQuery.proxy(function () {
+        var self = this;
+        SCWeb.core.Main.getTranslatedAnswer(this.sandbox.command_state)
+            .then(function (answer_addr) {
+                sandbox.addr = answer_addr;
+                sandbox.eventStructUpdate = true;
+                self.viewer = new SCs.Viewer();
+                sandbox.removeChild();
+                self.viewer.init(sandbox, articleContainer, jQuery.proxy(sandbox.getKeynode, sandbox),
+                    sandbox.generateWindowContainer);
+                self.sandbox.eventGetObjectsToTranslate = jQuery.proxy(viewObjectsToTranslate, self);
+                self.sandbox.eventApplyTranslation = viewUpdateTranslation;
+                self.sandbox.eventDataAppend = viewerReceiveData;
+                self.sandbox.updateContent();
+            });
+    }, this);
 
 
     this.updateTranslation = function (namesMap) {

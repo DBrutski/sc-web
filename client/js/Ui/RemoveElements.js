@@ -10,7 +10,18 @@ $(document).ready(function () {
         } else {
             document.getElementsByClassName("mode-switching-panel")[0].style.display = "none";
         }
+        var div = document.getElementsByClassName('scs-scn-field-root')[0];
+        if (div != null){
+            div.remove();
+        }
+
+        window.SCsViewer(window.sandbox).updateComponent();
     };
+    if (c.checked) {
+        document.getElementsByClassName("mode-switching-panel")[0].style.display = "";
+    } else {
+        document.getElementsByClassName("mode-switching-panel")[0].style.display = "none";
+    }
     button = document.querySelector('#button-for-view-advanced-elements');
     button.onclick = async () => {
         var cont_idtf = document.getElementById("input-for-view-advanced-elements").value;
