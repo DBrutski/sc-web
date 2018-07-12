@@ -22,13 +22,6 @@ $(document).ready(function () {
     } else {
         document.getElementsByClassName("mode-switching-panel")[0].style.display = "none";
     }
-    button = document.querySelector('#button-for-view-advanced-elements');
-    button.onclick = async () => {
-        var cont_idtf = document.getElementById("input-for-view-advanced-elements").value;
-        const addr = await scKeynodes.resolveKeynode(cont_idtf);
-        const for_remove = await  new Promise((resolve, reject) => getElementsForRemove(addr).then(resolve, reject));
-        SCWeb.core.Main.doDefaultCommand([for_remove]); // для отображения на ui результата работы функции
-    }
 });
 
 // button.onclick = getElementsForRemove(cont_idtf);
