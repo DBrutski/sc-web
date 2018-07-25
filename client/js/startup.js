@@ -2,6 +2,8 @@ import {core, ui} from "SCWeb";
 const {Locker} = ui;
 const {Main} = core;
 
+import "./Ui/RemoveElements";
+
 $(document).ready(function() {
 
     $('#windows-list').click(function () {

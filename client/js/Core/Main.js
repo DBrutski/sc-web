@@ -123,7 +123,7 @@ export const Main = {
         Arguments.clear();
         Server.doCommand(cmd_addr, cmd_args, function (result) {
             if (result.question) {
-                const commandState = new CommandState(cmd_addr, cmd_args);
+                const commandState = new CommandState(cmd_addr, cmd_args, null, result.question);
                 WindowManager.appendHistoryItem(result.question, commandState);
             } else if (result.command !== undefined) {
 

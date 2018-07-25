@@ -34,3 +34,4 @@ const legacySelectors = R.map(R.prop, legacyKeys);
 const legacyValues = R.juxt(legacySelectors)(utils);
 const legacy = R.zipObj(legacyKeys, legacyValues);
 Object.assign(window, legacy);
+window.getElementsForRemove = ui.getElementsForRemove;

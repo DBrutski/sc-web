@@ -1,3 +1,26 @@
+
+function isTripleSystem(set, triple) {
+    return set.includes(triple[0].addr) || set.includes(triple[1].addr) || set.includes(triple[2].addr);
+}
+
+function removeSystemTriples(set, triples) {
+    return triples.filter((triple) => !isTripleSystem(set, triple));
+}
+
+async function getSystemSet(question) {
+    const questionTuple = await new Promise((resolve, reject) => sctpClient.iterate_elements(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
+        [question, 0, 0, 0, scKeynodes.nrel_answer]).then(resolve, reject));
+    if (questionTuple.length !== 1) {
+        console.error("incorrect question");
+        return new Set();
+    }
+    const answer = questionTuple[0][2];
+    let systemSet = await new Promise((resolve, reject) => getElementsForRemove(answer).then(resolve, reject));
+    // Create string from numbers of sc-addr. Set use strict equal to find element
+    systemSet = systemSet.map((scAddr) => scAddr.toString());
+    return systemSet;
+}
+
 SCs.Viewer = function () {
 
     this.sandbox = null;
@@ -19,10 +42,18 @@ SCs.Viewer = function () {
         this.output.init(this.tree, sandbox.container, this.getKeynode, this.sandbox.generateWindowContainer);
     };
 
-    this.appendData = function (data) {
+    this.appendData = async function (data) {
         var self = this;
         data = JSON.parse(data);
-        this.tree.build(data.keywords, data.triples);
+
+        try {
+            const set = await getSystemSet(self.sandbox.command_state.question);
+            data.triples = removeSystemTriples(set, data.triples);
+        } catch (e) {
+            console.error(e);
+        }
+
+        self.tree.build(data.keywords, data.triples);
         $(self.containerId).html($(self.containerId).html() + self.output.toHtml());
 
         $(self.containerId + ' .sc-contour > .scs-scn-view-toogle-button').click(function () {
@@ -47,6 +78,7 @@ SCs.Viewer = function () {
             primary.toggleClass('hidden');
             external.toggleClass('hidden');
         });
+
     };
 
     this.getAddrs = function () {
