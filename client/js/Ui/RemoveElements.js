@@ -1,3 +1,5 @@
+import {EventManager} from "../Core/EventManager";
+
 var c;
 
 var button;
@@ -15,7 +17,8 @@ $(document).ready(function () {
             div.remove();
         }
 
-        window.SCsViewer(window.sandbox).updateComponent();
+        // window.SCsViewer(window.sandbox).updateComponent();
+        EventManager.emit("updateContent");
     };
     if (c.checked) {
         document.getElementsByClassName("mode-switching-panel")[0].style.display = "";

@@ -1,8 +1,11 @@
+import {EventManager} from "../../../client/js/Core/EventManager";
+
 SCsComponent = {
     ext_lang: 'scs_code',
     formats: ['format_scs_json'],
     factory: function (sandbox) {
         window.sandbox=sandbox;
+        EventManager.subscribe("updateContent", this, this.updateContent);
         return new SCsViewer(sandbox);
     },
     getRequestKeynodes: function () {
