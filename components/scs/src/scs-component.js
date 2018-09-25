@@ -30,6 +30,7 @@ var SCsViewer = function (sandbox) {
             .then(() => {
                 $.when(this.sandbox.createViewersForScLinks(this.viewer.getLinks())).then(
                     function () {
+                        showHide();
                         dfd.resolve();
                     },
                     function () {
