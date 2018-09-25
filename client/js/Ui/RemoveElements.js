@@ -15,6 +15,16 @@ $(document).ready(function () {
 });
 
 export function showHide() {
+    // системный идентификатор
+    var nrel_system_identifier = window.scKeynodes['nrel_system_identifier'];
+    // основной идентификатор
+    var nrel_main_idtf = window.scKeynodes['nrel_main_idtf'];
+    // трансляция sc-текста
+    var nrel_sc_text_translation = window.scKeynodes['nrel_sc_text_translation'];
+    // идентификатор
+    var nrel_idtf = window.scKeynodes['nrel_idtf'];
+
+
 
     c = document.querySelector('#mode-switching-checkbox');
     if (c.checked) {
@@ -26,7 +36,7 @@ export function showHide() {
 
     //идентификатор*
     if (c.checked) {
-        document.querySelectorAll('div > div > a[sc_addr="262144"]').forEach(function (element) {
+        document.querySelectorAll('div > div > a[sc_addr="'+nrel_idtf+'"]').forEach(function (element) {
             element.parentNode.parentNode.style.display = "";
             var nextElem = element.parentNode.parentNode.nextSibling;
             while (!nextElem.classList.contains("scs-scn-field")) {
@@ -35,7 +45,7 @@ export function showHide() {
             }
         });
     } else {
-        document.querySelectorAll('div > div > a[sc_addr="262144"]').forEach(function (element) {
+        document.querySelectorAll('div > div > a[sc_addr="'+nrel_idtf+'"]').forEach(function (element) {
             element.parentNode.parentNode.style.display = "none";
             var nextElem = element.parentNode.parentNode.nextSibling;
             while (!nextElem.classList.contains("scs-scn-field")) {
@@ -48,11 +58,11 @@ export function showHide() {
 
     //системный идентификатор*
     if (c.checked) {
-        document.querySelectorAll('div > div > a[sc_addr="196608"]').forEach(function (element) {
+        document.querySelectorAll('div > div > a[sc_addr="'+nrel_system_identifier+'"]').forEach(function (element) {
             element.parentNode.parentNode.style.display = "";
         });
     } else {
-        document.querySelectorAll('div > div > a[sc_addr="196608"]').forEach(function (element) {
+        document.querySelectorAll('div > div > a[sc_addr="'+nrel_system_identifier+'"]').forEach(function (element) {
             element.parentNode.parentNode.style.display = "none";
         });
     }
@@ -60,7 +70,7 @@ export function showHide() {
 
     //трансляция sc-текста*
     if (c.checked) {
-        document.querySelectorAll('div > a[sc_addr="212271104"]').forEach(function (element) {
+        document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
             var afterKeyScElem = element.parentNode.nextSibling.nextSibling;
             afterKeyScElem.childNodes[0].style.display = "";
             afterKeyScElem.childNodes[1].childNodes[0].style.display = "";
@@ -70,7 +80,7 @@ export function showHide() {
             afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[1].style.display = "";
         });
     } else {
-        document.querySelectorAll('div > a[sc_addr="212271104"]').forEach(function (element) {
+        document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
             var afterKeyScElem = element.parentNode.nextSibling.nextSibling;
             afterKeyScElem.childNodes[0].style.display = "none";
             afterKeyScElem.childNodes[1].childNodes[0].style.display = "none";
@@ -91,19 +101,10 @@ export function showHide() {
         }
     }
 
-    document.querySelectorAll('div > a[sc_addr="8650752"]').forEach(function (element) {
-        var langScAddr = element.parentNode.nextSibling.nextSibling.childNodes[1].childNodes[1].childNodes[0].getAttribute("sc_addr");
-        if (notSelectedIds.includes(langScAddr)){
-            element.parentNode.nextSibling.style.display = "none";
-            element.parentNode.nextSibling.nextSibling.style.display = "none";
-        }
-    });
-
-
 
     //основной идентификатор* на другом языке
     if (c.checked) {
-        document.querySelectorAll('div > a[sc_addr="8650752"]').forEach(function (element) {
+        document.querySelectorAll('div > a[sc_addr="'+nrel_main_idtf+'"]').forEach(function (element) {
             var langScAddr = element.parentNode.nextSibling.nextSibling.childNodes[1].childNodes[1].childNodes[0].getAttribute("sc_addr");
             if (notSelectedIds.includes(langScAddr)){
                 element.parentNode.nextSibling.style.display = "";
@@ -111,7 +112,7 @@ export function showHide() {
             }
         });
     } else {
-        document.querySelectorAll('div > a[sc_addr="8650752"]').forEach(function (element) {
+        document.querySelectorAll('div > a[sc_addr="'+nrel_main_idtf+'"]').forEach(function (element) {
             var langScAddr = element.parentNode.nextSibling.nextSibling.childNodes[1].childNodes[1].childNodes[0].getAttribute("sc_addr");
             if (notSelectedIds.includes(langScAddr)){
                 element.parentNode.nextSibling.style.display = "none";
@@ -121,7 +122,7 @@ export function showHide() {
     }
 
     if (c.checked) {
-        document.querySelectorAll('div > a[sc_addr="8650752"]').forEach(function (element) {
+        document.querySelectorAll('div > a[sc_addr="'+nrel_main_idtf+'"]').forEach(function (element) {
             var nextElem = element.parentNode.parentNode.nextSibling;
             while (nextElem.getAttribute("style") == null || !nextElem.getAttribute("style").includes("padding-left: 40px")) {
                 nextElem = nextElem.nextSibling;
@@ -144,7 +145,7 @@ export function showHide() {
             });
         });
     } else {
-        document.querySelectorAll('div > a[sc_addr="8650752"]').forEach(function (element) {
+        document.querySelectorAll('div > a[sc_addr="'+nrel_main_idtf+'"]').forEach(function (element) {
             var nextElem = element.parentNode.parentNode.nextSibling;
             while (nextElem.getAttribute("style") == null || !nextElem.getAttribute("style").includes("padding-left: 40px")) {
                 nextElem = nextElem.nextSibling;
