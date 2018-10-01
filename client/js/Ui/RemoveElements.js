@@ -5,9 +5,6 @@ var button;
 $(document).ready(function () {
     c = document.querySelector('#mode-switching-checkbox');
     c.onclick = function () {
-        // ComponentSandbox.prototype.resolveAddrs(['nrel_system_identifier', 'nrel_main_idtf', 'nrel_sc_text_translation', 'nrel_idtf', 'rrel_key_sc_element'], function(addrs){
-        //     showHide(addrs);
-        // });
         showHide();
     };
     if (c.checked) {
@@ -17,48 +14,23 @@ $(document).ready(function () {
     }
 });
 
-export async function showHide(/*addrs*/) {
-    // console.log(addrs);
-    await scKeynodes.resolveKeynode('rrel_key_sc_element');
+export async function showHide() {
 
     // системный идентификатор
-    var nrel_system_identifier = window.scKeynodes['nrel_system_identifier'];
-    scKeynodes.resolveKeynode('nrel_system_identifier', nrel_system_identifier);
+    await scKeynodes.resolveKeynode('nrel_system_identifier');
+    var nrel_system_identifier = scKeynodes['nrel_system_identifier'];
     // основной идентификатор
-    var nrel_main_idtf = window.scKeynodes['nrel_main_idtf'];
-    scKeynodes.resolveKeynode('nrel_system_identifier', nrel_system_identifier);
+    await scKeynodes.resolveKeynode('nrel_main_idtf');
+    var nrel_main_idtf = scKeynodes['nrel_main_idtf'];
     // трансляция sc-текста
-    var nrel_sc_text_translation = window.scKeynodes['nrel_sc_text_translation'];
+    await scKeynodes.resolveKeynode('nrel_sc_text_translation');
+    var nrel_sc_text_translation = scKeynodes['nrel_sc_text_translation'];
     // идентификатор
-    var nrel_idtf = window.scKeynodes['nrel_idtf'];
+    await scKeynodes.resolveKeynode('nrel_idtf');
+    var nrel_idtf = scKeynodes['nrel_idtf'];
     // ключевой sc-элемент
     await scKeynodes.resolveKeynode('rrel_key_sc_element');
     var rrel_key_sc_element = scKeynodes['rrel_key_sc_element'];
-    // scKeynodes.resolveKeynode('rrel_key_sc_element', rrel_key_sc_element);
-
-    // const dfd = new jQuery.Deferred();
-
-    // Server.resolveScAddr(['nrel_system_identifier', 'nrel_main_idtf', 'nrel_sc_text_translation', 'nrel_idtf', 'rrel_key_sc_element'], function (addrs) {
-    //     var nrel_system_identifier = addrs['nrel_system_identifier'];
-    //     var nrel_main_idtf = addrs['nrel_main_idtf'];
-    //     var nrel_sc_text_translation = addrs['nrel_sc_text_translation'];
-    //     var nrel_idtf = addrs['nrel_idtf'];
-    //     var rrel_key_sc_element = addrs['rrel_key_sc_element'];
-    //     // dfd.resolve();
-    // });
-
-    // console.log(nrel_system_identifier);
-    // console.log("\n");
-    // console.log(nrel_main_idtf);
-    // console.log("\n");
-    // console.log(nrel_sc_text_translation );
-    // console.log("\n");
-    // console.log(nrel_idtf);
-    // console.log("\n");
-    // console.log(rrel_key_sc_element);
-    // console.log("\n");
-
-    // if (dfd.isResolved)
 
 
 
@@ -105,59 +77,23 @@ export async function showHide(/*addrs*/) {
 
 
     //трансляция sc-текста*
-
     if (c.checked) {
         document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
             element.parentNode.parentNode.previousSibling.style.display = "";
             element.parentNode.previousSibling.style.display = "";
-            element.parentNode.nextSibling.childNodes[0] = "";
-            element.parentNode.nextSibling.childNodes[1].childNodes[0] = "";
-            element.parentNode.nextSibling.childNodes[1].childNodes[1] = "";
-            //
-            // var afterKeyScElem = element.parentNode.nextSibling.nextSibling;
-            // afterKeyScElem.childNodes[0].style.display = "";
-            // afterKeyScElem.childNodes[1].childNodes[0].style.display = "";
-            // afterKeyScElem.childNodes[1].childNodes[1].style.display = "";
-            // afterKeyScElem.childNodes[1].childNodes[2].childNodes[0].style.display = "";
-            // afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[0].style.display = "";
-            // afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[1].style.display = "";
+            element.parentNode.style.display = "";
+            element.parentNode.nextSibling.childNodes[0].style.display  = "";
+            element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display  = "";
+            element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display  = "";
         });
     } else {
         document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
             element.parentNode.parentNode.previousSibling.style.display = "none";
             element.parentNode.previousSibling.style.display = "none";
-            element.parentNode.nextSibling.childNodes[0] = "none";
-            element.parentNode.nextSibling.childNodes[1].childNodes[0] = "none";
-            element.parentNode.nextSibling.childNodes[1].childNodes[1] = "none";
-            // var afterKeyScElem = element.parentNode.nextSibling.nextSibling;
-            // afterKeyScElem.childNodes[0].style.display = "none";
-            // afterKeyScElem.childNodes[1].childNodes[0].style.display = "none";
-            // afterKeyScElem.childNodes[1].childNodes[1].style.display = "none";
-            // afterKeyScElem.childNodes[1].childNodes[2].childNodes[0].style.display = "none";
-            // afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[0].style.display = "none";
-            // afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[1].style.display = "none";
-        });
-    }
-
-    if (c.checked) {
-        document.querySelectorAll('div > a[sc_addr="'+rrel_key_sc_element+'"]').forEach(function (element) {
-            var afterKeyScElem = element.parentNode.nextSibling.nextSibling;
-            afterKeyScElem.childNodes[0].style.display = "";
-            afterKeyScElem.childNodes[1].childNodes[0].style.display = "";
-            afterKeyScElem.childNodes[1].childNodes[1].style.display = "";
-            afterKeyScElem.childNodes[1].childNodes[2].childNodes[0].style.display = "";
-            afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[0].style.display = "";
-            afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[1].style.display = "";
-        });
-    } else {
-        document.querySelectorAll('div > a[sc_addr="'+rrel_key_sc_element+'"]').forEach(function (element) {
-            var afterKeyScElem = element.parentNode.nextSibling.nextSibling;
-            afterKeyScElem.childNodes[0].style.display = "none";
-            afterKeyScElem.childNodes[1].childNodes[0].style.display = "none";
-            afterKeyScElem.childNodes[1].childNodes[1].style.display = "none";
-            afterKeyScElem.childNodes[1].childNodes[2].childNodes[0].style.display = "none";
-            afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[0].style.display = "none";
-            afterKeyScElem.childNodes[1].childNodes[2].childNodes[1].childNodes[1].style.display = "none";
+            element.parentNode.style.display = "none";
+            element.parentNode.nextSibling.childNodes[0].style.display  = "none";
+            element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display  = "none";
+            element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display  = "none";
         });
     }
 
