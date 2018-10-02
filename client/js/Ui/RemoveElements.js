@@ -75,25 +75,32 @@ export async function showHide() {
         });
     }
 
+    // element.parentNode.parentNode.parentNode.style.paddingLeft = "20px";
 
     //трансляция sc-текста*
     if (c.checked) {
         document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
+            element.parentNode.parentNode.parentNode.style.paddingLeft = "40px";
             element.parentNode.parentNode.previousSibling.style.display = "";
             element.parentNode.previousSibling.style.display = "";
             element.parentNode.style.display = "";
+            element.parentNode.nextSibling.style.paddingLeft = "20px";
             element.parentNode.nextSibling.childNodes[0].style.display  = "";
             element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display  = "";
             element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display  = "";
+            element.parentNode.nextSibling.childNodes[1].childNodes[2].style.paddingLeft = "20px";
         });
     } else {
         document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
+            element.parentNode.parentNode.parentNode.style.paddingLeft = "20px";
             element.parentNode.parentNode.previousSibling.style.display = "none";
             element.parentNode.previousSibling.style.display = "none";
             element.parentNode.style.display = "none";
+            element.parentNode.nextSibling.style.paddingLeft = "0px";
             element.parentNode.nextSibling.childNodes[0].style.display  = "none";
             element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display  = "none";
             element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display  = "none";
+            element.parentNode.nextSibling.childNodes[1].childNodes[2].style.paddingLeft = "0px";
         });
     }
 
@@ -105,6 +112,18 @@ export async function showHide() {
         if (!select.options[i].getAttribute("sc_addr").includes(selectedLangId)){
             notSelectedIds.push(select.options[i].getAttribute("sc_addr"));
         }
+    }
+
+
+    //текущий язык
+    if(c.checked){
+        document.querySelectorAll('div > div > a[sc_addr="'+selectedLangId+'"]').forEach(function (element) {
+            element.parentNode.parentNode.style.display = "";
+        });
+    } else {
+        document.querySelectorAll('div > div > a[sc_addr="'+selectedLangId+'"]').forEach(function (element) {
+            element.parentNode.parentNode.style.display = "none";
+        });
     }
 
 
