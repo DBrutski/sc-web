@@ -44,15 +44,25 @@ async function doAction(option){
 
     //трансляция sc-текста*
     document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
-        element.parentNode.parentNode.parentNode.style.paddingLeft = option.includes("none") ? "20px" : "40px";
-        element.parentNode.parentNode.previousSibling.style.display = option;
-        element.parentNode.previousSibling.style.display = option;
-        element.parentNode.style.display = option;
-        element.parentNode.nextSibling.style.paddingLeft = option.includes("none") ? "0px" : "20px";
-        element.parentNode.nextSibling.childNodes[0].style.display  = option;
-        element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display  = option;
-        element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display  = option;
-        element.parentNode.nextSibling.childNodes[1].childNodes[2].style.paddingLeft = option.includes("none") ? "0px" : "20px";
+        if (element.parentNode.parentNode.parentNode != null &&
+            element.parentNode.parentNode.previousSibling != null &&
+            element.parentNode.previousSibling != null &&
+            element.parentNode != null &&
+            element.parentNode.nextSibling != null &&
+            element.parentNode.nextSibling.childNodes[0] != null &&
+            element.parentNode.nextSibling.childNodes[1].childNodes[0] != null &&
+            element.parentNode.nextSibling.childNodes[1].childNodes[1] != null &&
+            element.parentNode.nextSibling.childNodes[1].childNodes[2] != null) {
+            element.parentNode.parentNode.parentNode.style.paddingLeft = option.includes("none") ? "20px" : "40px";
+            element.parentNode.parentNode.previousSibling.style.display = option;
+            element.parentNode.previousSibling.style.display = option;
+            element.parentNode.style.display = option;
+            element.parentNode.nextSibling.style.paddingLeft = option.includes("none") ? "0px" : "20px";
+            element.parentNode.nextSibling.childNodes[0].style.display = option;
+            element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display = option;
+            element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display = option;
+            element.parentNode.nextSibling.childNodes[1].childNodes[2].style.paddingLeft = option.includes("none") ? "0px" : "20px";
+        }
     });
 
     var select = document.getElementById("language-select");
