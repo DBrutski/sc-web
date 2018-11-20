@@ -2,6 +2,7 @@ SCsComponent = {
     ext_lang: 'scs_code',
     formats: ['format_scs_json'],
     factory: function (sandbox) {
+        window.sandbox=sandbox;
         return new SCsViewer(sandbox);
     },
     getRequestKeynodes: function () {
@@ -22,19 +23,40 @@ var SCsViewer = function (sandbox) {
     // ---- window interface -----
     this.receiveData = function (data) {
         this.data = data;
-        this.viewer.appendData(data);
 
         var dfd = new jQuery.Deferred();
 
-        $.when(this.sandbox.createViewersForScLinks(this.viewer.getLinks())).then(
-            function () {
-                dfd.resolve();
-            },
-            function () {
-                dfd.reject();
+        this.viewer.appendData(data)
+            .then(() => {
+                $.when(this.sandbox.createViewersForScLinks(this.viewer.getLinks())).then(
+                    function () {
+                        showHide();
+                        dfd.resolve();
+                    },
+                    function () {
+                        dfd.reject();
+                    });
             });
+
         return dfd.promise();
     };
+
+    this.updateContent = jQuery.proxy(function () {
+        var self = this;
+        SCWeb.core.Main.getTranslatedAnswer(this.sandbox.command_state)
+            .then(function (answer_addr) {
+                sandbox.addr = answer_addr;
+                sandbox.eventStructUpdate = true;
+                self.viewer = new SCs.Viewer();
+                sandbox.removeChild();
+                self.viewer.init(sandbox, articleContainer, jQuery.proxy(sandbox.getKeynode, sandbox),
+                    sandbox.generateWindowContainer);
+                self.sandbox.eventGetObjectsToTranslate = jQuery.proxy(viewObjectsToTranslate, self);
+                self.sandbox.eventApplyTranslation = viewUpdateTranslation;
+                self.sandbox.eventDataAppend = viewerReceiveData;
+                self.sandbox.updateContent();
+            });
+    }, this);
 
 
     this.updateTranslation = function (namesMap) {
@@ -57,8 +79,8 @@ var SCsViewer = function (sandbox) {
         return this.viewer.getAddrs();
     };
 
-    this.sandbox.eventDataAppend = $.proxy(this.receiveData, this);
-    this.sandbox.eventGetObjectsToTranslate = $.proxy(this.getObjectsToTranslate, this);
+    this.sandbox.eventDataAppend = this.receiveData.bind(this);
+    this.sandbox.eventGetObjectsToTranslate = this.getObjectsToTranslate.bind(this);
     this.sandbox.eventApplyTranslation = $.proxy(this.updateTranslation, this);
 
     this.viewer = new SCs.Viewer();

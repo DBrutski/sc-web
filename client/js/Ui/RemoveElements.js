@@ -1,119 +1,117 @@
 var c;
 
-var button;
-
 $(document).ready(function () {
     c = document.querySelector('#mode-switching-checkbox');
-    c.onclick = function () {
-        if (c.checked) {
-            document.getElementsByClassName("mode-switching-panel")[0].style.display = "";
-        } else {
-            document.getElementsByClassName("mode-switching-panel")[0].style.display = "none";
-        }
+    c.onclick = async function () {
+        await showHide();
     };
-    button = document.querySelector('#button-for-view-advanced-elements');
-    button.onclick = async () => {
-        var cont_idtf = document.getElementById("input-for-view-advanced-elements").value;
-        const addr = await scKeynodes.resolveKeynode(cont_idtf);
-        const for_remove = await  new Promise((resolve, reject) => getElementsForRemove(addr).then(resolve, reject));
-        SCWeb.core.Main.doDefaultCommand([for_remove]); // для отображения на ui результата работы функции
-    }
 });
 
-// button.onclick = getElementsForRemove(cont_idtf);
-export function getElementsForRemove(addr) {
-    var for_remove = new Set(); //удаляемые элементы
-    var dfd = $.Deferred();
-    //создание узла, содержащего удаляемые элементы
-    return window.sctpClient.create_node(sc_type_node).done(function (res) {
-        // for_remove = res;
-        //поиск исходных данных (контура) по idtf
-        var cont = addr;
-        //перебор всех элементов в контуре
-        return window.sctpClient.iterate_constr(
-            SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_A,
-                [cont,
-                    sc_type_arc_pos_const_perm,
-                    0
-                ])
-        ).done(function (results) {
-            //запись узла nrel_system_identifier в удаляемые
-            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, window.scKeynodes.nrel_system_identifier);
-            for_remove.add(scKeynodes.nrel_system_identifier);
-            results.results.forEach(function (elem) {
-                //поиск конструкций с nrel_system_identifier
-                window.sctpClient.iterate_constr(
-                    SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-                        [elem[2],
-                            sc_type_arc_common | sc_type_const,
-                            0,          //можно заменить на sc_type_link, наверное.
-                            sc_type_arc_pos_const_perm,
-                            window.scKeynodes.nrel_system_identifier
-                        ])
-                ).done(function (results) {
-                    //запись элементов [2-4] из пятерки в удаляемые элементы
-                    results.results.forEach(function (res) {
-                        // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[1]);
-                        // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[2]);
-                        // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, res[3]);
-                        for_remove.add(res[1]);
-                        for_remove.add(res[2]);
-                        for_remove.add(res[3]);
-                    });
-                });
 
-                //поиск конструкций elem => nrel_main_idtf: node
-                var current_lang = SCWeb.core.ComponentSandbox.prototype.getCurrentLanguage();
-                window.sctpClient.iterate_constr(
-                    SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_5F_A_A_A_F,
-                        [elem[2],
-                            sc_type_arc_common | sc_type_const,
-                            0,
-                            sc_type_arc_pos_const_perm,
-                            window.scKeynodes.nrel_main_idtf
-                        ])
-                ).done(function (results) {
-                    results.results.forEach(function (main_idtf_5_iterator) {
-                        //поиск конструкции some_lang -> node
-                        window.sctpClient.iterate_constr(
-                            SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3A_A_F,
-                                [0,
-                                    sc_type_arc_pos_const_perm,
-                                    main_idtf_5_iterator[2]
-                                ])
-                        ).done(function (results) {
-                            results.results.forEach(function (current_language_3_iterator) {
-                                //поиск конструкции languages -> some_lang
-                                window.sctpClient.iterate_constr(
-                                    SctpConstrIter(SctpIteratorType.SCTP_ITERATOR_3F_A_F,
-                                        [window.scKeynodes.languages,
-                                            sc_type_arc_pos_const_perm,
-                                            current_language_3_iterator[0]
-                                        ])
-                                ).done(function (results) {
-                                    results.results.forEach(function (belong_to_languages_3_iterator) {
-                                        if (belong_to_languages_3_iterator[2] != current_lang) {
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, current_language_3_iterator[0]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, current_language_3_iterator[1]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[1]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[2]);
-                                            // window.sctpClient.create_arc(sc_type_arc_pos_const_perm, for_remove, main_idtf_5_iterator[3]);
-                                            for_remove.add(current_language_3_iterator[0]);
-                                            for_remove.add(current_language_3_iterator[1]);
-                                            for_remove.add(main_idtf_5_iterator[1]);
-                                            for_remove.add(main_idtf_5_iterator[2]);
-                                            for_remove.add(main_idtf_5_iterator[3]);
-                                        }
-                                    });
+async function doAction(option){
+    // системный идентификатор
+    await scKeynodes.resolveKeynode('nrel_system_identifier');
+    var nrel_system_identifier = scKeynodes['nrel_system_identifier'];
+    // основной идентификатор
+    await scKeynodes.resolveKeynode('nrel_main_idtf');
+    var nrel_main_idtf = scKeynodes['nrel_main_idtf'];
+    // трансляция sc-текста
+    await scKeynodes.resolveKeynode('nrel_sc_text_translation');
+    var nrel_sc_text_translation = scKeynodes['nrel_sc_text_translation'];
+    // идентификатор
+    await scKeynodes.resolveKeynode('nrel_idtf');
+    var nrel_idtf = scKeynodes['nrel_idtf'];
+    // ключевой sc-элемент
+    await scKeynodes.resolveKeynode('rrel_key_sc_element');
+    var rrel_key_sc_element = scKeynodes['rrel_key_sc_element'];
 
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-            dfd.resolve(for_remove);
-        });
+    document.getElementsByClassName("mode-switching-panel")[0].style.display = option;
+
+    //идентификатор*
+    document.querySelectorAll('div > div > a[sc_addr="'+nrel_idtf+'"]').forEach(function (element) {
+        element.parentNode.parentNode.style.display = option;
+        var nextElem = element.parentNode.parentNode.nextSibling;
+        while (!nextElem.classList.contains("scs-scn-field")) {
+            nextElem.style.display = option;
+            nextElem = nextElem.nextSibling;
+        }
     });
-    return dfd.promise();
+
+    //системный идентификатор*
+    document.querySelectorAll('div > div > a[sc_addr="'+nrel_system_identifier+'"]').forEach(function (element) {
+        element.parentNode.parentNode.style.display = option;
+    });
+
+    //трансляция sc-текста*
+    document.querySelectorAll('div > a[sc_addr="'+nrel_sc_text_translation+'"]').forEach(function (element) {
+        if (element.parentNode.parentNode.parentNode != null &&
+            element.parentNode.parentNode.previousSibling != null &&
+            element.parentNode.previousSibling != null &&
+            element.parentNode != null &&
+            element.parentNode.nextSibling != null &&
+            element.parentNode.nextSibling.childNodes[0] != null &&
+            element.parentNode.nextSibling.childNodes[1].childNodes[0] != null &&
+            element.parentNode.nextSibling.childNodes[1].childNodes[1] != null &&
+            element.parentNode.nextSibling.childNodes[1].childNodes[2] != null) {
+            element.parentNode.parentNode.parentNode.style.paddingLeft = option.includes("none") ? "20px" : "40px";
+            element.parentNode.parentNode.previousSibling.style.display = option;
+            element.parentNode.previousSibling.style.display = option;
+            element.parentNode.style.display = option;
+            element.parentNode.nextSibling.style.paddingLeft = option.includes("none") ? "0px" : "20px";
+            element.parentNode.nextSibling.childNodes[0].style.display = option;
+            element.parentNode.nextSibling.childNodes[1].childNodes[0].style.display = option;
+            element.parentNode.nextSibling.childNodes[1].childNodes[1].style.display = option;
+            element.parentNode.nextSibling.childNodes[1].childNodes[2].style.paddingLeft = option.includes("none") ? "0px" : "20px";
+        }
+    });
+
+    var select = document.getElementById("language-select");
+    var selectedLangId = select.options[select.selectedIndex].getAttribute("sc_addr");
+    var notSelectedIds = [];
+
+    for(var i = 0; i < select.length; i++){
+        if (!select.options[i].getAttribute("sc_addr").includes(selectedLangId)){
+            notSelectedIds.push(select.options[i].getAttribute("sc_addr"));
+        }
+    }
+    //все языки
+    for(var i = 0; i < select.length; i++){
+        document.querySelectorAll('div > div > a[sc_addr="' + select.options[i].getAttribute("sc_addr") + '"]').forEach(function (element) {
+            element.parentNode.parentNode.style.display = option;
+        });
+    }
+
+    //основной идентификатор* на другом языке
+    document.querySelectorAll('div > a[sc_addr="'+nrel_main_idtf+'"]').forEach(function (element) {
+        var langScAddr = element.parentNode.nextSibling.nextSibling.childNodes[1].childNodes[1].childNodes[0].getAttribute("sc_addr");
+        element.parentNode.nextSibling.style.display = "";
+        element.parentNode.nextSibling.nextSibling.style.display = "";
+        if (notSelectedIds.includes(langScAddr)){
+            element.parentNode.nextSibling.style.display = option;
+            element.parentNode.nextSibling.nextSibling.style.display = option;
+        }
+        var langScAddr2 = element.parentNode.parentNode.nextSibling.nextSibling.childNodes[1].childNodes[1].childNodes[0].getAttribute("sc_addr");
+        element.parentNode.parentNode.nextSibling.style.display = "";
+        element.parentNode.parentNode.nextSibling.nextSibling.style.display = "";
+        if (notSelectedIds.includes(langScAddr2)){
+            element.parentNode.parentNode.nextSibling.style.display = option;
+            element.parentNode.parentNode.nextSibling.nextSibling.style.display = option;
+        }
+    });
+}
+
+export async function showHide() {
+    if (c.checked){
+        await doAction("");
+    } else{
+        await doAction("");
+        await doAction("none");
+    }
+}
+
+export async function getElementsForRemove(addr) {
+
+    return [];
+
+
 }

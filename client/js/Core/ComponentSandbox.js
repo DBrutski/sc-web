@@ -220,8 +220,8 @@ ComponentSandbox.prototype._appendChilds = function (windows) {
     for (let cntId in windows) {
         if (!windows.hasOwnProperty(cntId))
             continue;
-        if (this.childs[cntId])
-            throw "Duplicate child container " + cntId;
+        // if (this.childs[cntId])
+        //     throw "Duplicate child container " + cntId;
         this.childs[cntId] = windows[cntId];
     }
 };

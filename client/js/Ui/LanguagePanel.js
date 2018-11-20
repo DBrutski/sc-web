@@ -34,6 +34,7 @@ export const LanguagePanel = {
                     $('#language-select').removeAttr('disabled', true);
                     Locker.hide();
                 });
+                showHide();
             });
 
         // listen translation events
