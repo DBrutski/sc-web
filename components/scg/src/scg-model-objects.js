@@ -75,6 +75,19 @@ SCg.ModelObject.prototype.destroy = function () {
 };
 
 /**
+ * Calculate bounded rectangle
+ */
+SCg.ModelObject.prototype.boundedRectangle = function () {
+    const offset = 20;
+    return [
+        this.position.clone().add(new SCg.Vector3(-offset, -offset)),
+        this.position.clone().add(new SCg.Vector3(-offset, +offset)),
+        this.position.clone().add(new SCg.Vector3(+offset, +offset)),
+        this.position.clone().add(new SCg.Vector3(+offset, -offset)),
+    ];
+}
+
+/**
  * Setup new position of object
  * @param {SCg.Vector3} pos
  *      New position of object
@@ -390,6 +403,19 @@ SCg.ModelEdge = function (options) {
 
 SCg.ModelEdge.prototype = Object.create(SCg.ModelObject.prototype);
 
+SCg.ModelEdge.prototype.boundedRectangle = function () {
+    const maxX = Math.max(this.source.position.x, this.target.position.x);
+    const minX = Math.min(this.source.position.x, this.target.position.x);
+    const maxY = Math.max(this.source.position.y, this.target.position.y);
+    const minY = Math.min(this.source.position.y, this.target.position.y);
+    return [
+        new SCg.Vector3(minX, minY),
+        new SCg.Vector3(minX, maxY),
+        new SCg.Vector3(maxX, maxY),
+        new SCg.Vector3(maxX, minY),
+    ];
+}
+
 SCg.ModelEdge.prototype.setPosition = function (offset) {
     var dp = offset.clone().sub(this.position);
     for (var i = 0; i < this.points.length; i++) {
@@ -637,6 +663,25 @@ SCg.ModelContour = function (options) {
 
 SCg.ModelContour.prototype = Object.create(SCg.ModelObject.prototype);
 
+function convexRectangle(innerPoints) {
+    const pointsOrNull = innerPoints.length === 0 ? [new SCg.Vector3(0, 0, 0)] : innerPoints;
+    const minX = Math.min.apply(null, pointsOrNull.map(p => p.x));
+    const minY = Math.min.apply(null, pointsOrNull.map(p => p.y));
+    const maxX = Math.max.apply(null, pointsOrNull.map(p => p.x));
+    const maxY = Math.max.apply(null, pointsOrNull.map(p => p.y));
+    return [
+        new SCg.Vector3(minX, minY),
+        new SCg.Vector3(minX, maxY),
+        new SCg.Vector3(maxX, maxY),
+        new SCg.Vector3(maxX, minY),
+    ];
+}
+
+SCg.ModelContour.prototype.boundedRectangle = function () {
+    const innerPoints = this.childs.map(model => model.boundedRectangle());
+    const flatten = [].concat.apply([], innerPoints);
+    return convexRectangle(flatten);
+};
 
 SCg.ModelContour.prototype.setPosition = function (pos) {
 
@@ -657,6 +702,15 @@ SCg.ModelContour.prototype.setPosition = function (pos) {
 
 SCg.ModelContour.prototype.update = function () {
     SCg.ModelObject.prototype.update.call(this);
+};
+
+SCg.ModelContour.prototype.setVertices = function (vertexes) {
+    this.points = vertexes;
+    this.position = this.getCenter();
+
+    this.requestUpdate();
+    this.notifyEdgesUpdate();
+    this.notifyBusUpdate();
 };
 
 /**
@@ -724,19 +778,17 @@ SCg.ModelContour.prototype.getConnectionPos = function (from, dotPos) {
 SCg.ModelContour.prototype.getCenter = function () {
     var center = new SCg.Vector3();
 
-    center.x = this.points[0].x;
-    center.y = this.points[1].x;
+    center.x = 0;
+    center.y = 0;
     center.z = 0;
 
-    for (var i = i; i < points.length; ++i) {
-        var p = points[i];
-
+    for (const p of  this.points) {
         center.x += p.x;
         center.y += p.y;
     }
 
-    center.x /= points.length;
-    center.y /= points.length;
+    center.x /= this.points.length;
+    center.y /= this.points.length;
 
     return center;
 };
@@ -759,6 +811,19 @@ SCg.ModelBus = function (options) {
 };
 
 SCg.ModelBus.prototype = Object.create(SCg.ModelObject.prototype);
+
+SCg.ModelBus.prototype.boundedRectangle = function () {
+    const innerPoints = [this.source_pos, this.target_pos].concat(this.points);
+    let convexRect = convexRectangle(innerPoints);
+    const offset = 5;
+    return [
+        convexRect[0].clone().add(new SCg.Vector3(-offset, -offset)),
+        convexRect[1].clone().add(new SCg.Vector3(-offset, +offset)),
+        convexRect[2].clone().add(new SCg.Vector3(+offset, +offset)),
+        convexRect[3].clone().add(new SCg.Vector3(+offset, -offset)),
+    ];
+    ;
+}
 
 SCg.ModelBus.prototype.setPosition = function (offset) {
     var dp = offset.clone().sub(this.position);
