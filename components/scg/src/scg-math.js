@@ -1,4 +1,4 @@
-SCg.Vector2 = function (x, y) {
+SCg.Vector2 = function (x = 0, y = 0) {
     this.x = x;
     this.y = y;
 };
@@ -93,7 +93,7 @@ SCg.Vector2.prototype = {
 
 
 // --------------------
-SCg.Vector3 = function (x, y, z) {
+SCg.Vector3 = function (x = 0, y = 0, z = 0) {
     this.x = x;
     this.y = y;
     this.z = z;
