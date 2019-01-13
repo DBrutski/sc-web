@@ -1,5 +1,3 @@
-var showSCgContours = true;
-
 function ScgFromScImpl(_sandbox, _editor, aMapping) {
 
   var self = this,
@@ -70,8 +68,10 @@ function ScgFromScImpl(_sandbox, _editor, aMapping) {
   }
 
   function _addChildNodeToContour(beginObj, endObj) {
-    beginObj.childs.push(endObj);
+    beginObj.addChild(endObj);
   }
+
+  const sc_type_node_const_struct = sc_type_node_struct | sc_type_const | sc_type_node;
 
   function _executeTask(task) {
     var addr = task[0];
@@ -81,48 +81,37 @@ function ScgFromScImpl(_sandbox, _editor, aMapping) {
       return;
 
     if (type & sc_type_node) {
-      if (showSCgContours) {
-        if (type & sc_type_node_struct) {
-          _addContourToScene(type, addr);
-        } else {
-          _addNodeToScene(type, addr);
-        }
+      if (type === sc_type_node_const_struct) {
+        _addContourToScene(type, addr);
       } else {
         _addNodeToScene(type, addr);
       }
     } else if (type & sc_type_arc_mask) {
-      if (showSCgContours) {
-        if (type === sc_type_arc_pos_const_perm) {
-          var beginObj = editor.scene.getObjectByScAddr(task[2]);
-          var endObj = editor.scene.getObjectByScAddr(task[3]);
-          if (processedEdge[task[2]] || processedEdge[task[3]]) {
-            console.warn("Arc was skipped", task[2] + "-" + addr + "->" + task[3]);
-            return;
-          }
-          if (!beginObj || !endObj) {
-            tasks.push(task);
-          } else {
-            if (beginObj.sc_type & sc_type_node_struct) {
-              processedEdge[addr] = true;
-              _addChildNodeToContour(beginObj, endObj);
-            } else {
-              _addEdgeToScene(beginObj, endObj, type, addr);
-            }
-          }
+      var beginObj = editor.scene.getObjectByScAddr(task[2]);
+      var endObj = editor.scene.getObjectByScAddr(task[3]);
+      if (type === sc_type_arc_pos_const_perm) {
+        if (processedEdge[task[2]] || processedEdge[task[3]]) {
+          console.warn("Arc was skipped", task[2] + "-" + addr + "->" + task[3]);
+          return;
+        }
+        if (!beginObj || !endObj) {
+          tasks.push(task);
         } else {
-          var bObj = editor.scene.getObjectByScAddr(task[2]);
-          var eObj = editor.scene.getObjectByScAddr(task[3]);
-          if (!bObj || !eObj) {
-            tasks.push(task);
+          if (beginObj.sc_type === sc_type_node_const_struct) {
+            processedEdge[addr] = true;
+            _addChildNodeToContour(beginObj, endObj);
           } else {
-            _addEdgeToScene(bObj, eObj, type, addr);
+            _addEdgeToScene(beginObj, endObj, type, addr);
           }
         }
-      } else if (type & sc_type_link) {
-        _addLinkToScene(addr);
+      } else {
+        _addEdgeToScene(beginObj, endObj, type, addr);
+      }
+    } else if (type === sc_type_link) {
+      _addNodeToScene(type, addr);
+      // _addLinkToScene(addr);
       }
     }
-  }
 
     var doBatch = function () {
 
