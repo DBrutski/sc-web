@@ -91,6 +91,7 @@ function ScgFromScImpl(_sandbox, _editor, aMapping) {
       var endObj = editor.scene.getObjectByScAddr(task[3]);
       if (type === sc_type_arc_pos_const_perm) {
         if (processedEdge[task[2]] || processedEdge[task[3]]) {
+          processedEdge[addr] = true;
           console.warn("Arc was skipped", task[2] + "-" + addr + "->" + task[3]);
           return;
         }
@@ -108,8 +109,7 @@ function ScgFromScImpl(_sandbox, _editor, aMapping) {
         _addEdgeToScene(beginObj, endObj, type, addr);
       }
     } else if (type === sc_type_link) {
-      _addNodeToScene(type, addr);
-      // _addLinkToScene(addr);
+        _addLinkToScene(addr);
       }
     }
 
@@ -143,7 +143,7 @@ function ScgFromScImpl(_sandbox, _editor, aMapping) {
     var addTask = function (args) {
       tasks.push(args);
       if (!self.timeout) {
-        self.timeout = window.setInterval(doBatch, 10);
+        self.timeout = window.setTimeout(doBatch, 10);
       }
       doBatch();
     };

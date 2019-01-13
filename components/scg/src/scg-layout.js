@@ -54,49 +54,50 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
 
 
     this.force = d3.layout.force()
-        .nodes(this.nodes)
-        .links(this.edges)
-        .size(this.rect)
-        .friction(0.9)
-        .gravity(0.03)
-        .linkDistance(function (edge) {
-            if (edge.distance) return edge.distance;
+      .nodes(this.nodes)
+      .links(this.edges)
+      .size(this.rect)
+      .friction(0.9)
+      .gravity(0.03)
+      .chargeDistance(640)
+      .linkDistance(function (edge) {
+          if (edge.distance === 0 || edge.distance) return edge.distance;
 
-            var p1 = edge.source.object.getConnectionPos(edge.target.object.position, edge.object.source_dot);
-            var p2 = edge.target.object.getConnectionPos(edge.source.object.position, edge.object.target_dot);
-            var cd = edge.source.object.position.clone().sub(edge.target.object.position).length();
-            var d = cd - p1.sub(p2).length();
+          var p1 = edge.source.object.getConnectionPos(edge.target.object.position, edge.object.source_dot);
+          var p2 = edge.target.object.getConnectionPos(edge.source.object.position, edge.object.target_dot);
+          var cd = edge.source.object.position.clone().sub(edge.target.object.position).length();
+          var d = cd - p1.sub(p2).length();
 
-            if (edge.source.type == SCgLayoutObjectType.DotPoint ||
-                edge.target.type == SCgLayoutObjectType.DotPoint) {
-                return d + 50;
-            }
+          if (edge.source.type == SCgLayoutObjectType.DotPoint ||
+            edge.target.type == SCgLayoutObjectType.DotPoint) {
+              return d + 50;
+          }
 
-            return 100 + d;
-        })
-        .linkStrength(function (edge) {
-            if (edge.strength) return edge.strength;
-            if (edge.source.type == SCgLayoutObjectType.DotPoint ||
-                edge.target.type == SCgLayoutObjectType.DotPoint) {
-                return 1;
-            }
+          return 100 + d;
+      })
+      .linkStrength(function (edge) {
+          if (edge.strength === 0 || edge.strength) return edge.strength;
+          if (edge.source.type == SCgLayoutObjectType.DotPoint ||
+            edge.target.type == SCgLayoutObjectType.DotPoint) {
+              return 1;
+          }
 
-            return 0.3;
-        })
-        .charge(function (node) {
-            if (node.charge) return node.charge;
-            if (node.type == SCgLayoutObjectType.DotPoint) {
-                return 0;
-            } else if (node.type == SCgLayoutObjectType.Link) {
-                return -900;
-            }
+          return 0.3;
+      })
+      .charge(function (node) {
+          if (node.charge === 0 || node.charge) return node.charge;
+          if (node.type == SCgLayoutObjectType.DotPoint) {
+              return 0;
+          } else if (node.type == SCgLayoutObjectType.Link) {
+              return -900;
+          }
 
-            return -700;
-        })
-        .on('tick', function () {
-            self.onLayoutTick();
-        })
-        .start();
+          return -700;
+      })
+      .on('tick', function () {
+          self.onLayoutTick();
+      })
+      .start();
 };
 
 SCg.LayoutAlgorithmForceBased.prototype.onLayoutTick = function () {
@@ -128,6 +129,20 @@ SCg.LayoutAlgorithmForceBased.prototype.onLayoutTick = function () {
         dot.y = edge.position.y;
     }
 
+    for (const contour of this.nodes) {
+        if (contour.type === SCgLayoutObjectType.Contour) {
+            let boundedRectangle = contour.object.boundedRectangle();
+            const offset = 5;
+            const enlargedRect = [
+                boundedRectangle[0].clone().add(new SCg.Vector3(-offset, -offset)),
+                boundedRectangle[1].clone().add(new SCg.Vector3(-offset, +offset)),
+                boundedRectangle[2].clone().add(new SCg.Vector3(+offset, +offset)),
+                boundedRectangle[3].clone().add(new SCg.Vector3(+offset, -offset)),
+            ];
+            contour.object.setVertices(enlargedRect);
+        }
+    }
+
     this.onTickUpdate();
 };
 
@@ -154,121 +169,110 @@ SCg.LayoutManager.prototype.init = function (scene) {
  * Prepare objects for layout
  */
 SCg.LayoutManager.prototype.prepareObjects = function () {
+    const chargeCoefficient = 2;
+    const distanceCoefficient = 1;
 
     this.nodes = new Array();
     this.edges = new Array();
     var objDict = {};
 
     // first of all we need to collect objects from scene, and build them representation for layout
-    for (idx in this.scene.nodes) {
-        var node = this.scene.nodes[idx];
-        if (node.contour)
-            continue;
-
-        var obj = new Object();
-
-        obj.x = node.position.x;
-        obj.y = node.position.y;
-        obj.object = node;
-        obj.type = SCgLayoutObjectType.Node;
+    for (const node of this.scene.nodes) {
+        var obj = {
+            x: node.position.x,
+            y: node.position.y,
+            object: node,
+            type: SCgLayoutObjectType.Node,
+            charge: -300 * chargeCoefficient,
+        };
 
         objDict[node.id] = obj;
         this.nodes.push(obj);
     }
 
-    for (idx in this.scene.links) {
-        var link = this.scene.links[idx];
-        if (link.contour)
-            continue;
+    for (const link of this.scene.links) {
 
-        var obj = new Object();
-
-        obj.x = link.position.x;
-        obj.y = link.position.y;
-        obj.object = link;
-        obj.type = SCgLayoutObjectType.Link;
+        var obj = {
+            x: link.position.x,
+            y: link.position.y,
+            object: link,
+            type: SCgLayoutObjectType.Link,
+            charge: -300 * chargeCoefficient,
+        };
 
         objDict[link.id] = obj;
         this.nodes.push(obj);
     }
 
-    for (idx in this.scene.edges) {
-        var edge = this.scene.edges[idx];
-        if (edge.contour)
-            continue;
-
-        var obj = new Object();
-
-        obj.object = edge;
-        obj.type = SCgLayoutObjectType.Edge;
-
+    for (const edge of this.scene.edges) {
+        var obj = {
+            object: edge,
+            type: SCgLayoutObjectType.Edge,
+            strength: 0.3,
+            distance: 100 * distanceCoefficient,
+        };
         objDict[edge.id] = obj;
         this.edges.push(obj);
     }
 
-    for (idx in this.scene.contours) {
-        var contour = this.scene.contours[idx];
-        if (contour.contour)
-            continue;
-
-        var obj = new Object();
-
-        obj.x = contour.position.x;
-        obj.y = contour.position.y;
-        obj.object = contour;
-        obj.type = SCgLayoutObjectType.Contour;
-
-        objDict[contour.id] = obj;
-        this.nodes.push(obj);
-    }
-
-    for (idx in this.scene.contours) {
-        var contour = this.scene.contours[idx];
-
-        var obj = new Object();
-
-        obj.x = contour.position.x;
-        obj.y = contour.position.y;
-        obj.object = contour;
-        obj.type = SCgLayoutObjectType.Contour;
-        if (contour.contour) {
-            obj.charge = -10;
-        } else {
-            obj.charge = -900 + 100 * (contour.childs.length);
-        }
-
+    for (const contour of this.scene.contours) {
+        var obj = {
+            x: contour.position.x,
+            y: contour.position.y,
+            object: contour,
+            type: SCgLayoutObjectType.Contour,
+            charge: -300 * chargeCoefficient,
+        };
         objDict[contour.id] = obj;
         this.nodes.push(obj);
     }
 
     // store begin and end for edges
-    for (idx in this.edges) {
-        edge = this.edges[idx];
+    for (const edge of this.edges) {
+        const source = objDict[edge.object.source.id];
+        const target = objDict[edge.object.target.id];
 
-        source = objDict[edge.object.source.id];
-        target = objDict[edge.object.target.id];
-
-        function getEdgeObj(srcObj, isSource) {
-            if (srcObj.type == SCgLayoutObjectType.Edge) {
-                var obj = new Object();
-                obj.type = SCgLayoutObjectType.DotPoint;
-                obj.object = srcObj.object;
-                obj.source = isSource;
-
-                return obj;
-            }
-            return srcObj;
+        function getEdgeObj(srcObj) {
+            return {
+                type: SCgLayoutObjectType.DotPoint,
+                object: srcObj.object,
+                charge: 0
+            };
         };
-
-        edge.source = getEdgeObj(source, true);
-        edge.target = getEdgeObj(target, false);
-
-        if (edge.source != source)
+        if (source.type == SCgLayoutObjectType.Edge) {
+            edge.source = getEdgeObj(source);
             this.nodes.push(edge.source);
-        if (edge.target != target)
+        } else {
+            edge.source = source;
+        }
+        if (target.type == SCgLayoutObjectType.Edge) {
+            edge.target = getEdgeObj(target);
             this.nodes.push(edge.target);
+        } else {
+            edge.target = target;
+        }
     }
 
+    // collect contour nodes to one cluster
+    for (const contour of this.scene.contours) {
+        for (const child of contour.childs) {
+            let source = objDict[contour.id];
+            if (source.type === SCgLayoutObjectType.Edge) {
+                continue;
+            }
+            let target = objDict[child.id];
+            if (target.type === SCgLayoutObjectType.Edge) {
+                continue;
+            }
+            this.edges.push({
+                type: SCgLayoutObjectType.Edge,
+                source: source,
+                target: target,
+                strength: 0.3,
+                distance: 50 * distanceCoefficient,
+            });
+        }
+    }
 };
 
 /**
