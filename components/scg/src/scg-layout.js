@@ -60,6 +60,7 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
         .friction(0.9)
         .gravity(0.03)
         .linkDistance(function (edge) {
+            if (edge.distance) return edge.distance;
 
             var p1 = edge.source.object.getConnectionPos(edge.target.object.position, edge.object.source_dot);
             var p2 = edge.target.object.getConnectionPos(edge.source.object.position, edge.object.target_dot);
@@ -74,6 +75,7 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
             return 100 + d;
         })
         .linkStrength(function (edge) {
+            if (edge.strength) return edge.strength;
             if (edge.source.type == SCgLayoutObjectType.DotPoint ||
                 edge.target.type == SCgLayoutObjectType.DotPoint) {
                 return 1;
@@ -82,6 +84,7 @@ SCg.LayoutAlgorithmForceBased.prototype.start = function () {
             return 0.3;
         })
         .charge(function (node) {
+            if (node.charge) return node.charge;
             if (node.type == SCgLayoutObjectType.DotPoint) {
                 return 0;
             } else if (node.type == SCgLayoutObjectType.Link) {
@@ -214,6 +217,25 @@ SCg.LayoutManager.prototype.prepareObjects = function () {
         obj.y = contour.position.y;
         obj.object = contour;
         obj.type = SCgLayoutObjectType.Contour;
+
+        objDict[contour.id] = obj;
+        this.nodes.push(obj);
+    }
+
+    for (idx in this.scene.contours) {
+        var contour = this.scene.contours[idx];
+
+        var obj = new Object();
+
+        obj.x = contour.position.x;
+        obj.y = contour.position.y;
+        obj.object = contour;
+        obj.type = SCgLayoutObjectType.Contour;
+        if (contour.contour) {
+            obj.charge = -10;
+        } else {
+            obj.charge = -900 + 100 * (contour.childs.length);
+        }
 
         objDict[contour.id] = obj;
         this.nodes.push(obj);
