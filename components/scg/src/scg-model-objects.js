@@ -322,23 +322,24 @@ SCg.ModelLink.prototype.getConnectionPos = function (from, dotPos) {
         new SCg.Vector2(left, bottom)
     ], from, this.position);
 
-    if (points.length == 0)
-        throw "There are no intersection";
+    if (points.length == 0) {
 
-    // find shortes
-    var dMin = null,
-        res = null;
-    for (var i = 0; i < points.length; ++i) {
-        var p = points[i];
-        var d = SCg.Math.distanceSquared(p, from);
+        return this.position;
+    } else {
+        // find shortes
+        var dMin = null,
+          res = null;
+        for (var i = 0; i < points.length; ++i) {
+            var p = points[i];
+            var d = SCg.Math.distanceSquared(p, from);
 
-        if (dMin === null || dMin > d) {
-            dMin = d;
-            res = p;
+            if (dMin === null || dMin > d) {
+                dMin = d;
+                res = p;
+            }
         }
+        return new SCg.Vector3(res.x, res.y, this.position.z);
     }
-
-    return res ? new SCg.Vector3(res.x, res.y, this.position.z) : this.position;
 };
 
 /**
@@ -489,6 +490,53 @@ SCg.ModelEdge.prototype.setTargetDot = function (dot) {
     this.target_dot = dot;
     this.need_observer_sync = true;
     this.need_update = true;
+};
+
+SCg.ModelEdge.prototype.getSourcePos = function () {
+    const source_pos = this.source.position.clone();
+
+    if (this.points.length > 0) {
+
+        if (this.source instanceof SCg.ModelEdge) {
+            this.source_pos = this.source.getConnectionPos(new SCg.Vector3(this.points[0].x, this.points[0].y, 0), this.source_dot);
+        } else {
+            this.source_pos = this.source.getConnectionPos(new SCg.Vector3(this.points[0].x, this.points[0].y, 0), this.source_dot);
+        }
+
+    } else {
+
+        if (this.source instanceof SCg.ModelEdge) {
+            this.source_pos = this.source.getConnectionPos(this.target_pos, this.source_dot);
+        } else {
+            this.source_pos = this.source.getConnectionPos(this.target_pos, this.source_dot);
+        }
+    }
+
+    return source_pos;
+};
+
+SCg.ModelEdge.prototype.getTargetPos = function () {
+    const target_pos = this.target.position.clone();
+
+    // calculate begin and end positions
+    if (this.points.length > 0) {
+
+        if (this.source instanceof SCg.ModelEdge) {
+            this.target_pos = this.target.getConnectionPos(new SCg.Vector3(this.points[this.points.length - 1].x, this.points[this.points.length - 1].y, 0), this.target_dot);
+        } else {
+            this.target_pos = this.target.getConnectionPos(new SCg.Vector3(this.points[this.points.length - 1].x, this.points[this.points.length - 1].y, 0), this.target_dot);
+        }
+
+    } else {
+
+        if (this.source instanceof SCg.ModelEdge) {
+            this.target_pos = this.target.getConnectionPos(this.source_pos, this.target_dot);
+        } else {
+            this.target_pos = this.target.getConnectionPos(this.source_pos, this.target_dot);
+        }
+    }
+
+    return target_pos;
 };
 
 SCg.ModelEdge.prototype.update = function () {
@@ -657,8 +705,7 @@ SCg.ModelContour = function (options) {
     cx /= this.points.length;
     cy /= this.points.length;
 
-    this.position.x = cx;
-    this.position.y = cy;
+    this.setPosition(new SCg.Vector3(cx, cy, 0));
 };
 
 SCg.ModelContour.prototype = Object.create(SCg.ModelObject.prototype);
@@ -706,7 +753,6 @@ SCg.ModelContour.prototype.update = function () {
 
 SCg.ModelContour.prototype.setVertices = function (vertexes) {
     this.points = vertexes;
-    this.position = this.getCenter();
 
     this.requestUpdate();
     this.notifyEdgesUpdate();
@@ -763,7 +809,12 @@ SCg.ModelContour.prototype.addEdgesWhichAreInContourPolygon = function (edges) {
 
 SCg.ModelContour.prototype.getConnectionPos = function (from, dotPos) {
     var points = SCg.Algorithms.polyclip(this.points, from, this.position);
-    var nearestIntersectionPoint = new SCg.Vector3(points[0].x, points[0].y, 0);
+    var nearestIntersectionPoint;
+    if (!points.length) {
+        nearestIntersectionPoint = this.getCenter();
+    } else {
+        nearestIntersectionPoint = new SCg.Vector3(points[0].x, points[0].y, 0);
+    }
     for (var i = 1; i < points.length; i++) {
         var nextPoint = new SCg.Vector3(points[i].x, points[i].y, 0);
         var currentLength = from.clone().sub(nearestIntersectionPoint).length();

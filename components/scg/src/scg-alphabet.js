@@ -213,8 +213,8 @@ var SCgAlphabet = {
         var has_marker = edge.hasArrow();
 
         // now calculate target and source positions
-        var pos_src = edge.source_pos.clone();
-        var pos_trg = edge.target_pos.clone();
+        var pos_src = edge.getSourcePos();
+        var pos_trg = edge.getTargetPos();
 
         // if we have an arrow, then need to fix end position
         if (has_marker) {
